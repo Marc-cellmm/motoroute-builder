@@ -1,6 +1,7 @@
 import { cumulativeKm, decodePolyline, destination, bearing, haversine } from './geo';
 import type { DistanceBand, LngLat, PlanRequest } from './types';
 
+const ELEVATION_INTERVAL = 200; // metres
 const VALHALLA_URL: string = import.meta.env.VITE_VALHALLA_URL || '/api/valhalla';
 
 export const BAND_RANGE: Record<DistanceBand, [number, number]> = {
@@ -17,6 +18,8 @@ export interface RawRoute {
   unpavedKm: number;
   motorwayKm: number;
   unpavedRanges: [number, number][]; // trams marcats "rough" pel motor, en km
+  profileKm?: number[]; // perfil d'elevació que retorna el motor (cada 200 m)
+  elevations?: number[];
 }
 
 interface ValhallaManeuver {
@@ -27,7 +30,7 @@ interface ValhallaManeuver {
   rough?: boolean;
 }
 interface ValhallaTrip {
-  legs: { shape: string; maneuvers: ValhallaManeuver[] }[];
+  legs: { shape: string; maneuvers: ValhallaManeuver[]; elevation?: number[]; elevation_interval?: number; summary?: { length: number } }[];
   summary: { length: number; time: number };
 }
 
@@ -51,7 +54,18 @@ function parseTrip(trip: ValhallaTrip): RawRoute {
   let unpavedKm = 0;
   let motorwayKm = 0;
   const roughIdx: [number, number][] = [];
+  const profileKm: number[] = [];
+  const elevations: number[] = [];
+  let legStartKm = 0;
   for (const leg of trip.legs) {
+    if (leg.elevation?.length) {
+      const step = (leg.elevation_interval ?? ELEVATION_INTERVAL) / 1000;
+      leg.elevation.forEach((e, i) => {
+        profileKm.push(legStartKm + i * step);
+        elevations.push(e);
+      });
+    }
+    legStartKm += leg.summary?.length ?? 0;
     const pts = decodePolyline(leg.shape, 6);
     const base = coords.length ? coords.length - 1 : 0;
     // evita duplicar el punt d'unió entre trams
@@ -73,6 +87,7 @@ function parseTrip(trip: ValhallaTrip): RawRoute {
     unpavedKm,
     motorwayKm,
     unpavedRanges,
+    ...(elevations.length > 1 ? { profileKm, elevations } : {}),
   };
 }
 
@@ -82,6 +97,7 @@ async function callValhalla(locations: { coord: LngLat; type: 'break' | 'through
     costing: 'motorcycle',
     costing_options: costingOptions(req),
     directions_options: { units: 'kilometers', language: 'ca-ES' },
+    elevation_interval: ELEVATION_INTERVAL, // perfil d'elevació inclòs a la resposta
     ...(alternates ? { alternates } : {}),
   };
   // Amb proxy propi (dev, Vercel) fem POST; contra el servidor públic de Valhalla

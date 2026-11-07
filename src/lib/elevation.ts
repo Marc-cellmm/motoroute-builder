@@ -3,7 +3,7 @@ import type { LngLat } from './types';
 
 /** Perfil d'elevació amb l'API d'elevació d'Open-Meteo (màx. 100 punts per crida). */
 export async function elevationProfile(coords: LngLat[], totalKm: number) {
-  const step = Math.max(0.5, totalKm / 240);
+  const step = Math.max(0.5, totalKm / 99); // ≤ 100 punts: una sola crida
   const { points, km } = resample(coords, step);
   const elev: number[] = [];
   for (let i = 0; i < points.length; i += 100) {

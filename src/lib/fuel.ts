@@ -2,6 +2,7 @@ import { bbox, cumulativeKm, projectOnLine, resample } from './geo';
 import type { FuelKind, FuelPlan, FuelStation, LngLat, Motorcycle, RideMode, StationOnRoute } from './types';
 
 let cache: { at: number; stations: FuelStation[] } | null = null;
+let inflight: Promise<FuelStation[]> | null = null;
 
 const num = (s: string | undefined) => {
   if (!s) return null;
@@ -18,6 +19,12 @@ const FUEL_URL: string = import.meta.env.VITE_FUEL_URL || '/api/fuel';
 /** Descarrega totes les estacions d'Espanya (MITECO). Cache de 30 min. */
 export async function loadStations(): Promise<FuelStation[]> {
   if (cache && Date.now() - cache.at < 30 * 60000) return cache.stations;
+  // diverses rutes en paral·lel comparteixen una sola descàrrega
+  inflight ??= downloadStations().finally(() => (inflight = null));
+  return inflight;
+}
+
+async function downloadStations(): Promise<FuelStation[]> {
   const res = await fetch(FUEL_URL, { headers: { Accept: 'application/json' } });
   if (!res.ok) throw new Error('El servei de preus del MITECO no respon ara mateix');
   const json = await res.json();

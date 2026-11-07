@@ -17,7 +17,10 @@ export async function buildRoutes(req: PlanRequest, progress: (msg: string) => v
   for (let i = 0; i < routes.length; i++) {
     const r = routes[i];
     progress(`Analitzant corbes i desnivell (${i + 1}/${routes.length})…`);
-    const prof = await elevationProfile(r.coords, r.distanceKm);
+    // El motor ja retorna l'elevació; Open-Meteo només com a alternativa.
+    const prof = r.elevations && r.profileKm
+      ? { km: r.profileKm, elev: r.elevations }
+      : await elevationProfile(r.coords, r.distanceKm);
     const stats = elevationStats(prof.elev);
     const scoring = scoreRoute(req.mode, r.coords, prof.km, prof.elev, r.unpavedRanges);
     out.push({
@@ -64,10 +67,10 @@ export async function enrichWeather(route: RouteResult, req: PlanRequest) {
   const { etaAtKm, stages } = makeSchedule(route, req);
   const cum = cumulativeKm(route.coords);
   const scale = cum.at(-1)! / route.distanceKm;
-  const step = Math.max(15, route.distanceKm / 40);
+  const step = Math.max(15, route.distanceKm / 20); // ≤ 21 punts: no saturar Open-Meteo
   const samples = [];
   for (let km = 0; km <= route.distanceKm; km += step) {
-    const idx = route.profileKm.findIndex((k) => k >= km * scale);
+    const idx = route.profileKm.findIndex((k) => k >= km);
     samples.push({
       km,
       coord: pointAtKm(route.coords, cum, km * scale),
@@ -75,7 +78,8 @@ export async function enrichWeather(route: RouteResult, req: PlanRequest) {
       eta: etaAtKm(km),
     });
   }
-  const data = await fetchWeather(samples, new Date(req.departure));
+  const lastDay = stages.at(-1)!.date;
+  const data = await fetchWeather(samples, new Date(req.departure), lastDay);
   const weather = evaluate(samples, data);
   const best = stages.length === 1 ? bestDepartures(samples, data, route.durationMin) : undefined;
   return { weather, bestDepartures: best, stages };

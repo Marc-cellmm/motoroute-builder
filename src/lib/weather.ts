@@ -27,14 +27,28 @@ const VARS =
   'temperature_2m,apparent_temperature,precipitation_probability,precipitation,wind_gusts_10m,weather_code,freezing_level_height';
 
 /** Una sola crida multipunt a Open-Meteo amb tota la previsió horària. */
-export async function fetchWeather(samples: Sample[], departure: Date): Promise<WeatherData> {
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/** fetch amb reintents si Open-Meteo respon 429 (massa peticions). */
+async function fetchRetry(url: string): Promise<Response> {
+  for (let attempt = 0; ; attempt++) {
+    const res = await fetch(url);
+    if (res.status !== 429 || attempt >= 3) return res;
+    await sleep(4000 * (attempt + 1));
+  }
+}
+
+export async function fetchWeather(samples: Sample[], departure: Date, lastDay: Date = departure): Promise<WeatherData> {
   const lat = samples.map((s) => s.coord[1].toFixed(4)).join(',');
   const lng = samples.map((s) => s.coord[0].toFixed(4)).join(',');
   const elev = samples.map((s) => Math.round(s.altitude)).join(',');
+  // només els dies necessaris: menys càrrega per a Open-Meteo
+  const days = Math.min(16, Math.max(1, Math.ceil((lastDay.getTime() - Date.now()) / 86400000) + 2));
   const url =
     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&elevation=${elev}` +
-    `&hourly=${VARS}&daily=sunset&timeformat=unixtime&timezone=GMT&forecast_days=16&wind_speed_unit=kmh`;
-  const res = await fetch(url);
+    `&hourly=${VARS}&daily=sunset&timeformat=unixtime&timezone=GMT&forecast_days=${days}&wind_speed_unit=kmh`;
+  const res = await fetchRetry(url);
+  if (res.status === 429) throw new Error('El servei de meteo està saturat; torna-ho a provar d\'aquí a un minut.');
   if (!res.ok) throw new Error('No s\'ha pogut obtenir la previsió meteorològica');
   const json = await res.json();
   const list = Array.isArray(json) ? json : [json];
