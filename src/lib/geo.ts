@@ -143,3 +143,58 @@ export function bbox(coords: LngLat[]): [number, number, number, number] {
   }
   return [minX, minY, maxX, maxY];
 }
+
+/** Simplificació Douglas-Peucker (tolerància en km) per reduir la mida dels traçats compartits. */
+export function simplify(coords: LngLat[], toleranceKm = 0.015): LngLat[] {
+  if (coords.length < 3) return coords;
+  const kx = 111.32 * Math.cos(toRad(coords[0][1]));
+  const ky = 110.574;
+  const keep = new Uint8Array(coords.length);
+  keep[0] = keep[coords.length - 1] = 1;
+  const stack: [number, number][] = [[0, coords.length - 1]];
+  while (stack.length) {
+    const [a, b] = stack.pop()!;
+    const ax = coords[a][0] * kx, ay = coords[a][1] * ky;
+    const bx = coords[b][0] * kx, by = coords[b][1] * ky;
+    const dx = bx - ax, dy = by - ay;
+    const len2 = dx * dx + dy * dy;
+    let maxD = 0;
+    let idx = -1;
+    for (let i = a + 1; i < b; i++) {
+      const px = coords[i][0] * kx - ax, py = coords[i][1] * ky - ay;
+      const t = len2 ? Math.max(0, Math.min(1, (px * dx + py * dy) / len2)) : 0;
+      const d = Math.hypot(px - t * dx, py - t * dy);
+      if (d > maxD) { maxD = d; idx = i; }
+    }
+    if (idx >= 0 && maxD > toleranceKm) {
+      keep[idx] = 1;
+      stack.push([a, idx], [idx, b]);
+    }
+  }
+  return coords.filter((_, i) => keep[i]);
+}
+
+/** Codifica [lng, lat] com a polilínia (format Google/Valhalla). */
+export function encodePolyline(coords: LngLat[], precision = 5): string {
+  const factor = 10 ** precision;
+  let out = '';
+  let pLat = 0;
+  let pLng = 0;
+  const enc = (v: number) => {
+    let n = v < 0 ? ~(v << 1) : v << 1;
+    let s = '';
+    while (n >= 0x20) {
+      s += String.fromCharCode((0x20 | (n & 0x1f)) + 63);
+      n >>= 5;
+    }
+    return s + String.fromCharCode(n + 63);
+  };
+  for (const [lng, lat] of coords) {
+    const iLat = Math.round(lat * factor);
+    const iLng = Math.round(lng * factor);
+    out += enc(iLat - pLat) + enc(iLng - pLng);
+    pLat = iLat;
+    pLng = iLng;
+  }
+  return out;
+}

@@ -142,3 +142,13 @@ small, .muted { color: var(--muted); }
 
 .maplibregl-popup-content { background: var(--panel-2) !important; color: var(--text); border-radius: 10px !important; font-size: 13px; }
 .maplibregl-popup-tip { border-top-color: var(--panel-2) !important; border-bottom-color: var(--panel-2) !important; }
+
+/* Social */
+.reactions { display: flex; gap: 8px; margin-top: 12px; }
+.react { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 8px 14px; min-height: 40px; cursor: pointer; font-weight: 600; }
+.react.on.like { border-color: #ff4d6d; color: #ff8fa3; }
+.react.on.save { border-color: var(--accent); color: var(--accent); }
+.modal-bg { position: fixed; inset: 0; background: #000a; z-index: 50; display: grid; place-items: center; padding: 16px; }
+.modal { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 18px; width: min(480px, 100%); max-height: 92vh; overflow-y: auto; }
+textarea.input { resize: vertical; min-height: 80px; }
+.chip:disabled { opacity: 0.4; cursor: not-allowed; }

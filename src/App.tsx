@@ -2,15 +2,21 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import MapView, { DEMO } from './components/MapView';
 import Wizard, { type PickTarget } from './components/Wizard';
 import BikeScreen from './components/BikeScreen';
-import RouteCard, { fmtDuration } from './components/RouteCard';
+import RouteCard from './components/RouteCard';
 import RouteDetail, { Loader } from './components/RouteDetail';
 import { buildRoutes, enrichFuel, enrichWeather, makeSchedule } from './lib/pipeline';
 import { reverseGeocode, searchAccommodation } from './lib/places';
 import { loadBikes, loadRoutes, saveBikes, saveRoutes, uid } from './lib/storage';
 import { downloadText, toGpx } from './lib/gpx';
-import type { Accommodation, LngLat, Motorcycle, PlanRequest, RouteResult, SavedRoute } from './lib/types';
+import SocialScreen from './components/social/SocialScreen';
+import MyRoutes from './components/social/MyRoutes';
+import ShareDialog from './components/social/ShareDialog';
+import { getMe, socialEnabled, toRouteResult, type Me, type SharedRoute } from './lib/social';
+import { haversine } from './lib/geo';
+import type { Accommodation, LngLat, Motorcycle, PlanRequest, RideMode, RouteResult, SavedRoute } from './lib/types';
 
-type Tab = 'plan' | 'routes' | 'bike';
+type Tab = 'plan' | 'social' | 'routes' | 'bike';
+type ShareTarget = { route: RouteResult; title: string; mode: RideMode; startName: string | null };
 type View = 'wizard' | 'results' | 'detail';
 type Status = Record<string, { weather: string | null; fuel: string | null }>;
 
@@ -23,7 +29,7 @@ function defaultDeparture() {
 }
 
 export default function App() {
-  const [tab, setTab] = useState<Tab>('plan');
+  const [tab, setTabState] = useState<Tab>('plan');
   const [view, setView] = useState<View>('wizard');
   const [bikes, setBikesState] = useState<Motorcycle[]>(loadBikes);
   const [saved, setSavedState] = useState<SavedRoute[]>(loadRoutes);
@@ -53,6 +59,18 @@ export default function App() {
   const [accom, setAccom] = useState<Record<number, Accommodation[] | 'loading' | string>>({});
   const [accomOnMap, setAccomOnMap] = useState<Accommodation[]>([]);
   const [planReq, setPlanReq] = useState<PlanRequest | null>(null); // petició de les rutes actuals
+  const [me, setMe] = useState<Me | null>(null);
+  const [socialRoute, setSocialRoute] = useState<RouteResult | null>(null); // ruta de la comunitat al mapa
+  const [shareTarget, setShareTarget] = useState<ShareTarget | null>(null);
+
+  useEffect(() => {
+    if (socialEnabled) getMe().then(setMe).catch(() => setMe(null));
+  }, []);
+
+  const setTab = (t: Tab) => {
+    setTabState(t);
+    setSocialRoute(null); // cada apartat comença amb el mapa net
+  };
 
   const setBikes = (b: Motorcycle[]) => {
     setBikesState(b);
@@ -150,8 +168,30 @@ export default function App() {
   }
 
   function openSaved(s: SavedRoute) {
-    const r = { ...s.request, departure: defaultDeparture() };
-    const route: RouteResult = { ...s.route, id: `${Date.now()}` };
+    openRoute({ ...s.route, id: `${Date.now()}` } as RouteResult, { ...s.request, departure: defaultDeparture() });
+  }
+
+  /** Obre una ruta de la comunitat a Planificar, amb meteo i benzina per a la propera sortida. */
+  function openShared(s: SharedRoute) {
+    const route = toRouteResult(s);
+    const first = route.coords[0];
+    const last = route.coords.at(-1)!;
+    const circular = haversine(first, last) < 2;
+    openRoute({ ...route, id: `${Date.now()}` }, {
+      ...req,
+      mode: s.mode,
+      difficulty: s.difficulty,
+      origin: { name: s.start_name ?? 'Sortida', coord: first },
+      circular,
+      destination: circular ? null : { name: 'Arribada', coord: last },
+      vias: [],
+      departure: defaultDeparture(),
+      days: 1,
+    });
+  }
+
+  function openRoute(route: RouteResult, r: PlanRequest) {
+    setSocialRoute(null);
     setReq(r);
     setPlanReq(r);
     setRoutes([route]);
@@ -248,45 +288,69 @@ export default function App() {
               onSave={saveCurrent}
               onGpx={DEMO ? undefined : () => downloadText(`motoroute-${Math.round(selected.distanceKm)}km.gpx`, toGpx(selected, 'MotoRoute'))}
               saved={isSaved}
+              onShare={socialEnabled ? () => setShareTarget({
+                route: selected,
+                title: `${planReq.origin?.name.split(',')[0] ?? 'Ruta'}${planReq.circular ? ' · circular' : ' → ' + (planReq.destination?.name.split(',')[0] ?? '')}`,
+                mode: planReq.mode,
+                startName: planReq.origin?.name ?? null,
+              }) : undefined}
+            />
+          )}
+
+          {tab === 'social' && (
+            <SocialScreen
+              me={me}
+              setMe={setMe}
+              near={req.origin?.coord ?? null}
+              localRoutes={saved}
+              onShow={(r) => setSocialRoute(r ? toRouteResult(r) : null)}
+              onPreviewUpload={setSocialRoute}
+              onPlan={openShared}
             />
           )}
 
           {tab === 'routes' && (
-            <>
-              <h2>Les meves rutes</h2>
-              {!saved.length && (
-                <div className="empty"><span className="ico">🗺️</span>Encara no has desat cap ruta.</div>
-              )}
-              {saved.map((s) => (
-                <div key={s.id} className="box">
-                  <h3>{s.title}</h3>
-                  <div className="hint">
-                    {fmtDuration(s.route.durationMin)} · {s.route.elevationGain} m + · {s.request.mode === 'trail' ? 'Trail' : 'Carretera'} ·
-                    desada el {new Date(s.savedAt).toLocaleDateString('ca-ES')}
-                  </div>
-                  <div className="row" style={{ marginTop: 10 }}>
-                    <button className="btn small primary" onClick={() => openSaved(s)}>Obre</button>
-                    <button className="btn small ghost" onClick={() => setSaved(saved.filter((x) => x.id !== s.id))}>Elimina</button>
-                  </div>
-                </div>
-              ))}
-            </>
+            <MyRoutes
+              me={me}
+              setMe={setMe}
+              planned={saved}
+              onOpenPlanned={openSaved}
+              onDeletePlanned={(id) => setSaved(saved.filter((x) => x.id !== id))}
+              onSharePlanned={(s) => setShareTarget({ route: { ...s.route } as RouteResult, title: s.title, mode: s.request.mode, startName: s.request.origin?.name ?? null })}
+              onShow={(r) => setSocialRoute(r ? toRouteResult(r) : null)}
+              onPlan={openShared}
+            />
           )}
 
           {tab === 'bike' && <BikeScreen bikes={bikes} setBikes={setBikes} />}
         </div>
         <nav className="tabs">
           <button className={tab === 'plan' ? 'on' : ''} onClick={() => setTab('plan')}><span className="ico">🧭</span>Planificar</button>
+          <button className={tab === 'social' ? 'on' : ''} onClick={() => setTab('social')}><span className="ico">👥</span>Social</button>
           <button className={tab === 'routes' ? 'on' : ''} onClick={() => setTab('routes')}><span className="ico">🗂️</span>Les meves rutes</button>
           <button className={tab === 'bike' ? 'on' : ''} onClick={() => setTab('bike')}><span className="ico">🏍️</span>La meva moto</button>
         </nav>
+        {shareTarget && (
+          <ShareDialog
+            route={shareTarget.route}
+            me={me}
+            setMe={setMe}
+            defaultTitle={shareTarget.title}
+            defaultMode={shareTarget.mode}
+            startName={shareTarget.startName}
+            onClose={() => setShareTarget(null)}
+            onPublished={() => {}}
+          />
+        )}
       </aside>
       <main className="map-wrap">
         <MapView
-          routes={tab === 'plan' && view !== 'wizard' ? (view === 'detail' && selected ? [selected] : routes) : []}
-          selectedId={selectedId}
+          routes={tab === 'plan' && view !== 'wizard'
+            ? (view === 'detail' && selected ? [selected] : routes)
+            : (tab === 'social' || tab === 'routes') && socialRoute ? [socialRoute] : []}
+          selectedId={(tab === 'social' || tab === 'routes') && socialRoute ? socialRoute.id : selectedId}
           onSelect={(id) => setSelectedId(id)}
-          origin={req.origin}
+          origin={tab === 'plan' ? req.origin : null}
           destination={req.circular ? null : req.destination}
           vias={req.circular ? [] : req.vias}
           weather={showExtras && view === 'detail' ? selected!.weather : undefined}

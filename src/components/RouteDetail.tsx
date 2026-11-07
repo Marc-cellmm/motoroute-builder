@@ -15,6 +15,7 @@ interface Props {
   onBack: () => void;
   onSave: () => void;
   onGpx?: () => void;
+  onShare?: () => void;
   saved: boolean;
 }
 
@@ -81,6 +82,9 @@ export default function RouteDetail(p: Props) {
             {p.onGpx && <button className="btn" onClick={p.onGpx}>Exporta GPX</button>}
             <button className="btn primary" onClick={p.onSave} disabled={p.saved}>{p.saved ? 'Desada ✓' : 'Desa la ruta'}</button>
           </div>
+          {p.onShare && (
+            <button className="btn" style={{ width: '100%', marginTop: 10 }} onClick={p.onShare}>👥 Comparteix a la comunitat</button>
+          )}
         </>
       )}
 

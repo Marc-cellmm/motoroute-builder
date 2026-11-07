@@ -37,6 +37,19 @@ El workflow `.github/workflows/deploy.yml` construeix i publica la web a cada `p
 
 A GitHub Pages no hi ha servidor propi: les rutes es demanen directament al servidor públic de Valhalla, i els preus del MITECO els descarrega el workflow (`scripts/fetch-fuel.py`) a `data/fuel.json`.
 
+## Apartat Social (Supabase)
+
+Els motoristes publiquen rutes que han fet (des d'un GPX o d'una ruta desada), hi donen m'agrada i les guarden per fer-les. Les guardades apareixen a «Les meves rutes → Guardades».
+
+1. Crea un projecte gratuït a [supabase.com](https://supabase.com).
+2. **SQL Editor → New query**: enganxa i executa `supabase/schema.sql`.
+3. **Authentication → Sign In / Providers**: activa *Allow anonymous sign-ins*. Així es pot entrar només amb un nom de motorista, sense email.
+4. Posa la *Project URL* i la clau *anon/publishable* a `src/config.ts` (o a les variables `VITE_SUPABASE_URL` i `VITE_SUPABASE_ANON_KEY`). Aquestes dues són públiques per disseny. La clau *service_role* no ha d'anar mai a la web.
+
+Seguretat: les polítiques RLS de l'esquema fan que tothom pugui llegir rutes i perfils, però cadascú només pot crear, editar o esborrar el que és seu. Qui ha donat m'agrada o ha guardat què només ho veu el mateix usuari.
+
+Limitacions: el compte anònim viu en el navegador; si l'esborres o canvies de dispositiu, es perd. El pla gratuït de Supabase pausa el projecte després d'una setmana sense ús.
+
 ## Publicar-la per fer-la servir des del mòbil (Vercel, gratuït)
 
 1. Puja aquesta carpeta a un repositori de GitHub.
