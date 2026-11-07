@@ -45,6 +45,7 @@ export function costingOptions(req: Pick<PlanRequest, 'mode' | 'difficulty' | 'a
       use_primary: req.mode === 'trail' ? 0.2 : primary,
       use_trails: req.mode === 'trail' ? trails : 0,
       use_ferry: 0.2,
+      ...(req.mode === 'road' ? { exclude_unpaved: true } : {}),
     },
   };
 }
@@ -91,9 +92,19 @@ function parseTrip(trip: ValhallaTrip): RawRoute {
   };
 }
 
-async function callValhalla(locations: { coord: LngLat; type: 'break' | 'through' }[], req: PlanRequest, alternates = 0) {
+type Stop = { coord: LngLat; type: 'break' | 'through'; generated?: boolean };
+
+async function callValhalla(locations: Stop[], req: PlanRequest, alternates = 0) {
+  // En mode Carretera, els punts que genera l'app (bucles, desviaments) només s'enganxen a
+  // carreteres terciàries o millors: si no, un punt al costat d'una pista obliga a passar-hi.
+  const roadOnly = { min_road_class: 'tertiary' };
   const body = {
-    locations: locations.map((l) => ({ lat: l.coord[1], lon: l.coord[0], type: l.type })),
+    locations: locations.map((l) => ({
+      lat: l.coord[1],
+      lon: l.coord[0],
+      type: l.type,
+      ...(req.mode === 'road' && l.generated ? { search_filter: roadOnly } : {}),
+    })),
     costing: 'motorcycle',
     costing_options: costingOptions(req),
     directions_options: { units: 'kilometers', language: 'ca-ES' },
@@ -145,8 +156,8 @@ async function circularRoutes(req: PlanRequest): Promise<RawRoute[]> {
         const [route] = await callValhalla(
           [
             { coord: req.origin!.coord, type: 'break' },
-            { coord: p1, type: 'through' },
-            { coord: p2, type: 'through' },
+            { coord: p1, type: 'through', generated: true },
+            { coord: p2, type: 'through', generated: true },
             { coord: req.origin!.coord, type: 'break' },
           ],
           req,
@@ -173,10 +184,10 @@ async function circularRoutes(req: PlanRequest): Promise<RawRoute[]> {
 /** A→B: alternatives directes; si queden curtes per al rang, hi afegeix desviaments laterals. */
 async function pointToPointRoutes(req: PlanRequest): Promise<{ routes: RawRoute[]; note?: string }> {
   const dest = req.destination!;
-  const stops = [
-    { coord: req.origin!.coord, type: 'break' as const },
+  const stops: Stop[] = [
+    { coord: req.origin!.coord, type: 'break' },
     ...req.vias.map((v) => ({ coord: v.coord, type: 'through' as const })),
-    { coord: dest.coord, type: 'break' as const },
+    { coord: dest.coord, type: 'break' },
   ];
   const direct = await callValhalla(stops, req, req.vias.length ? 0 : 2);
   const [min] = BAND_RANGE[req.band];
@@ -196,7 +207,7 @@ async function pointToPointRoutes(req: PlanRequest): Promise<{ routes: RawRoute[
     try {
       await sleep(400);
       const [r] = await callValhalla(
-        [stops[0], { coord: via, type: 'through' }, stops[stops.length - 1]],
+        [stops[0], { coord: via, type: 'through', generated: true }, stops[stops.length - 1]],
         req,
       );
       detours.push(r);
