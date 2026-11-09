@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CATEGORY_LABEL, searchCatalog, type BikeModel } from '../lib/bikes';
+import { bikeFromModel, CATEGORY_LABEL, searchCatalog, type BikeModel } from '../lib/bikes';
 import { effectiveConsumption, realConsumption, usableRangeKm } from '../lib/fuel';
 import { uid } from '../lib/storage';
 import type { Motorcycle } from '../lib/types';
@@ -23,16 +23,7 @@ const blank = (): Motorcycle => ({
   isDefault: false,
 });
 
-const fromModel = (m: BikeModel): Motorcycle => ({
-  ...blank(),
-  name: `${m.make} ${m.model}`,
-  modelId: m.id,
-  category: m.category,
-  fuel: m.fuel,
-  tankLiters: m.tankLiters,
-  reserveLiters: m.reserveLiters,
-  consumptionWmtc: m.consumption,
-});
+const fromModel = (m: BikeModel): Motorcycle => bikeFromModel(m, uid());
 
 export default function BikeScreen({ bikes, setBikes }: Props) {
   const [mode, setMode] = useState<'list' | 'search' | 'edit' | 'refuel'>(bikes.length ? 'list' : 'search');

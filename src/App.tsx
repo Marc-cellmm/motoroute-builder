@@ -16,13 +16,16 @@ import NavigationPanel from './components/NavigationPanel';
 import { useNavigation } from './lib/useNavigation';
 import { liveEnabled, useLiveShare } from './lib/live';
 import LiveShareControl from './components/LiveShareControl';
+import ProfileScreen from './components/account/ProfileScreen';
+import { useAccount } from './components/account/AccountGate';
+import { planDefaults, syncBikes } from './lib/account';
 import { trackCoords, useRecorder } from './lib/recorder';
 import { getMe, routeFromTrack, socialEnabled, toRouteResult, type Me, type SharedRoute } from './lib/social';
 import { parseGpx } from './lib/gpxImport';
 import { haversine } from './lib/geo';
 import type { Accommodation, LngLat, Motorcycle, PlanRequest, RecordedRoute, RideMode, RouteResult, SavedRoute } from './lib/types';
 
-type Tab = 'plan' | 'record' | 'social' | 'routes' | 'bike';
+type Tab = 'plan' | 'record' | 'social' | 'routes' | 'bike' | 'profile';
 type ShareTarget = { route: RouteResult; title: string; mode: RideMode; startName: string | null; date?: string | null; recordedId?: string };
 type View = 'wizard' | 'results' | 'detail';
 type Status = Record<string, { weather: string | null; fuel: string | null }>;
@@ -36,9 +39,18 @@ function defaultDeparture() {
 }
 
 export default function App() {
+  const { account } = useAccount();
   const [tab, setTabState] = useState<Tab>('plan');
   const [view, setView] = useState<View>('wizard');
-  const [bikes, setBikesState] = useState<Motorcycle[]>(loadBikes);
+  // motos: les d'aquest dispositiu; si no n'hi ha, les del compte (un mòbil nou, per exemple)
+  const [bikes, setBikesState] = useState<Motorcycle[]>(() => {
+    const local = loadBikes();
+    if (!local.length && account?.settings?.bikes?.length) {
+      saveBikes(account.settings.bikes);
+      return account.settings.bikes;
+    }
+    return local;
+  });
   const [saved, setSavedState] = useState<SavedRoute[]>(loadRoutes);
   const [req, setReq] = useState<PlanRequest>(() => ({
     mode: 'road',
@@ -55,6 +67,7 @@ export default function App() {
     departure: defaultDeparture(),
     days: 1,
     kmPerDay: 250,
+    ...planDefaults(account),
   }));
   const [routes, setRoutes] = useState<RouteResult[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -152,8 +165,19 @@ export default function App() {
   }
 
   useEffect(() => {
-    if (socialEnabled) getMe().then(setMe).catch(() => setMe(null));
-  }, []);
+    if (account?.profile) setMe({ id: account.id, username: account.profile.username });
+    else if (socialEnabled) getMe().then(setMe).catch(() => setMe(null));
+  }, [account]);
+
+  // després d'editar el perfil: motos i preferències noves al Planificar
+  function onProfileSaved() {
+    const b = loadBikes();
+    setBikesState(b);
+    setReq((r) => ({ ...r, ...planDefaults(account), bikeId: b.find((x) => x.isDefault)?.id ?? r.bikeId }));
+  }
+  useEffect(() => {
+    if (account) setReq((r) => ({ ...r, ...planDefaults(account) }));
+  }, [account]);
 
   const setTab = (t: Tab) => {
     setTabState(t);
@@ -163,6 +187,7 @@ export default function App() {
   const setBikes = (b: Motorcycle[]) => {
     setBikesState(b);
     saveBikes(b);
+    if (account) void syncBikes(account.id, b).catch(() => {});
     if (!req.bikeId || !b.some((x) => x.id === req.bikeId)) setReq((r) => ({ ...r, bikeId: b.find((x) => x.isDefault)?.id ?? null }));
   };
   const setSaved = (s: SavedRoute[]) => {
@@ -478,6 +503,7 @@ export default function App() {
           )}
 
           {!navRoute && tab === 'bike' && <BikeScreen bikes={bikes} setBikes={setBikes} />}
+          {!navRoute && tab === 'profile' && <ProfileScreen onProfileSaved={onProfileSaved} />}
         </div>
         <nav className="tabs" style={navRoute ? { display: 'none' } : undefined}>
           <button className={tab === 'plan' ? 'on' : ''} onClick={() => setTab('plan')}><span className="ico">🧭</span>Planificar</button>
@@ -487,6 +513,7 @@ export default function App() {
           <button className={tab === 'social' ? 'on' : ''} onClick={() => setTab('social')}><span className="ico">👥</span>Social</button>
           <button className={tab === 'routes' ? 'on' : ''} onClick={() => setTab('routes')}><span className="ico">🗂️</span>Rutes</button>
           <button className={tab === 'bike' ? 'on' : ''} onClick={() => setTab('bike')}><span className="ico">🏍️</span>Moto</button>
+          {account && <button className={tab === 'profile' ? 'on' : ''} onClick={() => setTab('profile')}><span className="ico">👤</span>Perfil</button>}
         </nav>
         {shareTarget && (
           <ShareDialog

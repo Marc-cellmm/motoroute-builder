@@ -1,4 +1,4 @@
-import type { FuelKind } from './types';
+import type { FuelKind, Motorcycle } from './types';
 
 export interface BikeModel {
   id: string;
@@ -57,3 +57,21 @@ export const CATEGORY_LABEL: Record<string, string> = {
   custom: 'Custom',
   scooter: 'Scooter',
 };
+
+/** Moto nova a partir d'un model del catàleg (l'usuari la pot ajustar a «La meva moto»). */
+export function bikeFromModel(m: BikeModel, id: string): Motorcycle {
+  return {
+    id,
+    name: `${m.make} ${m.model}`,
+    modelId: m.id,
+    category: m.category,
+    fuel: m.fuel,
+    tankLiters: m.tankLiters,
+    reserveLiters: m.reserveLiters,
+    consumptionWmtc: m.consumption,
+    carriesPassenger: false,
+    carriesLuggage: false,
+    refuels: [],
+    isDefault: false,
+  };
+}

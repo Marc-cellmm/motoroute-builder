@@ -22,7 +22,7 @@ export default function JoinForm({ onJoined, compact }: { onJoined: (me: Me) => 
   return (
     <form onSubmit={submit} className={compact ? '' : 'box'}>
       {!compact && <h3>Entra a la comunitat</h3>}
-      <p className="hint">Tria un nom de motorista. No cal email ni contrasenya: el compte queda guardat en aquest navegador.</p>
+      <p className="hint">Tria un nom de motorista per a la comunitat.</p>
       <div className="row" style={{ marginTop: 10 }}>
         <input className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="p. ex. marc_trail" maxLength={24} autoComplete="nickname" />
         <button className="btn primary" style={{ flex: 'none' }} disabled={busy || name.trim().length < 3}>{busy ? 'Entrant…' : 'Entra'}</button>

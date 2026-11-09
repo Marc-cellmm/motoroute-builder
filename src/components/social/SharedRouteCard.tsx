@@ -75,6 +75,9 @@ export function SharedRouteDetail(p: CardProps & { onBack: () => void; onPlan: (
           <div className="hint">
             @{r.username}{r.ridden_on ? ` · feta el ${new Date(r.ridden_on).toLocaleDateString('ca-ES', { day: 'numeric', month: 'long', year: 'numeric' })}` : ''}
           </div>
+          {(r.author_bike || r.author_area) && (
+            <div className="author-meta">{[r.author_bike && `🏍️ ${r.author_bike}`, r.author_area && `📍 ${r.author_area}`].filter(Boolean).join(' · ')}</div>
+          )}
         </div>
         <span className={`badge ${r.difficulty}`} style={{ flex: 'none' }}>{DIFF_LABEL[r.difficulty]}</span>
       </div>

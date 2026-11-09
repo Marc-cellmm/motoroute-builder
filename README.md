@@ -70,18 +70,22 @@ Instal·lació gratuïta des d'un Mac (el teu Apple ID normal; l'app caduca cada
 
 Per actualitzar-la (o quan caduqui): `git pull`, `npm install`, `npm run ios` i torna a prémer ▶.
 
-## Apartat Social (Supabase)
+## Comptes i Social (Supabase)
+
+Abans d'entrar a l'app cal crear un compte amb correu i contrasenya i omplir el perfil de motorista (nom, any de naixement, d'on ets, carretera o muntanya, experiència, moto i interessos). El perfil posa els valors per defecte del Planificar i les motos queden desades al compte.
 
 Els motoristes publiquen rutes que han fet (des d'un GPX o d'una ruta desada), hi donen m'agrada i les guarden per fer-les. Les guardades apareixen a «Les meves rutes → Guardades».
 
 1. Crea un projecte gratuït a [supabase.com](https://supabase.com).
 2. **SQL Editor → New query**: enganxa i executa `supabase/schema.sql`.
-3. **Authentication → Sign In / Providers**: activa *Allow anonymous sign-ins*. Així es pot entrar només amb un nom de motorista, sense email.
-4. Posa la *Project URL* i la clau *anon/publishable* a `src/config.ts` (o a les variables `VITE_SUPABASE_URL` i `VITE_SUPABASE_ANON_KEY`). Aquestes dues són públiques per disseny. La clau *service_role* no ha d'anar mai a la web.
+3. **SQL Editor → New query**: enganxa i executa `supabase/accounts.sql` (perfil, dades privades i esborrar el compte).
+4. **Authentication → Sign In / Providers → Email**: desactiva *Confirm email* mentre no tinguis un servidor de correu propi. El servidor de correu de Supabase només envia a membres de l'equip del projecte i 2 correus per hora. Per enviar confirmacions i recuperar contrasenyes a qualsevol usuari, configura un SMTP propi (Brevo o Resend tenen pla gratuït) a **Authentication → Emails → SMTP Settings** i torna a activar *Confirm email*.
+5. Entrar amb el mòbil (SMS) necessita un proveïdor de SMS de pagament (Twilio, Vonage o MessageBird) a **Authentication → Sign In / Providers → Phone**.
+6. Posa la *Project URL* i la clau *anon/publishable* a `src/config.ts` (o a les variables `VITE_SUPABASE_URL` i `VITE_SUPABASE_ANON_KEY`). Aquestes dues són públiques per disseny. La clau *service_role* no ha d'anar mai a la web.
 
 Seguretat: les polítiques RLS de l'esquema fan que tothom pugui llegir rutes i perfils, però cadascú només pot crear, editar o esborrar el que és seu. Qui ha donat m'agrada o ha guardat què només ho veu el mateix usuari.
 
-Limitacions: el compte anònim viu en el navegador; si l'esborres o canvies de dispositiu, es perd. El pla gratuït de Supabase pausa el projecte després d'una setmana sense ús.
+Si algú ja tenia un nom de motorista amb l'accés anònim antic, en crear el compte des del mateix navegador se li passen el nom, les rutes publicades, els m'agrada i els guardats. L'edat i les preferències (taula `rider_settings`) només les pot llegir el mateix usuari. El compte es pot esborrar des de Perfil. El pla gratuït de Supabase pausa el projecte després d'una setmana sense ús.
 
 ## Publicar-la per fer-la servir des del mòbil (Vercel, gratuït)
 

@@ -45,6 +45,8 @@ export interface SharedRoute {
   created_at: string;
   likes: number;
   saves: number;
+  author_bike?: string | null;
+  author_area?: string | null;
 }
 
 export type FeedSort = 'recent' | 'popular' | 'near';
