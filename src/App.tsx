@@ -6,17 +6,19 @@ import RouteCard from './components/RouteCard';
 import RouteDetail, { Loader } from './components/RouteDetail';
 import { buildRoutes, enrichFuel, enrichWeather, makeSchedule } from './lib/pipeline';
 import { reverseGeocode, searchAccommodation } from './lib/places';
-import { loadBikes, loadRoutes, saveBikes, saveRoutes, uid } from './lib/storage';
+import { loadBikes, loadRecordings, loadRoutes, saveBikes, saveRecordings, saveRoutes, uid } from './lib/storage';
 import { downloadText, toGpx } from './lib/gpx';
 import SocialScreen from './components/social/SocialScreen';
 import MyRoutes from './components/social/MyRoutes';
 import ShareDialog from './components/social/ShareDialog';
+import RecordScreen from './components/RecordScreen';
+import { trackCoords, useRecorder } from './lib/recorder';
 import { getMe, socialEnabled, toRouteResult, type Me, type SharedRoute } from './lib/social';
 import { haversine } from './lib/geo';
-import type { Accommodation, LngLat, Motorcycle, PlanRequest, RideMode, RouteResult, SavedRoute } from './lib/types';
+import type { Accommodation, LngLat, Motorcycle, PlanRequest, RecordedRoute, RideMode, RouteResult, SavedRoute } from './lib/types';
 
-type Tab = 'plan' | 'social' | 'routes' | 'bike';
-type ShareTarget = { route: RouteResult; title: string; mode: RideMode; startName: string | null };
+type Tab = 'plan' | 'record' | 'social' | 'routes' | 'bike';
+type ShareTarget = { route: RouteResult; title: string; mode: RideMode; startName: string | null; date?: string | null; recordedId?: string };
 type View = 'wizard' | 'results' | 'detail';
 type Status = Record<string, { weather: string | null; fuel: string | null }>;
 
@@ -62,6 +64,39 @@ export default function App() {
   const [me, setMe] = useState<Me | null>(null);
   const [socialRoute, setSocialRoute] = useState<RouteResult | null>(null); // ruta de la comunitat al mapa
   const [shareTarget, setShareTarget] = useState<ShareTarget | null>(null);
+  const [recordings, setRecordingsState] = useState<RecordedRoute[]>(loadRecordings);
+  const rec = useRecorder(); // viu a l'App perquè la gravació continuï en canviar d'apartat
+  const setRecordings = (r: RecordedRoute[]) => {
+    setRecordingsState(r);
+    saveRecordings(r);
+  };
+  const markShared = (id: string) =>
+    setRecordingsState((rs) => {
+      const next = rs.map((r) => (r.id === id ? { ...r, sharedAt: new Date().toISOString() } : r));
+      saveRecordings(next);
+      return next;
+    });
+  const defaultBike = bikes.find((b) => b.isDefault) ?? bikes[0] ?? null;
+  const liveTrack = useMemo(() => trackCoords(rec.state.points), [rec.state.points]);
+
+  /** Torna a fer una ruta gravada: s'obre a Planificar amb meteo i benzina. */
+  function openRecorded(r: RecordedRoute) {
+    const route = { ...r.route, id: `${Date.now()}` } as RouteResult;
+    const first = route.coords[0];
+    const last = route.coords.at(-1)!;
+    const circular = haversine(first, last) < 2;
+    openRoute(route, {
+      ...req,
+      mode: r.mode,
+      difficulty: route.difficulty,
+      origin: { name: r.startName ?? 'Sortida', coord: first },
+      circular,
+      destination: circular ? null : { name: 'Arribada', coord: last },
+      vias: [],
+      departure: defaultDeparture(),
+      days: 1,
+    });
+  }
 
   useEffect(() => {
     if (socialEnabled) getMe().then(setMe).catch(() => setMe(null));
@@ -297,6 +332,19 @@ export default function App() {
             />
           )}
 
+          {tab === 'record' && (
+            <RecordScreen
+              rec={rec}
+              bike={defaultBike}
+              me={me}
+              setMe={setMe}
+              onSave={(r) => setRecordings([r, ...recordings])}
+              onMarkShared={markShared}
+              goToMyRoutes={() => setTab('routes')}
+              demo={DEMO}
+            />
+          )}
+
           {tab === 'social' && (
             <SocialScreen
               me={me}
@@ -319,6 +367,11 @@ export default function App() {
               onSharePlanned={(s) => setShareTarget({ route: { ...s.route } as RouteResult, title: s.title, mode: s.request.mode, startName: s.request.origin?.name ?? null })}
               onShow={(r) => setSocialRoute(r ? toRouteResult(r) : null)}
               onPlan={openShared}
+              recorded={recordings}
+              onShowRecorded={(r) => setSocialRoute(r ? ({ ...r.route, id: `rec-${r.id}`, color: '#ff6b2c' } as RouteResult) : null)}
+              onPlanRecorded={openRecorded}
+              onShareRecorded={(r) => setShareTarget({ route: r.route as RouteResult, title: r.title, mode: r.mode, startName: r.startName, date: r.recordedAt.slice(0, 10), recordedId: r.id })}
+              onDeleteRecorded={(id) => { setRecordings(recordings.filter((x) => x.id !== id)); setSocialRoute(null); }}
             />
           )}
 
@@ -326,9 +379,12 @@ export default function App() {
         </div>
         <nav className="tabs">
           <button className={tab === 'plan' ? 'on' : ''} onClick={() => setTab('plan')}><span className="ico">🧭</span>Planificar</button>
+          <button className={`${tab === 'record' ? 'on' : ''} ${rec.state.status === 'recording' ? 'rec-live' : ''}`} onClick={() => setTab('record')}>
+            <span className="ico">{rec.state.status === 'recording' ? '🔴' : '⏺️'}</span>Grava
+          </button>
           <button className={tab === 'social' ? 'on' : ''} onClick={() => setTab('social')}><span className="ico">👥</span>Social</button>
-          <button className={tab === 'routes' ? 'on' : ''} onClick={() => setTab('routes')}><span className="ico">🗂️</span>Les meves rutes</button>
-          <button className={tab === 'bike' ? 'on' : ''} onClick={() => setTab('bike')}><span className="ico">🏍️</span>La meva moto</button>
+          <button className={tab === 'routes' ? 'on' : ''} onClick={() => setTab('routes')}><span className="ico">🗂️</span>Rutes</button>
+          <button className={tab === 'bike' ? 'on' : ''} onClick={() => setTab('bike')}><span className="ico">🏍️</span>Moto</button>
         </nav>
         {shareTarget && (
           <ShareDialog
@@ -337,9 +393,10 @@ export default function App() {
             setMe={setMe}
             defaultTitle={shareTarget.title}
             defaultMode={shareTarget.mode}
+            defaultDate={shareTarget.date}
             startName={shareTarget.startName}
             onClose={() => setShareTarget(null)}
-            onPublished={() => {}}
+            onPublished={() => shareTarget.recordedId && markShared(shareTarget.recordedId)}
           />
         )}
       </aside>
@@ -359,6 +416,9 @@ export default function App() {
           stages={showExtras ? selected!.stages : undefined}
           accommodations={showExtras && view === 'detail' ? accomOnMap : undefined}
           onPick={picking ? onPick : null}
+          liveTrack={tab === 'record' ? liveTrack : undefined}
+          position={tab === 'record' ? rec.fix?.coord ?? null : null}
+          follow={tab === 'record' && rec.state.status !== 'finished'}
         />
       </main>
     </div>

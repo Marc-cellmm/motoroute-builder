@@ -37,6 +37,13 @@ El workflow `.github/workflows/deploy.yml` construeix i publica la web a cada `p
 
 A GitHub Pages no hi ha servidor propi: les rutes es demanen directament al servidor públic de Valhalla, i els preus del MITECO els descarrega el workflow (`scripts/fetch-fuel.py`) a `data/fuel.json`.
 
+## Grava (com Strava)
+
+L'apartat **Grava** segueix la ruta amb el GPS del telèfon (cal donar permís de localització) i mostra en directe km, temps, velocitat i altitud. Es pot pausar, i si la pàgina es tanca, la gravació es recupera en pausa. En acabar, calcula desnivell, corbes i dificultat. La ruta es desa a «Les meves rutes → Gravades» i es pot compartir a Social o exportar a GPX.
+
+- Filtres de senyal: es descarten posicions amb precisió pitjor que 40 m, moviments de menys de 8 m (soroll quan estàs aturat) i salts impossibles. El temps en moviment només compta per sobre de 3 km/h.
+- Mentre graves, la pantalla es manté encesa (Screen Wake Lock). Una web no pot gravar amb la pantalla apagada: el telèfon atura el GPS. Per gravar en segon pla cal empaquetar-la com a app nativa (per exemple, amb Capacitor).
+
 ## Apartat Social (Supabase)
 
 Els motoristes publiquen rutes que han fet (des d'un GPX o d'una ruta desada), hi donen m'agrada i les guarden per fer-les. Les guardades apareixen a «Les meves rutes → Guardades».

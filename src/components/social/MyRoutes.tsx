@@ -5,9 +5,11 @@ import { useSocialList } from './useSocialList';
 import { Loader } from '../RouteDetail';
 import { fmtDuration } from '../RouteCard';
 import { deleteRoute, fetchMine, fetchSaved, socialEnabled, type Me, type SharedRoute } from '../../lib/social';
-import type { SavedRoute } from '../../lib/types';
+import { downloadText } from '../../lib/gpx';
+import { fmtClock } from '../../lib/recorder';
+import type { RecordedRoute, SavedRoute } from '../../lib/types';
 
-type Section = 'planned' | 'saved' | 'mine';
+type Section = 'recorded' | 'planned' | 'saved' | 'mine';
 
 interface Props {
   me: Me | null;
@@ -18,16 +20,22 @@ interface Props {
   onSharePlanned: (s: SavedRoute) => void;
   onShow: (r: SharedRoute | null) => void;
   onPlan: (r: SharedRoute) => void;
+  recorded: RecordedRoute[];
+  onShowRecorded: (r: RecordedRoute | null) => void;
+  onPlanRecorded: (r: RecordedRoute) => void;
+  onShareRecorded: (r: RecordedRoute) => void;
+  onDeleteRecorded: (id: string) => void;
 }
 
 export default function MyRoutes(p: Props) {
-  const [section, setSection] = useState<Section>(socialEnabled ? 'saved' : 'planned');
+  const [section, setSection] = useState<Section>(p.recorded.length ? 'recorded' : socialEnabled ? 'saved' : 'planned');
+  const [shownRec, setShownRec] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState<SharedRoute | null>(null);
   const list = useSocialList(() => !!p.me?.username);
 
   async function refresh() {
-    if (section === 'planned' || !p.me?.username) return;
+    if (section === 'planned' || section === 'recorded' || !p.me?.username) return;
     setLoading(true);
     try {
       await list.load(section === 'saved' ? await fetchSaved() : await fetchMine(p.me.id));
@@ -66,12 +74,41 @@ export default function MyRoutes(p: Props) {
   return (
     <div>
       <h2>Les meves rutes</h2>
-      {socialEnabled && (
-        <div className="seg" style={{ margin: '12px 0' }}>
-          <button className={section === 'saved' ? 'on' : ''} onClick={() => setSection('saved')}>Guardades</button>
-          <button className={section === 'planned' ? 'on' : ''} onClick={() => setSection('planned')}>Planificades</button>
-          <button className={section === 'mine' ? 'on' : ''} onClick={() => setSection('mine')}>Publicades</button>
-        </div>
+      <div className="seg seg-wrap" style={{ margin: '12px 0' }}>
+        <button className={section === 'recorded' ? 'on' : ''} onClick={() => setSection('recorded')}>Gravades</button>
+        {socialEnabled && <button className={section === 'saved' ? 'on' : ''} onClick={() => setSection('saved')}>Guardades</button>}
+        <button className={section === 'planned' ? 'on' : ''} onClick={() => setSection('planned')}>Planificades</button>
+        {socialEnabled && <button className={section === 'mine' ? 'on' : ''} onClick={() => setSection('mine')}>Publicades</button>}
+      </div>
+
+      {section === 'recorded' && (
+        <>
+          <p className="hint">Rutes que has gravat amb el GPS del telèfon.</p>
+          {!p.recorded.length && <div className="empty"><span className="ico">⏺️</span>Encara no has gravat cap ruta. Fes-ho des de l'apartat «Grava».</div>}
+          {p.recorded.map((r) => (
+            <div key={r.id} className={`box ${shownRec === r.id ? 'box-on' : ''}`}>
+              <div className="row" style={{ alignItems: 'flex-start' }}>
+                <div style={{ minWidth: 0 }}>
+                  <h3>{r.title}</h3>
+                  <div className="hint">
+                    {new Date(r.recordedAt).toLocaleDateString('ca-ES', { day: 'numeric', month: 'short', year: 'numeric' })} ·{' '}
+                    {r.route.distanceKm.toFixed(1)} km · {fmtClock(r.movingMin * 60000)} · {r.avgKmh} km/h · {r.route.elevationGain} m +
+                  </div>
+                </div>
+                {r.sharedAt && <span className="badge" style={{ flex: 'none' }}>👥 Compartida</span>}
+              </div>
+              <div className="row" style={{ marginTop: 10, flexWrap: 'wrap', gap: 8 }}>
+                <button className="btn small" onClick={() => { const on = shownRec !== r.id; setShownRec(on ? r.id : null); p.onShowRecorded(on ? r : null); }}>
+                  {shownRec === r.id ? 'Amaga' : 'Al mapa'}
+                </button>
+                <button className="btn small primary" onClick={() => p.onPlanRecorded(r)}>Planifica</button>
+                {socialEnabled && !r.sharedAt && <button className="btn small" onClick={() => p.onShareRecorded(r)}>Comparteix</button>}
+                <button className="btn small" onClick={() => downloadText(`${r.title.replace(/[^\w-]+/g, '_')}.gpx`, r.gpx)}>GPX</button>
+                <button className="btn small ghost" onClick={() => p.onDeleteRecorded(r.id)}>Elimina</button>
+              </div>
+            </div>
+          ))}
+        </>
       )}
 
       {section === 'planned' && (
@@ -95,7 +132,7 @@ export default function MyRoutes(p: Props) {
         </>
       )}
 
-      {section !== 'planned' && (
+      {(section === 'saved' || section === 'mine') && (
         <>
           <p className="hint">
             {section === 'saved' ? 'Rutes de la comunitat que has guardat per fer-les.' : 'Rutes que has compartit amb la comunitat.'}

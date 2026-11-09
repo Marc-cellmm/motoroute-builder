@@ -152,3 +152,19 @@ export interface SavedRoute {
   request: PlanRequest;
   route: Omit<RouteResult, 'weather' | 'fuel' | 'stages' | 'bestDepartures'>;
 }
+
+/** Ruta gravada amb el GPS del telèfon. */
+export interface RecordedRoute {
+  id: string;
+  title: string;
+  recordedAt: string; // ISO
+  mode: RideMode;
+  startName: string | null;
+  movingMin: number;
+  elapsedMin: number;
+  avgKmh: number;
+  maxKmh: number;
+  route: Omit<RouteResult, 'weather' | 'fuel' | 'stages' | 'bestDepartures'>;
+  gpx: string; // traçat original amb hores, per exportar
+  sharedAt?: string;
+}

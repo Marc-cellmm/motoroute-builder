@@ -58,6 +58,9 @@ interface Props {
   stages?: Stage[];
   accommodations?: Accommodation[];
   onPick?: ((c: LngLat) => void) | null;
+  liveTrack?: LngLat[]; // traçat que s'està gravant
+  position?: LngLat | null; // posició actual del GPS
+  follow?: boolean;
 }
 
 const fc = (features: GeoJSON.Feature[]): GeoJSON.FeatureCollection => ({ type: 'FeatureCollection', features });
@@ -105,7 +108,7 @@ export default function MapView(p: Props) {
     m.addControl(new NavigationControl({ showCompass: false }), 'top-right');
     m.on('load', () => {
       const add = (id: string) => m.addSource(id, { type: 'geojson', data: fc([]) });
-      ['routes', 'weather', 'stations', 'stops', 'stages', 'accom', 'places'].forEach(add);
+      ['routes', 'weather', 'stations', 'stops', 'stages', 'accom', 'places', 'live', 'me'].forEach(add);
 
       m.addLayer({ id: 'routes-casing', type: 'line', source: 'routes', layout: { 'line-cap': 'round', 'line-join': 'round' },
         paint: { 'line-color': '#111', 'line-width': ['case', ['get', 'selected'], 9, 5], 'line-opacity': ['case', ['get', 'selected'], 0.6, 0.25] } });
@@ -127,6 +130,14 @@ export default function MapView(p: Props) {
       if (!DEMO) m.addLayer({ id: 'stages-label', type: 'symbol', source: 'stages',
         layout: { 'text-field': ['get', 'label'], 'text-size': 12, 'text-font': ['Noto Sans Bold'], 'text-allow-overlap': true },
         paint: { 'text-color': '#fff' } });
+      m.addLayer({ id: 'live-casing', type: 'line', source: 'live', layout: { 'line-cap': 'round', 'line-join': 'round' },
+        paint: { 'line-color': '#111', 'line-width': 8, 'line-opacity': 0.5 } });
+      m.addLayer({ id: 'live', type: 'line', source: 'live', layout: { 'line-cap': 'round', 'line-join': 'round' },
+        paint: { 'line-color': '#ff6b2c', 'line-width': 5 } });
+      m.addLayer({ id: 'me-halo', type: 'circle', source: 'me',
+        paint: { 'circle-radius': 16, 'circle-color': '#3fb6ff', 'circle-opacity': 0.25 } });
+      m.addLayer({ id: 'me', type: 'circle', source: 'me',
+        paint: { 'circle-radius': 8, 'circle-color': '#3fb6ff', 'circle-stroke-color': '#fff', 'circle-stroke-width': 3 } });
       m.addLayer({ id: 'places', type: 'circle', source: 'places',
         paint: { 'circle-radius': 8, 'circle-color': ['get', 'color'], 'circle-stroke-color': '#fff', 'circle-stroke-width': 3 } });
 
@@ -188,9 +199,28 @@ export default function MapView(p: Props) {
     if (q.destination) places.push(pt(q.destination.coord, { color: '#ff4d5e' }));
     q.vias.forEach((v) => places.push(pt(v.coord, { color: '#3fb6ff' })));
     setData('places', fc(places));
+    const live = q.liveTrack ?? [];
+    setData('live', fc(live.length > 1 ? [{ type: 'Feature', geometry: { type: 'LineString', coordinates: live }, properties: {} }] : []));
+    setData('me', fc(q.position ? [pt(q.position)] : []));
   }
 
-  useEffect(sync, [p.routes, p.selectedId, p.weather, p.stations, p.stops, p.stages, p.accommodations, p.origin, p.destination, p.vias]);
+  useEffect(sync, [p.routes, p.selectedId, p.weather, p.stations, p.stops, p.stages, p.accommodations, p.origin, p.destination, p.vias, p.liveTrack, p.position]);
+
+  // en gravar, el mapa segueix la posició
+  const centered = useRef(false);
+  useEffect(() => {
+    const m = map.current;
+    if (!m || !p.position || !p.follow) return;
+    if (!centered.current) {
+      m.jumpTo({ center: p.position, zoom: Math.max(m.getZoom(), 14) });
+      centered.current = true;
+    } else {
+      m.easeTo({ center: p.position, duration: 800 });
+    }
+  }, [p.position, p.follow]);
+  useEffect(() => {
+    if (!p.follow) centered.current = false;
+  }, [p.follow]);
 
   // Encaixa la vista a les rutes o als punts triats
   function fit() {

@@ -1,4 +1,4 @@
-import type { Motorcycle, SavedRoute } from './types';
+import type { Motorcycle, RecordedRoute, SavedRoute } from './types';
 
 function read<T>(key: string, fallback: T): T {
   try {
@@ -23,3 +23,6 @@ export const loadRoutes = () => read<SavedRoute[]>('mrb.routes', []);
 export const saveRoutes = (r: SavedRoute[]) => write('mrb.routes', r);
 
 export const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+
+export const loadRecordings = () => read<RecordedRoute[]>('mrb.recordings', []);
+export const saveRecordings = (r: RecordedRoute[]) => write('mrb.recordings', r);

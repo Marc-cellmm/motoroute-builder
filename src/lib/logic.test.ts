@@ -106,3 +106,35 @@ describe('corbes i dificultat', () => {
     expect(s.segments.at(-1)!.surface).toBe('paved');
   });
 });
+
+import { addPoint, type RecState } from './recorder';
+
+describe('gravador GPS', () => {
+  const base: RecState = { status: 'recording', points: [], seg: 0, startedAt: 0, elapsedMs: 0, resumedAt: 0, movingMs: 0, distanceKm: 0, maxSpeedKmh: 0 };
+  const p = (lat: number, t: number, acc = 5, seg = 0) => ({ lat, lng: 1.5, alt: null, acc, t, seg });
+
+  it('suma distància i temps en moviment', () => {
+    let s = addPoint(base, p(41, 0))!;
+    s = addPoint(s, p(41.001, 10000))!; // ~111 m en 10 s = 40 km/h
+    expect(s.distanceKm).toBeCloseTo(0.111, 2);
+    expect(s.movingMs).toBe(10000);
+    expect(Math.round(s.maxSpeedKmh)).toBe(40);
+  });
+  it('descarta posicions imprecises, soroll i salts impossibles', () => {
+    const s = addPoint(base, p(41, 0))!;
+    expect(addPoint(s, p(41.001, 10000, 80))).toBeNull(); // precisió de 80 m
+    expect(addPoint(s, p(41.00002, 2000))).toBeNull(); // 2 m: soroll
+    expect(addPoint(s, p(41.1, 1000))).toBeNull(); // 11 km en 1 s
+  });
+  it('no uneix trams separats per una pausa', () => {
+    let s = addPoint(base, p(41, 0))!;
+    s = addPoint(s, p(41.5, 600000, 5, 1))!; // nou tram després de pausa
+    expect(s.distanceKm).toBe(0);
+    expect(s.points).toHaveLength(2);
+  });
+  it('quan està parat no compta temps en moviment', () => {
+    let s = addPoint(base, p(41, 0))!;
+    s = addPoint(s, p(41.0001, 60000))!; // 11 m en 1 min: 0,7 km/h
+    expect(s.movingMs).toBe(0);
+  });
+});
