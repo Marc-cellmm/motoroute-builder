@@ -198,3 +198,19 @@ export function encodePolyline(coords: LngLat[], precision = 5): string {
   }
   return out;
 }
+
+/**
+ * Zona de privacitat: retalla els primers i els últims `km` del traçat perquè
+ * una ruta publicada no reveli on comença o acaba (casa, feina…). Si la ruta és
+ * massa curta per retallar sense quedar-se en no-res, la retorna intacta.
+ */
+export function trimEnds(coords: LngLat[], km = 0.4): { coords: LngLat[]; from: number; to: number } {
+  const cum = cumulativeKm(coords);
+  const total = cum.at(-1) ?? 0;
+  if (coords.length < 3 || total < km * 2 + 1) return { coords, from: 0, to: coords.length - 1 };
+  let from = 0;
+  while (from < coords.length - 1 && cum[from] < km) from++;
+  let to = coords.length - 1;
+  while (to > from && total - cum[to] < km) to--;
+  return { coords: coords.slice(from, to + 1), from, to };
+}

@@ -1,6 +1,6 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { SUPABASE_ANON_KEY, SUPABASE_URL } from '../config';
-import { cumulativeKm, decodePolyline, encodePolyline, haversine, resample, simplify } from './geo';
+import { cumulativeKm, decodePolyline, encodePolyline, haversine, resample, simplify, trimEnds } from './geo';
 import { elevationProfile } from './elevation';
 import { elevationStats, scoreRoute } from './scoring';
 import type { ParsedTrack } from './gpxImport';
@@ -10,7 +10,7 @@ const DEMO = import.meta.env.VITE_DEMO === '1';
 export const socialEnabled = !DEMO && !!SUPABASE_URL && !!SUPABASE_ANON_KEY;
 
 let client: SupabaseClient | null = null;
-function sb(): SupabaseClient {
+export function sb(): SupabaseClient {
   client ??= createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     auth: { persistSession: true, autoRefreshToken: true, storageKey: 'mrb.auth' },
   });
@@ -170,11 +170,26 @@ export interface PublishInput {
   difficulty: Difficulty;
   riddenOn: string | null;
   startName: string | null;
+  /** amaga els primers i últims ~400 m (inici i final del traçat) */
+  privacy?: boolean;
 }
 
 export async function publish(p: PublishInput): Promise<string> {
   const r = p.route;
-  const coords = simplify(r.coords, 0.012);
+  let full = r.coords;
+  let elevations = r.elevations;
+  if (p.privacy) {
+    const t = trimEnds(r.coords, 0.4);
+    full = t.coords;
+    // l'elevació va mostrejada sobre el traçat: retalla la mateixa proporció
+    if (elevations.length > 2 && t.coords !== r.coords) {
+      const n = r.coords.length - 1;
+      const a = Math.floor((t.from / n) * (elevations.length - 1));
+      const b = Math.ceil((t.to / n) * (elevations.length - 1));
+      elevations = elevations.slice(a, b + 1);
+    }
+  }
+  const coords = simplify(full, 0.012);
   const row = {
     title: p.title.trim(),
     description: p.description.trim() || null,
@@ -182,8 +197,8 @@ export async function publish(p: PublishInput): Promise<string> {
     difficulty: p.difficulty,
     ridden_on: p.riddenOn || null,
     start_name: p.startName,
-    start_lat: r.coords[0][1],
-    start_lng: r.coords[0][0],
+    start_lat: full[0][1],
+    start_lng: full[0][0],
     distance_km: Math.round(r.distanceKm * 10) / 10,
     duration_min: Math.round(r.durationMin) || null,
     elevation_gain: r.elevationGain,
@@ -191,7 +206,7 @@ export async function publish(p: PublishInput): Promise<string> {
     curvature_score: r.curvatureScore,
     unpaved_km: Math.round(r.unpavedKm * 10) / 10,
     polyline: encodePolyline(coords, 5),
-    elevations: downsample(r.elevations),
+    elevations: downsample(elevations),
   };
   const { data, error } = await sb().from('shared_routes').insert(row).select('id').single();
   if (error) fail(error, 'No s\'ha pogut publicar la ruta');

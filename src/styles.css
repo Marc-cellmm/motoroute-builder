@@ -170,3 +170,30 @@ textarea.input { resize: vertical; min-height: 80px; }
 .seg-wrap { flex-wrap: wrap; }
 .seg-wrap button { min-width: 45%; }
 .box-on { border-color: var(--accent); }
+
+/* Navegació */
+.nav-go { width: 100%; margin-bottom: 14px; font-size: 18px; min-height: 56px; }
+.nav-card { width: 100%; display: flex; gap: 14px; align-items: center; text-align: left; background: #1f6f43; border: 0; border-radius: 16px; padding: 14px 16px; color: #fff; cursor: pointer; min-height: 96px; }
+.nav-card.warn { background: #8a5a12; }
+.nav-card.arrived { background: #1f4f6f; }
+.nav-icon { font-size: 48px; line-height: 1; flex: none; width: 56px; text-align: center; }
+.nav-dist { font: 700 34px var(--display); line-height: 1; }
+.nav-text { font-size: 17px; font-weight: 600; margin-top: 4px; }
+.nav-then { margin-top: 8px; font-size: 14px; color: var(--muted); }
+.nav-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
+.nav-stats div { background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; padding: 8px; text-align: center; }
+.nav-stats b { display: block; font: 700 22px var(--display); }
+.nav-stats span { font-size: 11px; color: var(--muted); }
+
+.check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; margin: 4px 0 14px; cursor: pointer; line-height: 1.35; }
+.check input { width: 20px; height: 20px; flex: none; margin-top: 1px; accent-color: var(--accent); }
+
+.import-gpx { width: 100%; margin: 12px 0 2px; border-style: dashed; }
+.import-gpx small { color: var(--muted); font-weight: 400; }
+
+/* Seguiment en directe */
+.live-btn { width: 100%; margin: 6px 0 10px; }
+.live-box { background: var(--panel-2); border: 1px solid var(--line); border-radius: 14px; padding: 12px; margin: 6px 0 12px; }
+.live-head { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.live-dot { width: 10px; height: 10px; border-radius: 50%; background: #ff3b3b; box-shadow: 0 0 0 0 rgba(255,59,59,.6); animation: livepulse 1.6s infinite; display: inline-block; }
+@keyframes livepulse { 0% { box-shadow: 0 0 0 0 rgba(255,59,59,.6); } 70% { box-shadow: 0 0 0 10px rgba(255,59,59,0); } 100% { box-shadow: 0 0 0 0 rgba(255,59,59,0); } }

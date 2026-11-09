@@ -122,6 +122,17 @@ export interface Stage {
   accommodations?: Accommodation[];
 }
 
+/** Instrucció de navegació (maniobra de Valhalla). */
+export interface Maneuver {
+  type: number; // tipus de maniobra de Valhalla (gir, rotonda, arribada…)
+  instruction: string;
+  verbal?: string; // frase per a la veu, abans de la maniobra
+  beginIdx: number; // índex del vèrtex de coords on comença
+  lengthKm: number;
+  streets?: string[];
+  roundaboutExit?: number;
+}
+
 export interface RouteResult {
   id: string;
   label: string;
@@ -139,6 +150,7 @@ export interface RouteResult {
   difficulty: Difficulty;
   difficultyScore: number;
   segments: Segment[];
+  maneuvers?: Maneuver[];
   weather?: WeatherSample[];
   bestDepartures?: { time: Date; penalty: number; note: string }[];
   fuel?: FuelPlan;

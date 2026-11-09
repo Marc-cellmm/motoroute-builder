@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import ShareDialog from './social/ShareDialog';
 import ElevationProfile from './ElevationProfile';
 import { Loader } from './RouteDetail';
@@ -24,6 +24,8 @@ interface Props {
   onMarkShared: (id: string) => void;
   goToMyRoutes: () => void;
   demo: boolean;
+  /** control de seguiment en directe */
+  extra?: ReactNode;
 }
 
 function Stat({ value, label, big }: { value: string; label: string; big?: boolean }) {
@@ -35,7 +37,7 @@ function Stat({ value, label, big }: { value: string; label: string; big?: boole
   );
 }
 
-export default function RecordScreen({ rec, bike, me, setMe, onSave, onMarkShared, goToMyRoutes, demo }: Props) {
+export default function RecordScreen({ rec, bike, me, setMe, onSave, onMarkShared, goToMyRoutes, demo, extra }: Props) {
   const { state, fix, perm, gpsError, wakeLock, elapsedMs } = rec;
   const [confirmStop, setConfirmStop] = useState(false);
   const [confirmDiscard, setConfirmDiscard] = useState(false);
@@ -157,6 +159,7 @@ export default function RecordScreen({ rec, bike, me, setMe, onSave, onMarkShare
             {state.status === 'paused' && 'Gravació en pausa. El GPS està aturat.'}
           </div>
           {gpsError && state.status === 'recording' && <div className="alert warn">{gpsError}</div>}
+          {extra}
 
           {!confirmStop ? (
             <div className="actions">

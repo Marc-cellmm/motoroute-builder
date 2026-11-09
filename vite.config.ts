@@ -17,6 +17,11 @@ export default defineConfig(({ mode }) => ({
         changeOrigin: true,
         rewrite: () => '/route',
       },
+      '/api/valhalla-trace': {
+        target: 'https://valhalla1.openstreetmap.de',
+        changeOrigin: true,
+        rewrite: () => '/trace_route',
+      },
       '/api/fuel': {
         target: 'https://sedeaplicaciones.minetur.gob.es',
         changeOrigin: true,

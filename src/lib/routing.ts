@@ -1,5 +1,5 @@
 import { cumulativeKm, decodePolyline, destination, bearing, haversine } from './geo';
-import type { DistanceBand, LngLat, PlanRequest } from './types';
+import type { DistanceBand, LngLat, Maneuver, PlanRequest } from './types';
 
 const ELEVATION_INTERVAL = 200; // metres
 const VALHALLA_URL: string = import.meta.env.VITE_VALHALLA_URL || '/api/valhalla';
@@ -20,14 +20,20 @@ export interface RawRoute {
   unpavedRanges: [number, number][]; // trams marcats "rough" pel motor, en km
   profileKm?: number[]; // perfil d'elevació que retorna el motor (cada 200 m)
   elevations?: number[];
+  maneuvers: Maneuver[];
 }
 
 interface ValhallaManeuver {
+  type: number;
+  instruction: string;
+  verbal_pre_transition_instruction?: string;
   begin_shape_index: number;
   end_shape_index: number;
   length: number;
   highway?: boolean;
   rough?: boolean;
+  street_names?: string[];
+  roundabout_exit_count?: number;
 }
 interface ValhallaTrip {
   legs: { shape: string; maneuvers: ValhallaManeuver[]; elevation?: number[]; elevation_interval?: number; summary?: { length: number } }[];
@@ -50,12 +56,13 @@ export function costingOptions(req: Pick<PlanRequest, 'mode' | 'difficulty' | 'a
   };
 }
 
-function parseTrip(trip: ValhallaTrip): RawRoute {
+export function parseTrip(trip: ValhallaTrip): RawRoute {
   const coords: LngLat[] = [];
   let unpavedKm = 0;
   let motorwayKm = 0;
   const roughIdx: [number, number][] = [];
   const profileKm: number[] = [];
+  const maneuvers: Maneuver[] = [];
   const elevations: number[] = [];
   let legStartKm = 0;
   for (const leg of trip.legs) {
@@ -71,6 +78,22 @@ function parseTrip(trip: ValhallaTrip): RawRoute {
     const base = coords.length ? coords.length - 1 : 0;
     // evita duplicar el punt d'unió entre trams
     coords.push(...(coords.length ? pts.slice(1) : pts));
+    leg.maneuvers.forEach((m, i) => {
+      // entre trams, l'arribada intermèdia (tipus 4-6) no s'anuncia: no és el final
+      const isLegEnd = m.type >= 4 && m.type <= 6 && i === leg.maneuvers.length - 1;
+      const isLegStart = m.type >= 1 && m.type <= 3 && i === 0;
+      if ((!isLegEnd || leg === trip.legs.at(-1)) && (!isLegStart || leg === trip.legs[0])) {
+        maneuvers.push({
+          type: m.type,
+          instruction: m.instruction,
+          verbal: m.verbal_pre_transition_instruction,
+          beginIdx: base + m.begin_shape_index,
+          lengthKm: m.length,
+          streets: m.street_names,
+          roundaboutExit: m.roundabout_exit_count,
+        });
+      }
+    });
     for (const m of leg.maneuvers) {
       if (m.rough) {
         unpavedKm += m.length;
@@ -88,13 +111,14 @@ function parseTrip(trip: ValhallaTrip): RawRoute {
     unpavedKm,
     motorwayKm,
     unpavedRanges,
+    maneuvers,
     ...(elevations.length > 1 ? { profileKm, elevations } : {}),
   };
 }
 
-type Stop = { coord: LngLat; type: 'break' | 'through'; generated?: boolean };
+export type Stop = { coord: LngLat; type: 'break' | 'through'; generated?: boolean };
 
-async function callValhalla(locations: Stop[], req: PlanRequest, alternates = 0) {
+export async function callValhalla(locations: Stop[], req: Pick<PlanRequest, 'mode' | 'difficulty' | 'avoidMotorways' | 'avoidTolls'>, alternates = 0) {
   // En mode Carretera, els punts que genera l'app (bucles, desviaments) només s'enganxen a
   // carreteres terciàries o millors: si no, un punt al costat d'una pista obliga a passar-hi.
   const roadOnly = { min_road_class: 'tertiary' };
@@ -225,4 +249,24 @@ export async function planRoutes(req: PlanRequest): Promise<{ routes: RawRoute[]
   if (!req.origin) throw new Error('Tria un punt de sortida.');
   if (req.circular || !req.destination) return { routes: await circularRoutes(req) };
   return pointToPointRoutes(req);
+}
+
+/**
+ * Instruccions de navegació per a un traçat que no ve del motor (GPX, ruta gravada o de la
+ * comunitat): Valhalla l'ajusta a la xarxa viària i en retorna les maniobres.
+ */
+export async function traceManeuvers(coords: LngLat[]): Promise<{ coords: LngLat[]; maneuvers: Maneuver[] }> {
+  const body = {
+    shape: coords.map(([lon, lat]) => ({ lat, lon })),
+    costing: 'motorcycle',
+    shape_match: 'map_snap',
+    directions_options: { units: 'kilometers', language: 'ca-ES' },
+  };
+  const url = VALHALLA_URL.startsWith('http') ? VALHALLA_URL.replace(/\/route$/, '/trace_route') : '/api/valhalla-trace';
+  // text/plain: petició simple, sense preflight CORS
+  const res = await fetch(url, { method: 'POST', body: JSON.stringify(body) });
+  const json = await res.json().catch(() => null);
+  if (!res.ok || !json?.trip) throw new Error('No s\'han pogut preparar les instruccions de navegació per a aquesta ruta.');
+  const r = parseTrip(json.trip as ValhallaTrip);
+  return { coords: r.coords, maneuvers: r.maneuvers };
 }

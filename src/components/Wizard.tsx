@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import LocationInput from './LocationInput';
 import { DEMO } from './MapView';
 import type { Difficulty, DistanceBand, Motorcycle, Place, PlanRequest } from '../lib/types';
@@ -14,6 +14,9 @@ interface Props {
   setPicking: (t: PickTarget) => void;
   goToBike: () => void;
   busy: boolean;
+  /** obre un GPX d'una altra app (Calimoto, Kurviger, Garmin, Wikiloc…) com a ruta planificada */
+  onImportGpx?: (file: File) => void;
+  importError?: string | null;
 }
 
 const BANDS: { id: DistanceBand; label: string; sub: string }[] = [
@@ -36,7 +39,8 @@ const DIFF_HELP: Record<string, Record<Difficulty, string>> = {
   },
 };
 
-export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicking, goToBike, busy }: Props) {
+export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicking, goToBike, busy, onImportGpx, importError }: Props) {
+  const gpxRef = useRef<HTMLInputElement>(null);
   const [step, setStep] = useState(0);
   const [addingVia, setAddingVia] = useState(false);
   const set = (patch: Partial<PlanRequest>) => setReq({ ...req, ...patch });
@@ -58,6 +62,16 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
         <>
           <h2>Modalitat i moto</h2>
           <p className="hint">Tria per on vols rodar i amb quina moto.</p>
+          {onImportGpx && (
+            <>
+              <button className="btn ghost import-gpx" disabled={busy} onClick={() => gpxRef.current?.click()}>
+                📂 Ja tens la ruta? Obre un GPX <small>(Calimoto, Kurviger, Garmin, Wikiloc…)</small>
+              </button>
+              <input ref={gpxRef} type="file" accept=".gpx,application/gpx+xml" hidden
+                onChange={(e) => { const f = e.target.files?.[0]; if (f) onImportGpx(f); e.target.value = ''; }} />
+              {importError && <div className="alert err">{importError}</div>}
+            </>
+          )}
           <div className="cards2" style={{ marginTop: 14 }}>
             <button className={`choice ${req.mode === 'road' ? 'on' : ''}`} onClick={() => set({ mode: 'road' })}>
               <span className="ico">🛣️</span>

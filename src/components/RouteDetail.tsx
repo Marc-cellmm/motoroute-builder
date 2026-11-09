@@ -16,6 +16,7 @@ interface Props {
   onSave: () => void;
   onGpx?: () => void;
   onShare?: () => void;
+  onNavigate?: () => void;
   saved: boolean;
 }
 
@@ -56,6 +57,9 @@ export default function RouteDetail(p: Props) {
 
       {tab === 'summary' && (
         <>
+          {p.onNavigate && (
+            <button className="btn primary nav-go" onClick={p.onNavigate}>▶ Navega aquesta ruta</button>
+          )}
           <div className="stats" style={{ marginBottom: 12 }}>
             <div className="stat"><b>{Math.round(route.distanceKm)} km</b><span>{fmtDuration(route.durationMin)} amb parades</span></div>
             <div className="stat"><b>{route.curvatureScore}</b><span>índex de corbes</span></div>

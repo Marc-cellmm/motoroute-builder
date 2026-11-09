@@ -36,6 +36,7 @@ export async function buildRoutes(req: PlanRequest, progress: (msg: string) => v
       motorwayKm: r.motorwayKm,
       elevationGain: stats.gain,
       maxAltitude: stats.max,
+      maneuvers: r.maneuvers,
       ...scoring,
     });
   }

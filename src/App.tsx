@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import MapView, { DEMO } from './components/MapView';
 import Wizard, { type PickTarget } from './components/Wizard';
 import BikeScreen from './components/BikeScreen';
@@ -12,8 +12,13 @@ import SocialScreen from './components/social/SocialScreen';
 import MyRoutes from './components/social/MyRoutes';
 import ShareDialog from './components/social/ShareDialog';
 import RecordScreen from './components/RecordScreen';
+import NavigationPanel from './components/NavigationPanel';
+import { useNavigation } from './lib/useNavigation';
+import { liveEnabled, useLiveShare } from './lib/live';
+import LiveShareControl from './components/LiveShareControl';
 import { trackCoords, useRecorder } from './lib/recorder';
-import { getMe, socialEnabled, toRouteResult, type Me, type SharedRoute } from './lib/social';
+import { getMe, routeFromTrack, socialEnabled, toRouteResult, type Me, type SharedRoute } from './lib/social';
+import { parseGpx } from './lib/gpxImport';
 import { haversine } from './lib/geo';
 import type { Accommodation, LngLat, Motorcycle, PlanRequest, RecordedRoute, RideMode, RouteResult, SavedRoute } from './lib/types';
 
@@ -78,6 +83,54 @@ export default function App() {
     });
   const defaultBike = bikes.find((b) => b.isDefault) ?? bikes[0] ?? null;
   const liveTrack = useMemo(() => trackCoords(rec.state.points), [rec.state.points]);
+
+  // Navegació pas a pas: grava la sortida automàticament i guia amb veu.
+  const [navRoute, setNavRoute] = useState<RouteResult | null>(null);
+  const [navTitle, setNavTitle] = useState('');
+  const [navVoice, setNavVoice] = useState(true);
+  const navStartedRec = useRef(false);
+  const navCosting = planReq ?? req;
+  const nav = useNavigation(navRoute, rec.fix, navCosting, navVoice);
+  const live = useLiveShare(rec.state, rec.fix, me?.username ?? null);
+  const liveControl = liveEnabled && !DEMO && (rec.state.status === 'recording' || rec.state.status === 'paused')
+    ? <LiveShareControl live={live} />
+    : null;
+
+  function startNavigation(route: RouteResult, title: string) {
+    // a l'iPhone la veu només s'activa si el primer avís surt d'un toc de l'usuari
+    try {
+      const u = new SpeechSynthesisUtterance('Comencem la ruta.');
+      u.lang = 'ca-ES';
+      window.speechSynthesis?.speak(u);
+    } catch { /* sense veu */ }
+    setNavTitle(title);
+    setNavRoute(route);
+    if (rec.state.status === 'idle' || rec.state.status === 'finished') {
+      if (rec.state.status === 'finished') rec.discard();
+      rec.start();
+      navStartedRec.current = true;
+    } else {
+      navStartedRec.current = false;
+    }
+  }
+
+  function stopNavigation() {
+    window.speechSynthesis?.cancel();
+    setNavRoute(null);
+    if (navStartedRec.current && (rec.state.status === 'recording' || rec.state.status === 'paused')) {
+      rec.finish();
+      setTab('record'); // resum de la sortida: desar, compartir…
+    }
+    navStartedRec.current = false;
+  }
+
+  const navMapRoutes = useMemo(() => {
+    if (!navRoute) return [];
+    const mainRoute = { ...navRoute, id: 'nav-main', coords: nav.mainCoords ?? navRoute.coords, color: '#ff6b2c' };
+    const list: RouteResult[] = [mainRoute];
+    if (nav.view.detourCoords) list.push({ ...navRoute, id: 'nav-detour', coords: nav.view.detourCoords, color: '#3fb6ff' });
+    return list;
+  }, [navRoute, nav.mainCoords, nav.view.detourCoords]);
 
   /** Torna a fer una ruta gravada: s'obre a Planificar amb meteo i benzina. */
   function openRecorded(r: RecordedRoute) {
@@ -225,6 +278,37 @@ export default function App() {
     });
   }
 
+  const [importError, setImportError] = useState<string | null>(null);
+  async function importGpxToPlan(file: File) {
+    setImportError(null);
+    setProgress('Llegint el GPX…');
+    try {
+      const track = parseGpx(await file.text());
+      const route = await routeFromTrack(track, req.mode);
+      const first = track.coords[0];
+      const last = track.coords[track.coords.length - 1];
+      const closed = haversine(first, last) < 1;
+      setProgress('Buscant on comença…');
+      const [startName, endName] = await Promise.all([
+        reverseGeocode(first).catch(() => 'Inici'),
+        closed ? Promise.resolve('') : reverseGeocode(last).catch(() => 'Final'),
+      ]);
+      route.label = track.name ?? route.label;
+      const r: PlanRequest = {
+        ...req,
+        origin: { name: startName, coord: first },
+        destination: closed ? null : { name: endName, coord: last },
+        circular: closed,
+        vias: [],
+      };
+      openRoute(route, r);
+    } catch (e) {
+      setImportError((e as Error).message);
+    } finally {
+      setProgress(null);
+    }
+  }
+
   function openRoute(route: RouteResult, r: PlanRequest) {
     setSocialRoute(null);
     setReq(r);
@@ -264,13 +348,27 @@ export default function App() {
           <h1>MotoRoute Builder</h1>
         </div>
         <div className="panel-body">
-          {DEMO && (
+          {navRoute && (
+            <NavigationPanel
+              title={navTitle}
+              view={nav.view}
+              fix={rec.fix}
+              rec={rec.state}
+              elapsedMs={rec.elapsedMs}
+              voiceOn={navVoice}
+              setVoiceOn={setNavVoice}
+              onRepeat={nav.repeat}
+              onStop={stopNavigation}
+              extra={liveControl}
+            />
+          )}
+          {!navRoute && DEMO && (
             <div className="alert info" style={{ marginTop: 0 }}>
               <b>Mode demostració.</b> Rutes, meteo, benzineres i allotjaments són simulats (els pobles de Catalunya són reals).
               La versió completa amb dades reals es publica a Vercel.
             </div>
           )}
-          {tab === 'plan' && view === 'wizard' && (
+          {!navRoute && tab === 'plan' && view === 'wizard' && (
             <>
               <Wizard
                 req={req}
@@ -281,13 +379,15 @@ export default function App() {
                 setPicking={setPicking}
                 goToBike={() => setTab('bike')}
                 busy={!!progress}
+                onImportGpx={importGpxToPlan}
+                importError={importError}
               />
               {progress && <Loader text={progress} />}
               {error && <div className="alert err">{error}</div>}
             </>
           )}
 
-          {tab === 'plan' && view === 'results' && (
+          {!navRoute && tab === 'plan' && view === 'results' && (
             <>
               <div className="row" style={{ marginBottom: 12 }}>
                 <h2>Alternatives</h2>
@@ -310,7 +410,7 @@ export default function App() {
             </>
           )}
 
-          {tab === 'plan' && view === 'detail' && selected && planReq && (
+          {!navRoute && tab === 'plan' && view === 'detail' && selected && planReq && (
             <RouteDetail
               route={selected}
               req={planReq}
@@ -323,6 +423,7 @@ export default function App() {
               onSave={saveCurrent}
               onGpx={DEMO ? undefined : () => downloadText(`motoroute-${Math.round(selected.distanceKm)}km.gpx`, toGpx(selected, 'MotoRoute'))}
               saved={isSaved}
+              onNavigate={DEMO ? undefined : () => startNavigation(selected, selected.label)}
               onShare={socialEnabled ? () => setShareTarget({
                 route: selected,
                 title: `${planReq.origin?.name.split(',')[0] ?? 'Ruta'}${planReq.circular ? ' · circular' : ' → ' + (planReq.destination?.name.split(',')[0] ?? '')}`,
@@ -332,7 +433,7 @@ export default function App() {
             />
           )}
 
-          {tab === 'record' && (
+          {!navRoute && tab === 'record' && (
             <RecordScreen
               rec={rec}
               bike={defaultBike}
@@ -342,10 +443,11 @@ export default function App() {
               onMarkShared={markShared}
               goToMyRoutes={() => setTab('routes')}
               demo={DEMO}
+              extra={liveControl}
             />
           )}
 
-          {tab === 'social' && (
+          {!navRoute && tab === 'social' && (
             <SocialScreen
               me={me}
               setMe={setMe}
@@ -357,7 +459,7 @@ export default function App() {
             />
           )}
 
-          {tab === 'routes' && (
+          {!navRoute && tab === 'routes' && (
             <MyRoutes
               me={me}
               setMe={setMe}
@@ -375,9 +477,9 @@ export default function App() {
             />
           )}
 
-          {tab === 'bike' && <BikeScreen bikes={bikes} setBikes={setBikes} />}
+          {!navRoute && tab === 'bike' && <BikeScreen bikes={bikes} setBikes={setBikes} />}
         </div>
-        <nav className="tabs">
+        <nav className="tabs" style={navRoute ? { display: 'none' } : undefined}>
           <button className={tab === 'plan' ? 'on' : ''} onClick={() => setTab('plan')}><span className="ico">🧭</span>Planificar</button>
           <button className={`${tab === 'record' ? 'on' : ''} ${rec.state.status === 'recording' ? 'rec-live' : ''}`} onClick={() => setTab('record')}>
             <span className="ico">{rec.state.status === 'recording' ? '🔴' : '⏺️'}</span>Grava
@@ -402,10 +504,10 @@ export default function App() {
       </aside>
       <main className="map-wrap">
         <MapView
-          routes={tab === 'plan' && view !== 'wizard'
+          routes={navRoute ? navMapRoutes : tab === 'plan' && view !== 'wizard'
             ? (view === 'detail' && selected ? [selected] : routes)
             : (tab === 'social' || tab === 'routes') && socialRoute ? [socialRoute] : []}
-          selectedId={(tab === 'social' || tab === 'routes') && socialRoute ? socialRoute.id : selectedId}
+          selectedId={navRoute ? 'nav-main' : (tab === 'social' || tab === 'routes') && socialRoute ? socialRoute.id : selectedId}
           onSelect={(id) => setSelectedId(id)}
           origin={tab === 'plan' ? req.origin : null}
           destination={req.circular ? null : req.destination}
@@ -416,9 +518,9 @@ export default function App() {
           stages={showExtras ? selected!.stages : undefined}
           accommodations={showExtras && view === 'detail' ? accomOnMap : undefined}
           onPick={picking ? onPick : null}
-          liveTrack={tab === 'record' ? liveTrack : undefined}
-          position={tab === 'record' ? rec.fix?.coord ?? null : null}
-          follow={tab === 'record' && rec.state.status !== 'finished'}
+          liveTrack={tab === 'record' || navRoute ? liveTrack : undefined}
+          position={tab === 'record' || navRoute ? rec.fix?.coord ?? null : null}
+          follow={!!navRoute || (tab === 'record' && rec.state.status !== 'finished')}
         />
       </main>
     </div>

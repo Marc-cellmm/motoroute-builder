@@ -138,3 +138,67 @@ describe('gravador GPS', () => {
     expect(s.movingMs).toBe(0);
   });
 });
+
+import { dueAnnouncement, isOffRoute, locate, locateAnywhere, makeLeg, nextManeuver, rejoinPoint } from './navigation';
+
+describe('navegació', () => {
+  // ruta en L: 2 km cap a l'est i 2 km cap al nord, amb un gir a l'esquerra al km 2
+  const coords: [number, number][] = [];
+  for (let i = 0; i <= 40; i++) coords.push([1.5 + (i * 0.05) / (111.32 * Math.cos((41 * Math.PI) / 180)), 41]);
+  const corner = coords.at(-1)!;
+  for (let i = 1; i <= 40; i++) coords.push([corner[0], 41 + (i * 0.05) / 110.574]);
+  const leg = makeLeg(coords, [
+    { type: 1, instruction: 'Sortiu cap a l\'est.', beginIdx: 0, lengthKm: 2 },
+    { type: 15, instruction: 'Gireu a l\'esquerra.', beginIdx: 40, lengthKm: 2 },
+    { type: 4, instruction: 'Heu arribat.', beginIdx: 80, lengthKm: 0 },
+  ]);
+
+  it('situa la posició i troba la propera maniobra', () => {
+    const p = locateAnywhere([coords[20][0], 41.0002], leg); // ~22 m al nord del km 1
+    expect(p.km).toBeCloseTo(1, 1);
+    expect(p.offset).toBeLessThan(0.03);
+    const n = nextManeuver(leg, p.km)!;
+    expect(n.maneuver.type).toBe(15);
+    expect(n.distanceKm).toBeCloseTo(1, 1);
+  });
+  it('anuncia cada llindar una sola vegada', () => {
+    const said = new Set<number>();
+    expect(dueAnnouncement(1.2, 50, said, 2)).toBeNull();
+    expect(dueAnnouncement(0.95, 50, said, 2)).toBe(1);
+    expect(dueAnnouncement(0.9, 50, said, 2)).toBeNull();
+    expect(dueAnnouncement(0.25, 50, said, 2)).toBe(0.3);
+    expect(dueAnnouncement(0.02, 50, said, 2)).toBe(0.03);
+  });
+  it('detecta quan surts de la ruta', () => {
+    expect(isOffRoute([0.01, 0.02, 0.03])).toBe(false);
+    expect(isOffRoute([0.06, 0.07, 0.08])).toBe(true);
+    expect(isOffRoute([0.01, 0.2])).toBe(true);
+  });
+  it('torna a la ruta per davant, mai a un punt ja passat', () => {
+    // t'has desviat cap al sud al km 1,5
+    const r = rejoinPoint([coords[30][0], 40.995], leg, 1.5);
+    expect(r.km).toBeGreaterThanOrEqual(2.5);
+  });
+  it('no salta a una altra part de la ruta si passa a prop', () => {
+    const p = locate([coords[10][0], 41], leg, 0.5);
+    expect(p.km).toBeCloseTo(0.5, 1);
+  });
+});
+
+describe('zona de privacitat', () => {
+  it('retalla ~400 m a cada extrem', async () => {
+    const { trimEnds, cumulativeKm, haversine } = await import('./geo');
+    const line: [number, number][] = Array.from({ length: 101 }, (_, i) => [2 + i * 0.0006, 41.5]); // ~5 km
+    const t = trimEnds(line, 0.4);
+    expect(haversine(line[0], t.coords[0])).toBeGreaterThanOrEqual(0.4);
+    expect(haversine(line[100], t.coords.at(-1)!)).toBeGreaterThanOrEqual(0.4);
+    expect(haversine(line[0], t.coords[0])).toBeLessThan(0.5);
+    const total = cumulativeKm(line).at(-1)!;
+    expect(cumulativeKm(t.coords).at(-1)!).toBeGreaterThan(total - 1.1);
+  });
+  it('no retalla rutes massa curtes', async () => {
+    const { trimEnds } = await import('./geo');
+    const line: [number, number][] = Array.from({ length: 10 }, (_, i) => [2 + i * 0.0006, 41.5]);
+    expect(trimEnds(line).coords).toBe(line);
+  });
+});

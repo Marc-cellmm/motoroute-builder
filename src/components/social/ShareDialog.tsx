@@ -22,6 +22,7 @@ export default function ShareDialog(p: Props) {
   const [mode, setMode] = useState<RideMode>(p.defaultMode);
   const [difficulty, setDifficulty] = useState<Difficulty>(p.route.difficulty);
   const [date, setDate] = useState(p.defaultDate ?? '');
+  const [privacy, setPrivacy] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
@@ -30,7 +31,7 @@ export default function ShareDialog(p: Props) {
     setBusy(true);
     setError(null);
     try {
-      await publish({ route: p.route, title, description, mode, difficulty, riddenOn: date || null, startName: p.startName });
+      await publish({ route: p.route, title, description, mode, difficulty, riddenOn: date || null, startName: p.startName, privacy });
       setDone(true);
       p.onPublished();
     } catch (e) {
@@ -89,6 +90,10 @@ export default function ShareDialog(p: Props) {
                 ))}
               </div>
             </div>
+            <label className="check">
+              <input type="checkbox" checked={privacy} onChange={(e) => setPrivacy(e.target.checked)} />
+              <span><b>Amaga l'inici i el final</b> (~400 m a cada extrem) perquè ningú vegi on vius o on aparques.</span>
+            </label>
             {error && <div className="alert err">{error}</div>}
             <button className="btn primary" style={{ width: '100%' }} disabled={busy || title.trim().length < 3} onClick={submit}>
               {busy ? 'Publicant…' : 'Publica a la comunitat'}
