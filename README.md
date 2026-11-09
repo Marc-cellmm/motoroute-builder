@@ -44,6 +44,32 @@ L'apartat **Grava** segueix la ruta amb el GPS del telèfon (cal donar permís d
 - Filtres de senyal: es descarten posicions amb precisió pitjor que 40 m, moviments de menys de 8 m (soroll quan estàs aturat) i salts impossibles. El temps en moviment només compta per sobre de 3 km/h.
 - Mentre graves, la pantalla es manté encesa (Screen Wake Lock). Una web no pot gravar amb la pantalla apagada: el telèfon atura el GPS. Per gravar en segon pla cal empaquetar-la com a app nativa (per exemple, amb Capacitor).
 
+## App d'iPhone (grava amb la pantalla apagada)
+
+La carpeta `ios/` conté l'app nativa (Capacitor). És la mateixa web, però amb el GPS en segon pla: continua gravant amb la pantalla apagada o el mòbil a la butxaca.
+
+Instal·lació gratuïta des d'un Mac (el teu Apple ID normal; l'app caduca cada 7 dies i s'ha de tornar a instal·lar):
+
+1. Instal·la **Xcode** des de l'App Store del Mac i obre'l un cop per acabar la instal·lació.
+2. Instal·la **Node.js** (nodejs.org, versió LTS).
+3. Al Terminal:
+
+   ```bash
+   git clone https://github.com/Marc-cellmm/motoroute-builder.git
+   cd motoroute-builder
+   npm install
+   npm run ios
+   ```
+
+   S'obrirà Xcode amb el projecte.
+4. A Xcode: **Settings → Accounts → +** i afegeix el teu Apple ID.
+5. Selecciona el projecte **App → Signing & Capabilities → Team**: tria el teu nom (*Personal Team*). Si diu que l'identificador ja existeix, canvia el *Bundle Identifier* per un altre (per exemple `com.elteunom.motoroute`).
+6. Connecta l'iPhone amb el cable. A l'iPhone: **Configuració → Privacitat i seguretat → Mode de desenvolupador → activa'l** (es reinicia).
+7. A Xcode, tria el teu iPhone a dalt i prem ▶ (Run).
+8. La primera vegada, a l'iPhone: **Configuració → General → VPN i gestió de dispositius → el teu Apple ID → Confia**.
+
+Per actualitzar-la (o quan caduqui): `git pull`, `npm install`, `npm run ios` i torna a prémer ▶.
+
 ## Apartat Social (Supabase)
 
 Els motoristes publiquen rutes que han fet (des d'un GPX o d'una ruta desada), hi donen m'agrada i les guarden per fer-les. Les guardades apareixen a «Les meves rutes → Guardades».
