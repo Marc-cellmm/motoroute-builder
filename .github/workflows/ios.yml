@@ -1,11 +1,15 @@
 name: Compila l'app iOS
 
-# Comprova en un Mac al núvol que el projecte d'iPhone compila (sense signar).
+# En un Mac de GitHub: compila l'app d'iPhone, comprova que el zip s'obre i compila sense
+# Node.js, i el publica a Releases (ios-latest) per descarregar-lo i obrir-lo amb Xcode.
 on:
   push:
     branches: [main]
-    paths: ['ios/**', 'src/**', 'package.json', 'package-lock.json', 'capacitor.config.ts', '.github/workflows/ios.yml']
+    paths: ['ios/**', 'src/**', 'package.json', 'package-lock.json', 'capacitor.config.ts', 'scripts/package-ios.sh', '.github/workflows/ios.yml']
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   ios:
@@ -23,12 +27,23 @@ jobs:
       - name: Web + sincronització amb iOS
         run: npm run build:ios
 
-      - name: Esquemes del projecte
-        run: xcodebuild -list -project ios/App/App.xcodeproj
+      - name: Empaqueta el zip per a Xcode
+        run: ./scripts/package-ios.sh MotoRoute-iPhone.zip
 
-      - name: Compila per al simulador (sense signar)
+      - name: Compila des del zip (sense Node), com ho farà l'usuari
         run: |
           set -o pipefail
-          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug \
+          mkdir -p /tmp/check && unzip -q MotoRoute-iPhone.zip -d /tmp/check
+          xcodebuild -project /tmp/check/MotoRoute-iPhone/ios/App/App.xcodeproj -scheme App -configuration Debug \
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
-            CODE_SIGNING_ALLOWED=NO build | tail -60
+            CODE_SIGNING_ALLOWED=NO build | tail -40
+
+      - name: Publica a Releases (ios-latest)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete ios-latest --yes --cleanup-tag || true
+          gh release create ios-latest MotoRoute-iPhone.zip \
+            --title "MotoRoute per a iPhone (última versió)" \
+            --notes "Descarrega MotoRoute-iPhone.zip, descomprimeix-lo i obre ios/App/App.xcodeproj amb Xcode. Instruccions a LLEGEIX-ME.txt." \
+            --latest
