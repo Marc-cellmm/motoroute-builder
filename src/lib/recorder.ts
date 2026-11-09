@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { haversine } from './geo';
+import { isNativeApp, watchLocation, type Watch } from './location';
 import type { LngLat } from './types';
 
 export interface TrackPoint {
@@ -101,13 +102,15 @@ export function useRecorder() {
   const [gpsError, setGpsError] = useState<string | null>(null);
   const [wakeLock, setWakeLock] = useState<'on' | 'off' | 'unsupported'>('off');
   const [now, setNow] = useState(Date.now());
-  const watchId = useRef<number | null>(null);
+  const watch = useRef<Watch | null>(null);
+  const watchSeq = useRef(0); // evita condicions de carrera en arrencar i aturar el GPS
   const lock = useRef<WakeLockSentinel | null>(null);
   const stateRef = useRef(state);
   stateRef.current = state;
 
   // estat del permís de localització
   useEffect(() => {
+    if (isNativeApp) return setPerm('prompt'); // a l'app, el permís es demana en activar el GPS
     if (!('geolocation' in navigator)) return setPerm('unsupported');
     navigator.permissions?.query({ name: 'geolocation' as PermissionName })
       .then((p) => {
@@ -137,6 +140,7 @@ export function useRecorder() {
   }, [state.status]);
 
   const acquireWakeLock = useCallback(async () => {
+    if (isNativeApp) return; // a l'app nativa no cal: grava amb la pantalla apagada
     if (!('wakeLock' in navigator)) return setWakeLock('unsupported');
     try {
       lock.current = await navigator.wakeLock.request('screen');
@@ -162,66 +166,71 @@ export function useRecorder() {
   }, [acquireWakeLock]);
 
   const stopWatch = useCallback(() => {
-    if (watchId.current !== null) navigator.geolocation.clearWatch(watchId.current);
-    watchId.current = null;
+    watchSeq.current++;
+    watch.current?.stop();
+    watch.current = null;
   }, []);
 
-  const startWatch = useCallback(() => {
+  const startWatch = useCallback((background: boolean) => {
     stopWatch();
-    watchId.current = navigator.geolocation.watchPosition(
+    const seq = watchSeq.current;
+    void watchLocation(
+      background,
       (pos) => {
         setPerm('granted');
         setGpsError(null);
-        const c = pos.coords;
-        const live: LiveFix = {
-          coord: [c.longitude, c.latitude],
-          accuracy: c.accuracy,
-          speedKmh: c.speed != null && c.speed >= 0 ? c.speed * 3.6 : null,
-          alt: c.altitude,
-          at: pos.timestamp,
-        };
-        setFix(live);
+        setFix({
+          coord: [pos.lng, pos.lat],
+          accuracy: pos.accuracy,
+          speedKmh: pos.speedMs != null && pos.speedMs >= 0 ? pos.speedMs * 3.6 : null,
+          alt: pos.altitude,
+          at: pos.time,
+        });
         setState((s) => {
           if (s.status !== 'recording') return s;
-          const next = addPoint(s, { lat: c.latitude, lng: c.longitude, alt: c.altitude, acc: c.accuracy, t: pos.timestamp, seg: s.seg });
+          const next = addPoint(s, { lat: pos.lat, lng: pos.lng, alt: pos.altitude, acc: pos.accuracy, t: pos.time, seg: s.seg });
           return next ?? s;
         });
       },
       (err) => {
-        if (err.code === err.PERMISSION_DENIED) {
+        if (err === 'denied') {
           setPerm('denied');
           setGpsError('Sense permís de localització.');
-        } else if (err.code === err.POSITION_UNAVAILABLE) {
+        } else if (err === 'unavailable') {
           setGpsError('Buscant senyal GPS… Surt a l\'exterior si pots.');
         } else {
           setGpsError('El GPS triga a respondre. Continuem intentant-ho.');
         }
       },
-      { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 },
-    );
+    ).then((w) => {
+      // si mentrestant s'ha aturat o reiniciat el GPS, tanca aquest seguiment
+      if (seq !== watchSeq.current) w.stop();
+      else watch.current = w;
+    }).catch(() => setGpsError('No s\'ha pogut activar el GPS.'));
   }, [stopWatch]);
 
   /** Demana el permís (el navegador mostra el diàleg del telèfon) i comença a seguir la posició. */
   const requestPermission = useCallback(() => {
-    if (!('geolocation' in navigator)) return;
-    startWatch();
+    if (!isNativeApp && !('geolocation' in navigator)) return;
+    startWatch(false);
   }, [startWatch]);
 
   const start = useCallback(() => {
     const t = Date.now();
     setState({ ...EMPTY, status: 'recording', startedAt: t, resumedAt: t });
-    startWatch();
+    startWatch(true);
     void acquireWakeLock();
   }, [startWatch, acquireWakeLock]);
 
   const pause = useCallback(() => {
     setState((s) => ({ ...s, status: 'paused', elapsedMs: s.elapsedMs + (s.resumedAt ? Date.now() - s.resumedAt : 0), resumedAt: null }));
+    stopWatch();
     releaseWakeLock();
-  }, [releaseWakeLock]);
+  }, [stopWatch, releaseWakeLock]);
 
   const resume = useCallback(() => {
     setState((s) => ({ ...s, status: 'recording', seg: s.seg + 1, resumedAt: Date.now() }));
-    startWatch();
+    startWatch(true);
     void acquireWakeLock();
   }, [startWatch, acquireWakeLock]);
 

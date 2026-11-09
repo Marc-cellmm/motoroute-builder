@@ -10,6 +10,7 @@ import { reverseGeocode } from '../lib/places';
 import { effectiveConsumption } from '../lib/fuel';
 import { downloadText } from '../lib/gpx';
 import { uid } from '../lib/storage';
+import { isNativeApp, openAppSettings } from '../lib/location';
 import type { Motorcycle, RecordedRoute, RideMode, RouteResult } from '../lib/types';
 
 type Recorder = ReturnType<typeof useRecorder>;
@@ -78,7 +79,13 @@ export default function RecordScreen({ rec, bike, me, setMe, onSave, onMarkShare
         <>
           <p className="hint">Com Strava: el GPS del telèfon segueix la teva ruta. Quan acabis, la pots desar i compartir a la comunitat.</p>
           {perm === 'unsupported' && <div className="alert err">Aquest navegador no té GPS disponible.</div>}
-          {perm === 'denied' && (
+          {perm === 'denied' && isNativeApp && (
+            <div className="alert err">
+              <b>Permís de localització denegat.</b> Activa'l a Configuració → MotoRoute → Ubicació → <b>Sempre</b>.
+              <button className="btn small" style={{ marginTop: 8 }} onClick={openAppSettings}>Obre la configuració</button>
+            </div>
+          )}
+          {perm === 'denied' && !isNativeApp && (
             <div className="alert err">
               <b>Permís de localització denegat.</b> Activa'l per a aquest web:
               <ul style={{ margin: '6px 0 0', paddingLeft: 18 }}>
@@ -90,7 +97,11 @@ export default function RecordScreen({ rec, bike, me, setMe, onSave, onMarkShare
           {(perm === 'prompt' || perm === 'unknown') && !fix && (
             <div className="box">
               <b>Permís de localització</b>
-              <p className="hint">El telèfon et preguntarà si permets la ubicació. Tria «Permet» (o «Mentre s'usa l'app»).</p>
+              <p className="hint">
+                {isNativeApp
+                  ? 'L\'iPhone et preguntarà si permets la ubicació. Tria «Mentre s\'usa l\'app»; quan comencis a gravar et proposarà «Permet sempre»: accepta-ho per gravar amb la pantalla apagada.'
+                  : 'El telèfon et preguntarà si permets la ubicació. Tria «Permet» (o «Mentre s\'usa l\'app»).'}
+              </p>
               <button className="btn" style={{ width: '100%', marginTop: 8 }} onClick={rec.requestPermission}>📍 Activa la ubicació</button>
             </div>
           )}
@@ -106,9 +117,18 @@ export default function RecordScreen({ rec, bike, me, setMe, onSave, onMarkShare
           <div className="box" style={{ marginTop: 14 }}>
             <div className="label">Abans de sortir</div>
             <ul className="hint" style={{ margin: '6px 0 0', paddingLeft: 18 }}>
-              <li>Posa el mòbil al suport amb la pantalla encesa: l'app la manté activa mentre graves.</li>
-              <li>Si bloqueges la pantalla o canvies d'app, el telèfon pot aturar el GPS. En tornar, la gravació continua.</li>
-              <li>Porta el mòbil carregat o connectat a la moto.</li>
+              {isNativeApp ? (
+                <>
+                  <li>Pots apagar la pantalla o guardar el mòbil: l'app continua gravant (veuràs l'indicador blau d'ubicació a dalt).</li>
+                  <li>Perquè funcioni amb la pantalla apagada, la ubicació ha d'estar a «Sempre» o «Mentre s'usa l'app» (Configuració → MotoRoute).</li>
+                </>
+              ) : (
+                <>
+                  <li>Posa el mòbil al suport amb la pantalla encesa: l'app la manté activa mentre graves.</li>
+                  <li>Si bloqueges la pantalla o canvies d'app, el telèfon pot aturar el GPS. En tornar, la gravació continua.</li>
+                </>
+              )}
+              <li>Porta el mòbil carregat o connectat a la moto: el GPS gasta bateria.</li>
             </ul>
           </div>
         </>
@@ -129,7 +149,9 @@ export default function RecordScreen({ rec, bike, me, setMe, onSave, onMarkShare
               <>
                 {gpsOk ? `GPS ±${Math.round(fix!.accuracy)} m` : 'Buscant senyal GPS…'}
                 {' · '}
-                {wakeLock === 'on' ? 'pantalla mantinguda encesa' : wakeLock === 'unsupported' ? 'mantén la pantalla encesa manualment' : 'pantalla: toca-la si s\'enfosqueix'}
+                {isNativeApp
+                  ? 'pots apagar la pantalla'
+                  : wakeLock === 'on' ? 'pantalla mantinguda encesa' : wakeLock === 'unsupported' ? 'mantén la pantalla encesa manualment' : 'pantalla: toca-la si s\'enfosqueix'}
               </>
             )}
             {state.status === 'paused' && 'Gravació en pausa. El GPS està aturat.'}

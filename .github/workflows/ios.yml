@@ -1,0 +1,34 @@
+name: Compila l'app iOS
+
+# Comprova en un Mac al núvol que el projecte d'iPhone compila (sense signar).
+on:
+  push:
+    branches: [main]
+    paths: ['ios/**', 'src/**', 'package.json', 'package-lock.json', 'capacitor.config.ts', '.github/workflows/ios.yml']
+  workflow_dispatch:
+
+jobs:
+  ios:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Web + sincronització amb iOS
+        run: npm run build:ios
+
+      - name: Esquemes del projecte
+        run: xcodebuild -list -project ios/App/App.xcodeproj
+
+      - name: Compila per al simulador (sense signar)
+        run: |
+          set -o pipefail
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO build | tail -60
