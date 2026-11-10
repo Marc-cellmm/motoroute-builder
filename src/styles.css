@@ -485,3 +485,39 @@ textarea.input { resize: vertical; min-height: 80px; font: inherit; }
 .greeting { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 0 0 14px; font-size: 15px; }
 .greeting b { color: var(--text); }
 .greeting .hint { margin: 0; }
+
+/* ---------- Idioma i país ---------- */
+.first-run { max-width: 520px; }
+.first-head { display: flex; align-items: center; gap: 14px; margin-bottom: 4px; }
+.lang-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.lang-item { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: start; padding: 12px 14px; min-height: 62px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel-2); color: var(--text); cursor: pointer; }
+.lang-item b { font-size: 16px; font-weight: 600; }
+.lang-item small { font-size: 12px; }
+.lang-item:hover { border-color: var(--line-2); }
+.lang-item.on { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 1px var(--accent) inset; }
+.lang-check { position: absolute; top: 10px; inset-inline-end: 10px; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; }
+.country-list { max-height: min(46vh, 380px); overflow-y: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--panel-2); }
+.country-item { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; align-items: center; gap: 10px; width: 100%; padding: 11px 12px; background: none; border: 0; border-bottom: 1px solid var(--line); color: var(--text); text-align: start; cursor: pointer; font-size: 15px; }
+.country-item:last-child { border-bottom: 0; }
+.country-item.sep { border-top: 6px solid var(--panel); }
+.country-item .cc { font: 700 12px var(--font); letter-spacing: 0.06em; color: var(--muted); background: var(--panel-3); border-radius: 6px; padding: 3px 0; text-align: center; }
+.country-item.on { background: var(--accent-soft); }
+.country-item.on .icon { color: var(--accent-text); }
+.country-item.on .cc { background: var(--accent); color: #fff; }
+.pref-row .pref-value { font-weight: 600; color: var(--muted); }
+
+/* Escriptura de dreta a esquerra (àrab) */
+[dir='rtl'] .icon.flip, [dir='rtl'] .btn .icon[data-dir] { transform: scaleX(-1); }
+[dir='rtl'] .search-field .icon { left: auto; right: 13px; }
+[dir='rtl'] .search-field .input { padding-left: 13px; padding-right: 42px; }
+[dir='rtl'] select.input { background-position: left 12px center; padding-right: 13px; padding-left: 38px; }
+[dir='rtl'] .stop { border-left: 0; border-right: 3px solid var(--accent); padding-left: 0; padding-right: 10px; }
+[dir='rtl'] .nav-card { border-left: 1px solid var(--line-2); border-right: 4px solid var(--accent); }
+[dir='rtl'] .nav-card.go { border-right-color: var(--go); }
+[dir='rtl'] .nav-card.warn { border-right-color: var(--warn); }
+[dir='rtl'] .kv b, [dir='rtl'] .detail-list b { text-align: left; }
+[dir='rtl'] .map-wrap { direction: ltr; }
+:lang(ar) body, [lang='ar-MA'] body { font-family: 'Inter Variable', 'Segoe UI', 'Noto Sans Arabic', 'Geeza Pro', Tahoma, sans-serif; }
+:lang(zh) h1, :lang(zh) h2, :lang(zh) h3, :lang(ru) h1, :lang(ru) h2, :lang(ru) h3, [lang='ar-MA'] h1, [lang='ar-MA'] h2, [lang='ar-MA'] h3 { font-family: var(--font); letter-spacing: 0; }
+.tab-label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 400px) { .tabs button { font-size: 10.5px; letter-spacing: 0; } }

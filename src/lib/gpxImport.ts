@@ -1,5 +1,6 @@
 import { cumulativeKm } from './geo';
 import type { LngLat } from './types';
+import { t } from '../i18n';
 
 export interface ParsedTrack {
   name: string | null;
@@ -13,10 +14,10 @@ export interface ParsedTrack {
 /** Llegeix un GPX (traces de GPS, Wikiloc, Strava, Calimoto…): pistes i, si no n'hi ha, rutes. */
 export function parseGpx(text: string): ParsedTrack {
   const doc = new DOMParser().parseFromString(text, 'application/xml');
-  if (doc.querySelector('parsererror')) throw new Error('El fitxer no és un GPX vàlid.');
+  if (doc.querySelector('parsererror')) throw new Error(t("El fitxer no és un GPX vàlid."));
   let pts = [...doc.getElementsByTagName('trkpt')];
   if (!pts.length) pts = [...doc.getElementsByTagName('rtept')];
-  if (pts.length < 2) throw new Error('El GPX no conté cap traçat.');
+  if (pts.length < 2) throw new Error(t("El GPX no conté cap traçat."));
 
   const coords: LngLat[] = [];
   const ele: number[] = [];

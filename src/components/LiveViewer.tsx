@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import MapView from './MapView';
 import { Logo } from './Icon';
 import { useLiveFollow } from '../lib/live';
+import { t } from '../i18n';
 
 const ago = (ms: number) => {
   const s = Math.max(0, Math.round(ms / 1000));
   if (s < 60) return `fa ${s} s`;
   const m = Math.round(s / 60);
-  return m < 60 ? `fa ${m} min` : `fa ${Math.round(m / 60)} h`;
+  return m < 60 ? t("fa {0} min", [m]) : `fa ${Math.round(m / 60)} h`;
 };
 
 /** Pàgina pública per seguir una sortida en directe (?live=<id>). */
@@ -20,19 +21,19 @@ export default function LiveViewer({ id }: { id: string }) {
   }, []);
 
   const stale = last && !last.done && now - last.t > 60_000;
-  const who = last?.name ? `@${last.name}` : 'El motorista';
+  const who = last?.name ? `@${last.name}` : t("El motorista");
 
   return (
     <div className="app">
       <aside className="panel">
         <div className="brand">
           <Logo size={34} />
-          <h1>MotoRoute<span>En directe</span></h1>
+          <h1>MotoRoute<span>{t("En directe")}</span></h1>
         </div>
         <div className="panel-body">
-          {status === 'error' && <div className="alert err">No s'ha pogut obrir el seguiment. Comprova l'enllaç.</div>}
+          {status === 'error' && <div className="alert err">{t("No s'ha pogut obrir el seguiment. Comprova l'enllaç.")}</div>}
           {(status === 'connecting' || status === 'waiting') && (
-            <div className="alert info">Esperant la ubicació… El telèfon de qui grava envia la posició cada 10 segons.</div>
+            <div className="alert info">{t("Esperant la ubicació… El telèfon de qui grava envia la posició cada 10 segons.")}</div>
           )}
           {last && (
             <>
@@ -40,18 +41,18 @@ export default function LiveViewer({ id }: { id: string }) {
                 {!last.done && !stale && <span className="live-dot" />}
                 <b>{who}</b>
                 <span className="hint">
-                  {last.done ? ' · ha acabat la sortida' : last.paused ? ' · en pausa' : stale ? ` · sense senyal (${ago(now - last.t)})` : ` · actualitzat ${ago(now - last.t)}`}
+                  {last.done ? t(" · ha acabat la sortida") : last.paused ? t(" · en pausa") : stale ? t(" · sense senyal ({0})", [ago(now - last.t)]) : t(" · actualitzat {0}", [ago(now - last.t)])}
                 </span>
               </div>
               <div className="rec-grid">
-                <div className="rec-stat big"><b>{last.km.toFixed(1)}</b><span>km fets</span></div>
-                <div className="rec-stat big"><b>{last.s != null && !last.paused && !last.done ? Math.round(last.s) : '—'}</b><span>km/h</span></div>
+                <div className="rec-stat big"><b>{last.km.toFixed(1)}</b><span>{t("km fets")}</span></div>
+                <div className="rec-stat big"><b>{last.s != null && !last.paused && !last.done ? Math.round(last.s) : '—'}</b><span>{t("km/h")}</span></div>
               </div>
             </>
           )}
           <p className="hint" style={{ marginTop: 14 }}>
-            Planifica les teves rutes amb corbes, meteo i benzina a{' '}
-            <a href={location.pathname}>MotoRoute Builder</a>.
+            {t("Planifica les teves rutes amb corbes, meteo i benzina a")}{' '}
+            <a href={location.pathname}>{t("MotoRoute Builder")}</a>.
           </p>
         </div>
       </aside>

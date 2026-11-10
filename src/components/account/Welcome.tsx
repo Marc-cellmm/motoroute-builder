@@ -1,5 +1,6 @@
 import { useRef, useState, type ReactNode } from 'react';
 import Icon, { Logo } from '../Icon';
+import { t } from '../../i18n';
 
 interface Slide {
   eyebrow: string;
@@ -19,9 +20,9 @@ const ArtPlan = (
       <circle cx="282" cy="40" r="7" fill="var(--accent-hi)" stroke="#fff" strokeWidth="2.5" />
     </svg>
     <div className="w-chips">
-      <span className="w-chip on"><Icon name="curves" size={14} />Corbes 82</span>
-      <span className="w-chip"><Icon name="mountain" size={14} />Trail</span>
-      <span className="w-chip"><Icon name="route" size={14} />186 km</span>
+      <span className="w-chip on"><Icon name="curves" size={14} />{t("Corbes 82")}</span>
+      <span className="w-chip"><Icon name="mountain" size={14} />{t("Trail")}</span>
+      <span className="w-chip"><Icon name="route" size={14} />{t("186 km")}</span>
     </div>
   </div>
 );
@@ -31,16 +32,16 @@ const ArtWeather = (
     <div className="w-tile">
       <Icon name="cloud-sun" size={26} />
       <b>17°</b>
-      <span>Port del Cantó · 11:40</span>
+      <span>{t("Port del Cantó · 11:40")}</span>
     </div>
     <div className="w-tile go">
       <Icon name="fuel" size={26} />
       <b>1,52 €</b>
-      <span>Reposta al km 142</span>
+      <span>{t("Reposta al km 142")}</span>
     </div>
     <div className="w-tile wide">
       <span className="w-bar"><i style={{ width: '64%' }} /></span>
-      <span>Autonomia segura <b className="go-text">214 km</b></span>
+      <span>{t("Autonomia segura")}{' '}<b className="go-text">{t("214 km")}</b></span>
     </div>
   </div>
 );
@@ -51,13 +52,13 @@ const ArtNav = (
       <Icon name="turn-right" size={46} />
       <div>
         <b>300 m</b>
-        <span>Gira a la dreta cap a la C-26</span>
+        <span>{t("Gira a la dreta cap a la C-26")}</span>
       </div>
     </div>
     <div className="w-nav-stats">
-      <div><b>74</b><span>km/h</span></div>
-      <div><b>48 km</b><span>queden</span></div>
-      <div><span className="w-rec" />Gravant</div>
+      <div><b>74</b><span>{t("km/h")}</span></div>
+      <div><b>{t("48 km")}</b><span>{t("queden")}</span></div>
+      <div><span className="w-rec" />{t("Gravant")}</div>
     </div>
   </div>
 );
@@ -67,12 +68,12 @@ const ArtSocial = (
     <div className="w-post">
       <div className="w-post-head">
         <span className="w-av">J</span>
-        <div><b>@jordi_gs</b><span>Ports del Pirineu · 312 km</span></div>
+        <div><b>@jordi_gs</b><span>{t("Ports del Pirineu · 312 km")}</span></div>
       </div>
       <svg viewBox="0 0 260 60" aria-hidden="true"><path d="M5 50 C 50 50, 60 10, 110 18 S 170 52, 205 40 S 240 8, 255 12" fill="none" stroke="var(--accent-hi)" strokeWidth="4" strokeLinecap="round" /></svg>
       <div className="w-post-actions">
         <span className="on"><Icon name="heart" size={16} filled />128</span>
-        <span><Icon name="bookmark" size={16} />Guardada</span>
+        <span><Icon name="bookmark" size={16} />{t("Guardada")}</span>
       </div>
     </div>
   </div>
@@ -83,51 +84,51 @@ const ArtSafety = (
     <div className="w-live">
       <span className="w-live-ring"><span /></span>
       <div>
-        <b>En directe</b>
-        <span>2 persones et segueixen</span>
+        <b>{t("En directe")}</b>
+        <span>{t("2 persones et segueixen")}</span>
       </div>
     </div>
     <div className="w-chips">
-      <span className="w-chip"><Icon name="bed" size={14} />Etapes amb allotjament</span>
-      <span className="w-chip"><Icon name="lock" size={14} />Inici i final amagats</span>
+      <span className="w-chip"><Icon name="bed" size={14} />{t("Etapes amb allotjament")}</span>
+      <span className="w-chip"><Icon name="lock" size={14} />{t("Inici i final amagats")}</span>
     </div>
   </div>
 );
 
 const SLIDES: Slide[] = [
   {
-    eyebrow: 'Planifica',
-    title: 'Rutes pensades per a la moto',
-    text: 'Tria carretera o trail, el nivell i els quilòmetres. Te\'n proposem diverses, ordenades per corbes i desnivell.',
-    points: ['Circulars o d\'un punt a un altre', 'Evita autopistes i peatges', 'Obre els GPX d\'altres apps'],
+    eyebrow: t("Planifica"),
+    title: t("Rutes pensades per a la moto"),
+    text: t("Tria carretera o trail, el nivell i els quilòmetres. Te'n proposem diverses, ordenades per corbes i desnivell."),
+    points: [t("Circulars o d'un punt a un altre"), t("Evita autopistes i peatges"), t("Obre els GPX d'altres apps")],
     art: ArtPlan,
   },
   {
-    eyebrow: 'Prepara la sortida',
-    title: 'Meteo i benzina a l\'hora que hi passaràs',
-    text: 'La previsió de cada tram a l\'hora que hi arribaràs, i on repostar segons el dipòsit i el consum de la teva moto.',
-    points: ['Avisos de pluja, vent i fred', 'Preus reals de les benzineres', 'Millor hora per sortir'],
+    eyebrow: t("Prepara la sortida"),
+    title: t("Meteo i benzina a l'hora que hi passaràs"),
+    text: t("La previsió de cada tram a l'hora que hi arribaràs, i on repostar segons el dipòsit i el consum de la teva moto."),
+    points: [t("Avisos de pluja, vent i fred"), t("Preus reals de les benzineres"), t("Millor hora per sortir")],
     art: ArtWeather,
   },
   {
-    eyebrow: 'Roda',
-    title: 'Navega amb veu i grava la sortida',
-    text: 'Indicacions en català que s\'avancen si vas ràpid. Si et surts de la ruta, et retorna per davant, mai enrere.',
-    points: ['Grava amb la pantalla apagada (iPhone)', 'Velocitat, temps i desnivell', 'Exporta a GPX'],
+    eyebrow: t("Roda"),
+    title: t("Navega amb veu i grava la sortida"),
+    text: t("Indicacions amb veu en el teu idioma que s'avancen si vas ràpid. Si et surts de la ruta, et retorna per davant, mai enrere."),
+    points: [t("Grava amb la pantalla apagada (iPhone)"), t("Velocitat, temps i desnivell"), t("Exporta a GPX")],
     art: ArtNav,
   },
   {
-    eyebrow: 'Comunitat',
-    title: 'Descobreix les rutes d\'altres motoristes',
-    text: 'Publica les teves sortides, dona m\'agrada i guarda les que vulguis fer. Amb el teu perfil, la teva moto i les teves fotos.',
-    points: ['Rutes a prop teu', 'Les més populars', 'Guarda-les per fer-les'],
+    eyebrow: t("Comunitat"),
+    title: t("Descobreix les rutes d'altres motoristes"),
+    text: t("Publica les teves sortides, dona m'agrada i guarda les que vulguis fer. Amb el teu perfil, la teva moto i les teves fotos."),
+    points: [t("Rutes a prop teu"), t("Les més populars"), t("Guarda-les per fer-les")],
     art: ArtSocial,
   },
   {
-    eyebrow: 'Tranquil·litat',
-    title: 'Que a casa sàpiguen per on vas',
-    text: 'Comparteix la ubicació en directe amb un enllaç. Ningú ha d\'instal·lar res, i s\'atura sol quan acabes.',
-    points: ['Etapes de diversos dies', 'Privacitat en publicar', 'Gratis, sense subscripcions'],
+    eyebrow: t("Tranquil·litat"),
+    title: t("Que a casa sàpiguen per on vas"),
+    text: t("Comparteix la ubicació en directe amb un enllaç. Ningú ha d'instal·lar res, i s'atura sol quan acabes."),
+    points: [t("Etapes de diversos dies"), t("Privacitat en publicar"), t("Gratis, sense subscripcions")],
     art: ArtSafety,
   },
 ];
@@ -151,7 +152,7 @@ export default function Welcome({ onDone }: { onDone: (mode: 'signup' | 'login')
       <header className="welcome-top">
         <Logo size={30} />
         <span className="welcome-brand">MotoRoute</span>
-        {!last && <button className="link-btn muted-link" style={{ marginLeft: 'auto', margin: '0 0 0 auto' }} onClick={() => go(SLIDES.length - 1)}>Salta</button>}
+        {!last && <button className="link-btn muted-link" style={{ margin: 0, marginInlineStart: 'auto' }} onClick={() => go(SLIDES.length - 1)}>{t("Salta")}</button>}
       </header>
 
       <div className="welcome-stage" key={i}>
@@ -168,20 +169,20 @@ export default function Welcome({ onDone }: { onDone: (mode: 'signup' | 'login')
       </div>
 
       <footer className="welcome-foot">
-        <div className="dots" role="tablist" aria-label="Diapositives">
+        <div className="dots" role="tablist" aria-label={t("Diapositives")}>
           {SLIDES.map((_, n) => (
-            <button key={n} className={n === i ? 'on' : ''} onClick={() => go(n)} aria-label={`Diapositiva ${n + 1}`} aria-selected={n === i} role="tab" />
+            <button key={n} className={n === i ? 'on' : ''} onClick={() => go(n)} aria-label={t("Diapositiva {0}", [n + 1])} aria-selected={n === i} role="tab" />
           ))}
         </div>
         {last ? (
           <div className="welcome-cta">
-            <button className="btn primary wide-btn" onClick={() => onDone('signup')}>Crea el compte gratis</button>
-            <button className="btn ghost wide-btn" onClick={() => onDone('login')}>Ja tinc compte</button>
+            <button className="btn primary wide-btn" onClick={() => onDone('signup')}>{t("Crea el compte gratis")}</button>
+            <button className="btn ghost wide-btn" onClick={() => onDone('login')}>{t("Ja tinc compte")}</button>
           </div>
         ) : (
           <div className="welcome-cta row-cta">
-            {i > 0 && <button className="btn ghost" onClick={() => go(i - 1)} aria-label="Anterior"><Icon name="chevron-left" /></button>}
-            <button className="btn primary" style={{ flex: 1 }} onClick={() => go(i + 1)}>Següent <Icon name="arrow-right" size={18} /></button>
+            {i > 0 && <button className="btn ghost" onClick={() => go(i - 1)} aria-label={t("Anterior")}><Icon name="chevron-left" /></button>}
+            <button className="btn primary" style={{ flex: 1 }} onClick={() => go(i + 1)}>{t("Següent")}{' '}<Icon name="arrow-right" size={18} /></button>
           </div>
         )}
       </footer>

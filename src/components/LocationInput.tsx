@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { reverseGeocode, searchPlaces } from '../lib/places';
 import type { Place } from '../lib/types';
 import Icon from './Icon';
+import { t } from '../i18n';
 
 interface Props {
   label: string;
@@ -55,7 +56,7 @@ export default function LocationInput({ label, value, onChange, allowMyLocation,
         <input
           className="input"
           value={text}
-          placeholder="Cerca un poble, ciutat o lloc"
+          placeholder={t("Cerca un poble, ciutat o lloc")}
           onChange={(e) => onType(e.target.value)}
           onFocus={() => results.length && setOpen(true)}
           onBlur={() => setTimeout(() => setOpen(false), 150)}
@@ -80,12 +81,12 @@ export default function LocationInput({ label, value, onChange, allowMyLocation,
       <div className="row" style={{ flex: 'none', gap: 8 }}>
         {allowMyLocation && (
           <button type="button" className="btn small" onClick={myLocation} disabled={locating}>
-            <Icon name="locate" size={18} />{locating ? 'Localitzant…' : 'La meva ubicació'}
+            <Icon name="locate" size={18} />{locating ? t("Localitzant…") : t("La meva ubicació")}
           </button>
         )}
         {onPickOnMap && (
           <button type="button" className={`btn small ${picking ? 'primary' : ''}`} onClick={onPickOnMap}>
-            <Icon name="map" size={18} />{picking ? 'Toca el mapa…' : 'Tria al mapa'}
+            <Icon name="map" size={18} />{picking ? t("Toca el mapa…") : t("Tria al mapa")}
           </button>
         )}
       </div>

@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import type { FuelKind, Motorcycle } from './types';
 
 export interface BikeModel {
@@ -49,8 +50,8 @@ export function searchCatalog(q: string): BikeModel[] {
 
 export const CATEGORY_LABEL: Record<string, string> = {
   naked: 'Naked',
-  sport: 'Esportiva',
-  touring: 'Turisme',
+  sport: t('Esportiva'),
+  touring: t('Turisme'),
   adventure: 'Trail / Adventure',
   trail: 'Trail',
   enduro: 'Enduro',

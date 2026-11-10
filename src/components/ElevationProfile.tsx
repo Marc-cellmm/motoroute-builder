@@ -1,6 +1,7 @@
 import type { RouteResult } from '../lib/types';
 
 import { DIFF_COLORS as DIFF, LEVEL_COLORS as LEVEL, ROUTE_RED } from '../lib/theme';
+import { t } from '../i18n';
 
 export default function ElevationProfile({ route }: { route: RouteResult }) {
   const W = 400;
@@ -22,7 +23,7 @@ export default function ElevationProfile({ route }: { route: RouteResult }) {
 
   return (
     <div>
-      <svg className="profile" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" role="img" aria-label="Perfil d'elevació">
+      <svg className="profile" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" role="img" aria-label={t("Perfil d'elevació")}>
         <path d={area} fill={route.color} fillOpacity="0.18" />
         <path d={line} fill="none" stroke={route.color} strokeWidth="1.6" vectorEffect="non-scaling-stroke" />
         {/* franja de dificultat per trams */}
@@ -40,8 +41,8 @@ export default function ElevationProfile({ route }: { route: RouteResult }) {
       </svg>
       <div className="row muted" style={{ fontSize: 12, justifyContent: 'space-between' }}>
         <span>{Math.round(minE)}–{Math.round(maxE)} m</span>
-        <span>Franges: dificultat · meteo{route.fuel?.stops.length ? ' · línies: benzina' : ''}</span>
-        <span>{Math.round(route.distanceKm)} km</span>
+        <span>{t("Franges: dificultat · meteo")}{route.fuel?.stops.length ? t(" · línies: benzina") : ''}</span>
+        <span>{Math.round(route.distanceKm)} {t("km")}</span>
       </div>
     </div>
   );

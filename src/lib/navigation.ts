@@ -1,5 +1,6 @@
 import { cumulativeKm, haversine } from './geo';
 import type { LngLat, Maneuver } from './types';
+import { lang, t } from '../i18n';
 
 /**
  * Lògica de navegació pas a pas (sense UI), per poder-la provar:
@@ -92,12 +93,17 @@ export function dueAnnouncement(distanceKm: number, speedKmh: number, said: Set<
 
 /** Text de l'avís: "D'aquí a 500 metres, gireu a la dreta…" */
 export function phrase(m: Maneuver, distanceKm: number, final: boolean): string {
-  const text = (m.verbal || m.instruction).replace(/\.$/, '');
+  const raw = (m.verbal || m.instruction).replace(/\.$/, '');
+  // en xinès i àrab no hi ha majúscules
+  const text = ['zh', 'ary'].includes(lang().code) ? raw : raw.charAt(0).toLowerCase() + raw.slice(1);
   const arrive = m.type >= 4 && m.type <= 6;
-  if (final) return arrive ? 'Has arribat al final de la ruta' : `Ara, ${text.charAt(0).toLowerCase()}${text.slice(1)}`;
-  const dist = distanceKm >= 0.95 ? `${Math.round(distanceKm)} quilòmetre${Math.round(distanceKm) === 1 ? '' : 's'}` : `${Math.round((distanceKm * 1000) / 50) * 50} metres`;
-  if (arrive) return `D'aquí a ${dist} arribaràs al final de la ruta`;
-  return `D'aquí a ${dist}, ${text.charAt(0).toLowerCase()}${text.slice(1)}`;
+  if (final) return arrive ? t("Has arribat al final de la ruta") : t("Ara, {text}", { text });
+  const km = Math.round(distanceKm);
+  const dist = distanceKm >= 0.95
+    ? (km === 1 ? t("1 quilòmetre") : t("{n} quilòmetres", { n: km }))
+    : t("{n} metres", { n: Math.round((distanceKm * 1000) / 50) * 50 });
+  if (arrive) return t("D'aquí a {dist} arribaràs al final de la ruta", { dist });
+  return t("D'aquí a {dist}, {text}", { dist, text });
 }
 
 /** Fora de ruta: més de 50 m durant 3 posicions seguides, o més de 150 m d'una vegada. */

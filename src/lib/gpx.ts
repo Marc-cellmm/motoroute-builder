@@ -1,11 +1,12 @@
 import type { RouteResult } from './types';
+import { t } from '../i18n';
 
 const esc = (s: string) => s.replace(/[<>&"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
 export function toGpx(route: RouteResult, title: string): string {
   const pts = route.coords.map(([lng, lat]) => `<trkpt lat="${lat.toFixed(6)}" lon="${lng.toFixed(6)}"/>`).join('\n');
   const stops = (route.fuel?.stops ?? [])
-    .map((s) => `<wpt lat="${s.coord[1]}" lon="${s.coord[0]}"><name>${esc(`Benzina: ${s.brand}`)}</name></wpt>`)
+    .map((s) => `<wpt lat="${s.coord[1]}" lon="${s.coord[0]}"><name>${esc(t("Benzina: {0}", [s.brand]))}</name></wpt>`)
     .join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>
 <gpx version="1.1" creator="MotoRoute Builder" xmlns="http://www.topografix.com/GPX/1/1">

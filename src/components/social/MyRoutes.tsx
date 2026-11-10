@@ -9,6 +9,7 @@ import { downloadText } from '../../lib/gpx';
 import { fmtClock } from '../../lib/recorder';
 import type { RecordedRoute, SavedRoute } from '../../lib/types';
 import Icon from '../Icon';
+import { t, locale } from '../../i18n';
 
 type Section = 'recorded' | 'planned' | 'saved' | 'mine';
 
@@ -74,38 +75,38 @@ export default function MyRoutes(p: Props) {
 
   return (
     <div>
-      <h2>Les meves rutes</h2>
+      <h2>{t("Les meves rutes")}</h2>
       <div className="seg seg-wrap" style={{ margin: '12px 0' }}>
-        <button className={section === 'recorded' ? 'on' : ''} onClick={() => setSection('recorded')}>Gravades</button>
-        {socialEnabled && <button className={section === 'saved' ? 'on' : ''} onClick={() => setSection('saved')}>Guardades</button>}
-        <button className={section === 'planned' ? 'on' : ''} onClick={() => setSection('planned')}>Planificades</button>
-        {socialEnabled && <button className={section === 'mine' ? 'on' : ''} onClick={() => setSection('mine')}>Publicades</button>}
+        <button className={section === 'recorded' ? 'on' : ''} onClick={() => setSection('recorded')}>{t("Gravades")}</button>
+        {socialEnabled && <button className={section === 'saved' ? 'on' : ''} onClick={() => setSection('saved')}>{t("Guardades")}</button>}
+        <button className={section === 'planned' ? 'on' : ''} onClick={() => setSection('planned')}>{t("Planificades")}</button>
+        {socialEnabled && <button className={section === 'mine' ? 'on' : ''} onClick={() => setSection('mine')}>{t("Publicades")}</button>}
       </div>
 
       {section === 'recorded' && (
         <>
-          <p className="hint">Rutes que has gravat amb el GPS del telèfon.</p>
-          {!p.recorded.length && <div className="empty"><Icon name="record" size={40} />Encara no has gravat cap ruta. Fes-ho des de l'apartat «Grava».</div>}
+          <p className="hint">{t("Rutes que has gravat amb el GPS del telèfon.")}</p>
+          {!p.recorded.length && <div className="empty"><Icon name="record" size={40} />{t("Encara no has gravat cap ruta. Fes-ho des de l'apartat «Grava».")}</div>}
           {p.recorded.map((r) => (
             <div key={r.id} className={`box ${shownRec === r.id ? 'box-on' : ''}`}>
               <div className="row" style={{ alignItems: 'flex-start' }}>
                 <div style={{ minWidth: 0 }}>
                   <h3>{r.title}</h3>
                   <div className="hint">
-                    {new Date(r.recordedAt).toLocaleDateString('ca-ES', { day: 'numeric', month: 'short', year: 'numeric' })} ·{' '}
-                    {r.route.distanceKm.toFixed(1)} km · {fmtClock(r.movingMin * 60000)} · {r.avgKmh} km/h · {r.route.elevationGain} m +
+                    {new Date(r.recordedAt).toLocaleDateString(locale(), { day: 'numeric', month: 'short', year: 'numeric' })} ·{' '}
+                    {r.route.distanceKm.toFixed(1)} {t("km ·")}{' '}{fmtClock(r.movingMin * 60000)} · {r.avgKmh} {t("km/h ·")}{' '}{r.route.elevationGain} m +
                   </div>
                 </div>
-                {r.sharedAt && <span className="badge" style={{ flex: 'none' }}><Icon name="social" size={14} />Compartida</span>}
+                {r.sharedAt && <span className="badge" style={{ flex: 'none' }}><Icon name="social" size={14} />{t("Compartida")}</span>}
               </div>
               <div className="row" style={{ marginTop: 10, flexWrap: 'wrap', gap: 8 }}>
                 <button className="btn small" onClick={() => { const on = shownRec !== r.id; setShownRec(on ? r.id : null); p.onShowRecorded(on ? r : null); }}>
-                  {shownRec === r.id ? 'Amaga' : 'Al mapa'}
+                  {shownRec === r.id ? t("Amaga") : t("Al mapa")}
                 </button>
-                <button className="btn small primary" onClick={() => p.onPlanRecorded(r)}>Planifica</button>
-                {socialEnabled && !r.sharedAt && <button className="btn small" onClick={() => p.onShareRecorded(r)}>Comparteix</button>}
-                <button className="btn small" onClick={() => downloadText(`${r.title.replace(/[^\w-]+/g, '_')}.gpx`, r.gpx)}>GPX</button>
-                <button className="btn small ghost" onClick={() => p.onDeleteRecorded(r.id)}>Elimina</button>
+                <button className="btn small primary" onClick={() => p.onPlanRecorded(r)}>{t("Planifica")}</button>
+                {socialEnabled && !r.sharedAt && <button className="btn small" onClick={() => p.onShareRecorded(r)}>{t("Comparteix")}</button>}
+                <button className="btn small" onClick={() => downloadText(`${r.title.replace(/[^\w-]+/g, '_')}.gpx`, r.gpx)}>{t("GPX")}</button>
+                <button className="btn small ghost" onClick={() => p.onDeleteRecorded(r.id)}>{t("Elimina")}</button>
               </div>
             </div>
           ))}
@@ -114,19 +115,18 @@ export default function MyRoutes(p: Props) {
 
       {section === 'planned' && (
         <>
-          <p className="hint">Rutes que has calculat i desat en aquest navegador.</p>
-          {!p.planned.length && <div className="empty"><Icon name="map" size={40} />Encara no has desat cap ruta.</div>}
+          <p className="hint">{t("Rutes que has calculat i desat en aquest navegador.")}</p>
+          {!p.planned.length && <div className="empty"><Icon name="map" size={40} />{t("Encara no has desat cap ruta.")}</div>}
           {p.planned.map((s) => (
             <div key={s.id} className="box">
               <h3>{s.title}</h3>
               <div className="hint">
-                {fmtDuration(s.route.durationMin)} · {s.route.elevationGain} m + · {s.request.mode === 'trail' ? 'Trail' : 'Carretera'} ·
-                desada el {new Date(s.savedAt).toLocaleDateString('ca-ES')}
+                {fmtDuration(s.route.durationMin)} · {s.route.elevationGain} m + · {s.request.mode === 'trail' ? t("Trail") : t("Carretera")} {t("· desada el")}{' '}{new Date(s.savedAt).toLocaleDateString(locale())}
               </div>
               <div className="row" style={{ marginTop: 10, flexWrap: 'wrap' }}>
-                <button className="btn small primary" onClick={() => p.onOpenPlanned(s)}>Obre</button>
-                {socialEnabled && <button className="btn small" onClick={() => p.onSharePlanned(s)}>Comparteix</button>}
-                <button className="btn small ghost" onClick={() => p.onDeletePlanned(s.id)}>Elimina</button>
+                <button className="btn small primary" onClick={() => p.onOpenPlanned(s)}>{t("Obre")}</button>
+                {socialEnabled && <button className="btn small" onClick={() => p.onSharePlanned(s)}>{t("Comparteix")}</button>}
+                <button className="btn small ghost" onClick={() => p.onDeletePlanned(s.id)}>{t("Elimina")}</button>
               </div>
             </div>
           ))}
@@ -136,15 +136,15 @@ export default function MyRoutes(p: Props) {
       {(section === 'saved' || section === 'mine') && (
         <>
           <p className="hint">
-            {section === 'saved' ? 'Rutes de la comunitat que has guardat per fer-les.' : 'Rutes que has compartit amb la comunitat.'}
+            {section === 'saved' ? t("Rutes de la comunitat que has guardat per fer-les.") : t("Rutes que has compartit amb la comunitat.")}
           </p>
           {!p.me?.username && <div style={{ marginTop: 10 }}><JoinForm onJoined={p.setMe} /></div>}
           {list.error && <div className="alert err">{list.error}</div>}
-          {loading && <Loader text="Carregant…" />}
+          {loading && <Loader text={t("Carregant…")} />}
           {!loading && p.me?.username && !list.rows.length && !list.error && (
             <div className="empty">
               <Icon name={section === 'saved' ? 'bookmark' : 'upload'} size={40} />
-              {section === 'saved' ? 'Encara no has guardat cap ruta. Busca\'n a l\'apartat Social.' : 'Encara no has publicat cap ruta.'}
+              {section === 'saved' ? t("Encara no has guardat cap ruta. Busca'n a l'apartat Social.") : t("Encara no has publicat cap ruta.")}
             </div>
           )}
           {list.rows.map((r) => (

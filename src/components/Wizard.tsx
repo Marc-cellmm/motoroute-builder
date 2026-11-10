@@ -3,6 +3,7 @@ import LocationInput from './LocationInput';
 import { DEMO } from './MapView';
 import type { Difficulty, DistanceBand, Motorcycle, Place, PlanRequest } from '../lib/types';
 import Icon from './Icon';
+import { t } from '../i18n';
 
 export type PickTarget = 'origin' | 'destination' | null;
 
@@ -21,22 +22,22 @@ interface Props {
 }
 
 const BANDS: { id: DistanceBand; label: string; sub: string }[] = [
-  { id: '50_100', label: '50–100 km', sub: 'Sortida ràpida' },
-  { id: '100_200', label: '100–200 km', sub: 'Mig dia' },
-  { id: '200_400', label: '200–400 km', sub: 'Jornada completa' },
-  { id: '400_plus', label: '400+ km', sub: 'Gran travessa' },
+  { id: '50_100', label: t("50–100 km"), sub: t("Sortida ràpida") },
+  { id: '100_200', label: t("100–200 km"), sub: t("Mig dia") },
+  { id: '200_400', label: t("200–400 km"), sub: t("Jornada completa") },
+  { id: '400_plus', label: t("400+ km"), sub: t("Gran travessa") },
 ];
 
 const DIFF_HELP: Record<string, Record<Difficulty, string>> = {
   road: {
-    beginner: 'Carreteres amples, corbes obertes i pendents suaus.',
-    intermediate: 'Secundàries amb corbes enllaçades i ports moderats.',
-    expert: 'Carreteres estretes, forquilles i ports amb pendents forts.',
+    beginner: t("Carreteres amples, corbes obertes i pendents suaus."),
+    intermediate: t("Secundàries amb corbes enllaçades i ports moderats."),
+    expert: t("Carreteres estretes, forquilles i ports amb pendents forts."),
   },
   trail: {
-    beginner: 'Asfalt d\'enllaç i pistes amples i compactades.',
-    intermediate: 'Pistes de grava i terra amb algun tram trencat.',
-    expert: 'Pistes amb pedra solta i pendents tècnics.',
+    beginner: t("Asfalt d'enllaç i pistes amples i compactades."),
+    intermediate: t("Pistes de grava i terra amb algun tram trencat."),
+    expert: t("Pistes amb pedra solta i pendents tècnics."),
   },
 };
 
@@ -61,12 +62,12 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
 
       {step === 0 && (
         <>
-          <h2>Modalitat i moto</h2>
-          <p className="hint">Tria per on vols rodar i amb quina moto.</p>
+          <h2>{t("Modalitat i moto")}</h2>
+          <p className="hint">{t("Tria per on vols rodar i amb quina moto.")}</p>
           {onImportGpx && (
             <>
               <button className="btn ghost import-gpx" disabled={busy} onClick={() => gpxRef.current?.click()}>
-                <Icon name="upload" /> Ja tens la ruta? Obre un GPX <small>(Calimoto, Kurviger, Garmin, Wikiloc…)</small>
+                <Icon name="upload" /> {t("Ja tens la ruta? Obre un GPX")}{' '}<small>{t("(Calimoto, Kurviger, Garmin, Wikiloc…)")}</small>
               </button>
               <input ref={gpxRef} type="file" accept=".gpx,application/gpx+xml" hidden
                 onChange={(e) => { const f = e.target.files?.[0]; if (f) onImportGpx(f); e.target.value = ''; }} />
@@ -76,39 +77,38 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
           <div className="cards2" style={{ marginTop: 14 }}>
             <button className={`choice ${req.mode === 'road' ? 'on' : ''}`} onClick={() => set({ mode: 'road' })}>
               <span className="icon-tile"><Icon name="road" size={22} /></span>
-              <b>Carretera</b>
-              <small>100 % asfalt, prioritza secundàries amb corbes</small>
+              <b>{t("Carretera")}</b>
+              <small>{t("100 % asfalt, prioritza secundàries amb corbes")}</small>
             </button>
             <button className={`choice ${req.mode === 'trail' ? 'on' : ''}`} onClick={() => set({ mode: 'trail', avoidMotorways: true })}>
               <span className="icon-tile"><Icon name="mountain" size={22} /></span>
-              <b>Trail / Off-road</b>
-              <small>Asfalt d'enllaç + pistes transitables</small>
+              <b>{t("Trail / Off-road")}</b>
+              <small>{t("Asfalt d'enllaç + pistes transitables")}</small>
             </button>
           </div>
           {req.mode === 'trail' && (
             <div className="alert warn">
-              Circula només per pistes autoritzades. El motor respecta les restriccions d'accés d'OpenStreetMap,
-              però pot haver-hi tancaments locals (per exemple, risc d'incendi) que no hi constin.
+              {t("Circula només per pistes autoritzades. El motor respecta les restriccions d'accés d'OpenStreetMap, però pot haver-hi tancaments locals (per exemple, risc d'incendi) que no hi constin.")}
             </div>
           )}
           <div className="field">
-            <label>La meva moto</label>
+            <label>{t("La meva moto")}</label>
             {bikes.length ? (
               <select className="input" value={req.bikeId ?? ''} onChange={(e) => set({ bikeId: e.target.value || null })}>
                 {bikes.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
-                <option value="">Sense moto (no es calcularan parades de benzina)</option>
+                <option value="">{t("Sense moto (no es calcularan parades de benzina)")}</option>
               </select>
             ) : (
-              <button className="btn" onClick={goToBike}><Icon name="plus" size={16} /> Afegeix la meva moto per calcular la benzina</button>
+              <button className="btn" onClick={goToBike}><Icon name="plus" size={16} /> {t("Afegeix la meva moto per calcular la benzina")}</button>
             )}
           </div>
           {req.bikeId && (
             <div className="field">
-              <label>Amb quant dipòsit surts?</label>
+              <label>{t("Amb quant dipòsit surts?")}</label>
               <div className="chips">
                 {[1, 0.75, 0.5, 0.25].map((f) => (
                   <button key={f} className={`chip ${req.startFuelFraction === f ? 'on' : ''}`} onClick={() => set({ startFuelFraction: f })}>
-                    {f === 1 ? 'Ple' : f === 0.75 ? '3/4' : f === 0.5 ? '1/2' : '1/4'}
+                    {f === 1 ? t("Ple") : f === 0.75 ? '3/4' : f === 0.5 ? '1/2' : '1/4'}
                   </button>
                 ))}
               </div>
@@ -119,10 +119,10 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
 
       {step === 1 && (
         <>
-          <h2>Origen i destinació</h2>
+          <h2>{t("Origen i destinació")}</h2>
           <div style={{ height: 12 }} />
           <LocationInput
-            label="Sortida"
+            label={t("Sortida")}
             value={req.origin}
             onChange={(origin) => set({ origin })}
             allowMyLocation={!DEMO}
@@ -131,8 +131,8 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
           />
           <div className="toggle">
             <div>
-              <b>Ruta circular</b>
-              <div className="hint">Sortida i arribada al mateix punt</div>
+              <b>{t("Ruta circular")}</b>
+              <div className="hint">{t("Sortida i arribada al mateix punt")}</div>
             </div>
             <input type="checkbox" checked={circular} onChange={(e) => set({ circular: e.target.checked, vias: [] })} />
           </div>
@@ -140,7 +140,7 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
           {!circular && (
             <>
               <LocationInput
-                label="Destinació"
+                label={t("Destinació")}
                 value={req.destination}
                 onChange={(destination) => set({ destination })}
                 onPickOnMap={() => setPicking(picking === 'destination' ? null : 'destination')}
@@ -148,13 +148,13 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
               />
               {req.vias.map((v, i) => (
                 <div key={i}>
-                  <LocationInput label={`Punt de pas ${i + 1}`} value={v} onChange={(p) => setVia(i, p)} />
-                  <button className="btn small ghost" onClick={() => setVia(i, null)}>Treu el punt de pas</button>
+                  <LocationInput label={t("Punt de pas {0}", [i + 1])} value={v} onChange={(p) => setVia(i, p)} />
+                  <button className="btn small ghost" onClick={() => setVia(i, null)}>{t("Treu el punt de pas")}</button>
                 </div>
               ))}
               {addingVia && (
                 <LocationInput
-                  label={`Punt de pas ${req.vias.length + 1}`}
+                  label={t("Punt de pas {0}", [req.vias.length + 1])}
                   value={null}
                   onChange={(p) => {
                     if (p) set({ vias: [...req.vias, p] });
@@ -163,7 +163,7 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
                 />
               )}
               {req.vias.length < 3 && !addingVia && (
-                <button className="btn small" onClick={() => setAddingVia(true)}><Icon name="plus" size={16} /> Afegeix punt de pas</button>
+                <button className="btn small" onClick={() => setAddingVia(true)}><Icon name="plus" size={16} /> {t("Afegeix punt de pas")}</button>
               )}
             </>
           )}
@@ -172,9 +172,9 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
 
       {step === 2 && (
         <>
-          <h2>Distància i dificultat</h2>
+          <h2>{t("Distància i dificultat")}</h2>
           <div className="field" style={{ marginTop: 14 }}>
-            <label>Quilometratge</label>
+            <label>{t("Quilometratge")}</label>
             <div className="chips">
               {BANDS.map((b) => (
                 <button key={b.id} className={`chip ${req.band === b.id ? 'on' : ''}`} onClick={() => set({ band: b.id })}>
@@ -185,11 +185,11 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
             </div>
           </div>
           <div className="field">
-            <label>Nivell</label>
+            <label>{t("Nivell")}</label>
             <div className="seg">
               {(['beginner', 'intermediate', 'expert'] as Difficulty[]).map((d) => (
                 <button key={d} className={req.difficulty === d ? 'on' : ''} onClick={() => set({ difficulty: d })}>
-                  {d === 'beginner' ? 'Principiant' : d === 'intermediate' ? 'Intermedi' : 'Avançat'}
+                  {d === 'beginner' ? t("Principiant") : d === 'intermediate' ? t("Intermedi") : t("Avançat")}
                 </button>
               ))}
             </div>
@@ -197,12 +197,12 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
           </div>
           {req.mode === 'road' && (
             <div className="toggle">
-              <span>Evitar autopistes i autovies</span>
+              <span>{t("Evitar autopistes i autovies")}</span>
               <input type="checkbox" checked={req.avoidMotorways} onChange={(e) => set({ avoidMotorways: e.target.checked })} />
             </div>
           )}
           <div className="toggle">
-            <span>Evitar peatges</span>
+            <span>{t("Evitar peatges")}</span>
             <input type="checkbox" checked={req.avoidTolls} onChange={(e) => set({ avoidTolls: e.target.checked })} />
           </div>
           {req.origin && (
@@ -212,7 +212,7 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
               disabled={busy}
               onClick={() => onSubmit({ ...req, circular: true, vias: [] })}
             >
-              <Icon name="sparkle" /> Suggereix-me rutes circulars des de {req.origin.name.split(',')[0]}
+              <Icon name="sparkle" /> {t("Suggereix-me rutes circulars des de")}{' '}{req.origin.name.split(',')[0]}
             </button>
           )}
         </>
@@ -220,35 +220,35 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
 
       {step === 3 && (
         <>
-          <h2>Dates i etapes</h2>
+          <h2>{t("Dates i etapes")}</h2>
           <div className="field" style={{ marginTop: 14 }}>
-            <label>Sortida</label>
+            <label>{t("Sortida")}</label>
             <input type="datetime-local" className="input" value={req.departure} onChange={(e) => set({ departure: e.target.value })} />
           </div>
           <div className="grid2">
             <div className="field">
-              <label>Dies</label>
+              <label>{t("Dies")}</label>
               <select className="input" value={req.days} onChange={(e) => set({ days: +e.target.value })}>
-                {[1, 2, 3, 4, 5, 6, 7].map((d) => <option key={d} value={d}>{d === 1 ? '1 dia' : `${d} dies`}</option>)}
+                {[1, 2, 3, 4, 5, 6, 7].map((d) => <option key={d} value={d}>{d === 1 ? t("1 dia") : `${d} dies`}</option>)}
               </select>
             </div>
             {req.days > 1 && (
               <div className="field">
-                <label>Màxim km per dia</label>
+                <label>{t("Màxim km per dia")}</label>
                 <input type="number" min={50} step={10} className="input" value={req.kmPerDay} onChange={(e) => set({ kmPerDay: +e.target.value })} />
               </div>
             )}
           </div>
-          <p className="hint">La meteo es consulta a l'hora estimada de pas per cada tram (previsió fins a 16 dies).</p>
+          <p className="hint">{t("La meteo es consulta a l'hora estimada de pas per cada tram (previsió fins a 16 dies).")}</p>
         </>
       )}
 
       <div className="actions">
-        {step > 0 && <button className="btn" onClick={() => setStep(step - 1)}>Enrere</button>}
+        {step > 0 && <button className="btn" onClick={() => setStep(step - 1)}>{t("Enrere")}</button>}
         {step < 3 ? (
-          <button className="btn primary" disabled={!canNext} onClick={() => setStep(step + 1)}>Següent</button>
+          <button className="btn primary" disabled={!canNext} onClick={() => setStep(step + 1)}>{t("Següent")}</button>
         ) : (
-          <button className="btn primary" disabled={busy || !req.origin} onClick={() => onSubmit(req)}>Calcula les rutes</button>
+          <button className="btn primary" disabled={busy || !req.origin} onClick={() => onSubmit(req)}>{t("Calcula les rutes")}</button>
         )}
       </div>
     </div>

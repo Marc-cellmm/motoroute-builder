@@ -1,5 +1,6 @@
 import { Capacitor, registerPlugin } from '@capacitor/core';
 import type { BackgroundGeolocationPlugin } from '@capacitor-community/background-geolocation';
+import { t } from '../i18n';
 
 /**
  * Font de posicions GPS. A l'app nativa (iPhone) fa servir el plugin de geolocalització en
@@ -37,7 +38,7 @@ export async function watchLocation(
     const id = await BackgroundGeolocation.addWatcher(
       {
         // amb backgroundMessage, iOS continua enviant posicions amb la pantalla apagada
-        ...(background ? { backgroundMessage: 'Gravant la ruta', backgroundTitle: 'MotoRoute' } : {}),
+        ...(background ? { backgroundMessage: t("Gravant la ruta"), backgroundTitle: 'MotoRoute' } : {}),
         requestPermissions: true,
         stale: false,
         distanceFilter: 5,

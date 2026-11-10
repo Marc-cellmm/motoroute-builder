@@ -27,6 +27,7 @@ import { getMe, routeFromTrack, socialEnabled, toRouteResult, type Me, type Shar
 import { parseGpx } from './lib/gpxImport';
 import { haversine } from './lib/geo';
 import type { Accommodation, LngLat, Motorcycle, PlanRequest, RecordedRoute, RideMode, RouteResult, SavedRoute } from './lib/types';
+import { t, lang } from './i18n';
 
 type Tab = 'plan' | 'record' | 'social' | 'routes' | 'bike' | 'profile';
 type ShareTarget = { route: RouteResult; title: string; mode: RideMode; startName: string | null; date?: string | null; recordedId?: string };
@@ -43,7 +44,7 @@ function defaultDeparture() {
 
 function greeting() {
   const h = new Date().getHours();
-  return h < 6 ? 'Bona nit' : h < 13 ? 'Bon dia' : h < 20 ? 'Bona tarda' : 'Bona nit';
+  return h < 6 ? t("Bona nit") : h < 13 ? t("Bon dia") : h < 20 ? t("Bona tarda") : t("Bona nit");
 }
 
 export default function App() {
@@ -120,8 +121,8 @@ export default function App() {
   function startNavigation(route: RouteResult, title: string) {
     // a l'iPhone la veu només s'activa si el primer avís surt d'un toc de l'usuari
     try {
-      const u = new SpeechSynthesisUtterance('Comencem la ruta.');
-      u.lang = 'ca-ES';
+      const u = new SpeechSynthesisUtterance(t("Comencem la ruta."));
+      u.lang = lang().speech;
       window.speechSynthesis?.speak(u);
     } catch { /* sense veu */ }
     setNavTitle(title);
@@ -163,9 +164,9 @@ export default function App() {
       ...req,
       mode: r.mode,
       difficulty: route.difficulty,
-      origin: { name: r.startName ?? 'Sortida', coord: first },
+      origin: { name: r.startName ?? t("Sortida"), coord: first },
       circular,
-      destination: circular ? null : { name: 'Arribada', coord: last },
+      destination: circular ? null : { name: t("Arribada"), coord: last },
       vias: [],
       departure: defaultDeparture(),
       days: 1,
@@ -244,7 +245,7 @@ export default function App() {
     setPicking(null);
     setAccom({});
     setAccomOnMap([]);
-    setProgress('Preparant…');
+    setProgress(t("Preparant…"));
     try {
       const { routes: list, note } = await buildRoutes(r, setProgress);
       setRoutes(list);
@@ -284,7 +285,7 @@ export default function App() {
   function saveCurrent() {
     if (!selected || !planReq) return;
     const rest = { ...selected, weather: undefined, fuel: undefined, stages: undefined, bestDepartures: undefined };
-    const title = `${planReq.origin?.name.split(',')[0]} ${planReq.circular ? '· circular' : '→ ' + planReq.destination?.name.split(',')[0]} · ${Math.round(selected.distanceKm)} km`;
+    const title = `${planReq.origin?.name.split(',')[0]} ${planReq.circular ? t("· circular") : '→ ' + planReq.destination?.name.split(',')[0]} · ${Math.round(selected.distanceKm)} km`;
     setSaved([{ id: uid(), title, savedAt: new Date().toISOString(), request: planReq, route: rest }, ...saved]);
   }
 
@@ -302,9 +303,9 @@ export default function App() {
       ...req,
       mode: s.mode,
       difficulty: s.difficulty,
-      origin: { name: s.start_name ?? 'Sortida', coord: first },
+      origin: { name: s.start_name ?? t("Sortida"), coord: first },
       circular,
-      destination: circular ? null : { name: 'Arribada', coord: last },
+      destination: circular ? null : { name: t("Arribada"), coord: last },
       vias: [],
       departure: defaultDeparture(),
       days: 1,
@@ -314,17 +315,17 @@ export default function App() {
   const [importError, setImportError] = useState<string | null>(null);
   async function importGpxToPlan(file: File) {
     setImportError(null);
-    setProgress('Llegint el GPX…');
+    setProgress(t("Llegint el GPX…"));
     try {
       const track = parseGpx(await file.text());
       const route = await routeFromTrack(track, req.mode);
       const first = track.coords[0];
       const last = track.coords[track.coords.length - 1];
       const closed = haversine(first, last) < 1;
-      setProgress('Buscant on comença…');
+      setProgress(t("Buscant on comença…"));
       const [startName, endName] = await Promise.all([
-        reverseGeocode(first).catch(() => 'Inici'),
-        closed ? Promise.resolve('') : reverseGeocode(last).catch(() => 'Final'),
+        reverseGeocode(first).catch(() => t("Inici")),
+        closed ? Promise.resolve('') : reverseGeocode(last).catch(() => t("Final")),
       ]);
       route.label = track.name ?? route.label;
       const r: PlanRequest = {
@@ -380,7 +381,7 @@ export default function App() {
           <Logo size={34} />
           <h1>MotoRoute<span>Builder</span></h1>
           {account?.profile && (
-            <button className="brand-avatar" onClick={() => setTab('profile')} aria-label="El meu perfil">
+            <button className="brand-avatar" onClick={() => setTab('profile')} aria-label={t("El meu perfil")}>
               <Avatar url={account.profile.avatar_url} name={account.profile.display_name || account.profile.username} size={34} />
             </button>
           )}
@@ -402,8 +403,7 @@ export default function App() {
           )}
           {!navRoute && DEMO && (
             <div className="alert info" style={{ marginTop: 0 }}>
-              <b>Mode demostració.</b> Rutes, meteo, benzineres i allotjaments són simulats (els pobles de Catalunya són reals).
-              La versió completa amb dades reals es publica a Vercel.
+              <b>{t("Mode demostració.")}</b> {t("Rutes, meteo, benzineres i allotjaments són simulats (els pobles de Catalunya són reals). La versió completa amb dades reals es publica a Vercel.")}
             </div>
           )}
           {!navRoute && tab === 'plan' && view === 'wizard' && (
@@ -411,7 +411,7 @@ export default function App() {
               {account?.profile && (
                 <div className="greeting">
                   <span>{greeting()}, <b>{account.profile.display_name || account.profile.username}</b></span>
-                  <span className="hint">On anem avui?</span>
+                  <span className="hint">{t("On anem avui?")}</span>
                 </div>
               )}
               <Wizard
@@ -434,8 +434,8 @@ export default function App() {
           {!navRoute && tab === 'plan' && view === 'results' && (
             <>
               <div className="row" style={{ marginBottom: 12 }}>
-                <h2>Alternatives</h2>
-                <button className="btn small" style={{ flex: 'none' }} onClick={() => setView('wizard')}>Edita</button>
+                <h2>{t("Alternatives")}</h2>
+                <button className="btn small" style={{ flex: 'none' }} onClick={() => setView('wizard')}>{t("Edita")}</button>
               </div>
               {note && <div className="alert info">{note}</div>}
               {routes.map((r) => (
@@ -448,9 +448,9 @@ export default function App() {
                 />
               ))}
               <button className="btn primary" style={{ width: '100%' }} disabled={!selected} onClick={() => setView('detail')}>
-                Veure el detall de {selected?.label}
+                {t("Veure el detall de")}{' '}{selected?.label}
               </button>
-              <p className="hint">Toca una ruta per seleccionar-la; toca-la de nou per obrir-ne el detall.</p>
+              <p className="hint">{t("Toca una ruta per seleccionar-la; toca-la de nou per obrir-ne el detall.")}</p>
             </>
           )}
 
@@ -470,7 +470,7 @@ export default function App() {
               onNavigate={DEMO ? undefined : () => startNavigation(selected, selected.label)}
               onShare={socialEnabled ? () => setShareTarget({
                 route: selected,
-                title: `${planReq.origin?.name.split(',')[0] ?? 'Ruta'}${planReq.circular ? ' · circular' : ' → ' + (planReq.destination?.name.split(',')[0] ?? '')}`,
+                title: `${planReq.origin?.name.split(',')[0] ?? t("Ruta")}${planReq.circular ? t(" · circular") : ' → ' + (planReq.destination?.name.split(',')[0] ?? '')}`,
                 mode: planReq.mode,
                 startName: planReq.origin?.name ?? null,
               }) : undefined}
@@ -525,14 +525,14 @@ export default function App() {
           {!navRoute && tab === 'profile' && <ProfileScreen onProfileSaved={onProfileSaved} />}
         </div>
         <nav className="tabs" style={navRoute ? { display: 'none' } : undefined}>
-          <button className={tab === 'plan' ? 'on' : ''} onClick={() => setTab('plan')}><Icon name="plan" size={22} />Planificar</button>
+          <button className={tab === 'plan' ? 'on' : ''} onClick={() => setTab('plan')}><Icon name="plan" size={22} /><span className="tab-label">{t("Planificar")}</span></button>
           <button className={`${tab === 'record' ? 'on' : ''} ${rec.state.status === 'recording' ? 'rec-live' : ''}`} onClick={() => setTab('record')}>
-            <Icon name="record" size={22} filled={rec.state.status === 'recording'} />Grava
+            <Icon name="record" size={22} filled={rec.state.status === 'recording'} /><span className="tab-label">{t("Grava")}</span>
           </button>
-          <button className={tab === 'social' ? 'on' : ''} onClick={() => setTab('social')}><Icon name="social" size={22} />Social</button>
-          <button className={tab === 'routes' ? 'on' : ''} onClick={() => setTab('routes')}><Icon name="routes" size={22} />Rutes</button>
-          <button className={tab === 'bike' ? 'on' : ''} onClick={() => setTab('bike')}><Icon name="bike" size={22} />Moto</button>
-          {account && <button className={tab === 'profile' ? 'on' : ''} onClick={() => setTab('profile')}><Icon name="profile" size={22} />Perfil</button>}
+          <button className={tab === 'social' ? 'on' : ''} onClick={() => setTab('social')}><Icon name="social" size={22} /><span className="tab-label">{t("Social")}</span></button>
+          <button className={tab === 'routes' ? 'on' : ''} onClick={() => setTab('routes')}><Icon name="routes" size={22} /><span className="tab-label">{t("Rutes")}</span></button>
+          <button className={tab === 'bike' ? 'on' : ''} onClick={() => setTab('bike')}><Icon name="bike" size={22} /><span className="tab-label">{t("Moto")}</span></button>
+          {account && <button className={tab === 'profile' ? 'on' : ''} onClick={() => setTab('profile')}><Icon name="profile" size={22} /><span className="tab-label">{t("Perfil")}</span></button>}
         </nav>
         {shareTarget && (
           <ShareDialog

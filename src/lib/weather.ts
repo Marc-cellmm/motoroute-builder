@@ -1,4 +1,5 @@
 import type { LngLat, WeatherSample } from './types';
+import { t as tr } from '../i18n';
 
 interface Sample {
   km: number;
@@ -48,8 +49,8 @@ export async function fetchWeather(samples: Sample[], departure: Date, lastDay: 
     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&elevation=${elev}` +
     `&hourly=${VARS}&daily=sunset&timeformat=unixtime&timezone=GMT&forecast_days=${days}&wind_speed_unit=kmh`;
   const res = await fetchRetry(url);
-  if (res.status === 429) throw new Error('El servei de meteo està saturat; torna-ho a provar d\'aquí a un minut.');
-  if (!res.ok) throw new Error('No s\'ha pogut obtenir la previsió meteorològica');
+  if (res.status === 429) throw new Error(tr("El servei de meteo està saturat; torna-ho a provar d'aquí a un minut."));
+  if (!res.ok) throw new Error(tr("No s'ha pogut obtenir la previsió meteorològica"));
   const json = await res.json();
   const list = Array.isArray(json) ? json : [json];
   const daily = list[0]?.daily;
@@ -93,24 +94,24 @@ export function classify(v: {
     if (l > level) level = l;
     reasons.push(why);
   };
-  if (v.gust >= 90) bump(3, `Ratxes de ${Math.round(v.gust)} km/h`);
-  else if (v.gust >= 70) bump(2, `Ratxes de ${Math.round(v.gust)} km/h`);
-  else if (v.gust >= 50) bump(1, `Ratxes de ${Math.round(v.gust)} km/h`);
+  if (v.gust >= 90) bump(3, tr("Ratxes de {0} km/h", [Math.round(v.gust)]));
+  else if (v.gust >= 70) bump(2, tr("Ratxes de {0} km/h", [Math.round(v.gust)]));
+  else if (v.gust >= 50) bump(1, tr("Ratxes de {0} km/h", [Math.round(v.gust)]));
 
-  if (v.mm >= 5) bump(3, `Pluja forta (${v.mm.toFixed(1)} mm/h)`);
-  else if (v.prob >= 70 && v.mm >= 1) bump(2, `Pluja probable (${v.prob} %)`);
-  else if (v.prob >= 40) bump(1, `Risc de pluja (${v.prob} %)`);
+  if (v.mm >= 5) bump(3, tr("Pluja forta ({0} mm/h)", [v.mm.toFixed(1)]));
+  else if (v.prob >= 70 && v.mm >= 1) bump(2, tr("Pluja probable ({0} %)", [v.prob]));
+  else if (v.prob >= 40) bump(1, tr("Risc de pluja ({0} %)", [v.prob]));
 
-  if ([96, 99].includes(v.code)) bump(3, 'Tempesta amb calamarsa');
-  else if (v.code === 95) bump(2, 'Tempesta');
+  if ([96, 99].includes(v.code)) bump(3, tr("Tempesta amb calamarsa"));
+  else if (v.code === 95) bump(2, tr("Tempesta"));
 
-  if ([71, 73, 75, 77, 85, 86].includes(v.code)) bump(3, 'Neu');
-  else if (v.freezing !== null && v.freezing < v.altitude + 200) bump(2, 'Cota de congelació propera: risc de gel');
-  else if (v.temp <= 3) bump(1, `Temperatura baixa (${Math.round(v.temp)} °C): risc de gel`);
+  if ([71, 73, 75, 77, 85, 86].includes(v.code)) bump(3, tr("Neu"));
+  else if (v.freezing !== null && v.freezing < v.altitude + 200) bump(2, tr("Cota de congelació propera: risc de gel"));
+  else if (v.temp <= 3) bump(1, tr("Temperatura baixa ({0} °C): risc de gel", [Math.round(v.temp)]));
 
-  if (v.apparent >= 40) bump(3, `Calor extrema (${Math.round(v.apparent)} °C)`);
-  else if (v.apparent >= 36) bump(2, `Molta calor (${Math.round(v.apparent)} °C)`);
-  else if (v.apparent >= 32) bump(1, `Calor (${Math.round(v.apparent)} °C)`);
+  if (v.apparent >= 40) bump(3, tr("Calor extrema ({0} °C)", [Math.round(v.apparent)]));
+  else if (v.apparent >= 36) bump(2, tr("Molta calor ({0} °C)", [Math.round(v.apparent)]));
+  else if (v.apparent >= 32) bump(1, tr("Calor ({0} °C)", [Math.round(v.apparent)]));
 
   return { level: level as 0 | 1 | 2 | 3, reasons };
 }
@@ -123,7 +124,7 @@ export function evaluate(samples: Sample[], data: WeatherData, shiftMs = 0): Wea
     if (idx < 0) {
       return {
         km: s.km, coord: s.coord, eta, altitude: s.altitude, tempC: NaN, precipProb: NaN, precipMm: NaN,
-        gustKmh: NaN, weatherCode: -1, freezingLevel: null, level: 0, reasons: ['Fora de l\'horitzó de previsió'],
+        gustKmh: NaN, weatherCode: -1, freezingLevel: null, level: 0, reasons: [tr("Fora de l'horitzó de previsió")],
       };
     }
     const v = {
@@ -163,17 +164,19 @@ export function bestDepartures(samples: Sample[], data: WeatherData, durationMin
     let penalty = evals.reduce((acc, e) => acc + WEIGHT[e.level] * stepMin, 0);
     const arrival = t.getTime() + durationMin * 60000;
     let note = '';
+    let night = false;
     if (data.sunset) {
       const late = (arrival / 1000 - data.sunset) / 60; // minuts després de la posta
       if (late > 0) {
         penalty += late * 2;
-        note = 'arribada de nit';
+        night = true;
+        note = tr("arribada de nit");
       } else {
-        note = `arribes ${Math.round(-late / 60 * 10) / 10} h abans de la posta`;
+        note = tr("arribes {0} h abans de la posta", [Math.round(-late / 60 * 10) / 10]);
       }
     }
     const worst = evals.reduce((m, e) => Math.max(m, e.level), 0);
-    if (worst === 0 && !note.includes('nit')) note = `sense alertes · ${note}`;
+    if (worst === 0 && !night) note = tr("sense alertes · {0}", [note]);
     options.push({ time: t, penalty: Math.round(penalty), note });
   }
   return options.sort((a, b) => a.penalty - b.penalty).slice(0, 3);

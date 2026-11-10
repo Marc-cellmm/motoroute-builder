@@ -1,5 +1,6 @@
 import { bbox, cumulativeKm, projectOnLine, resample } from './geo';
 import type { FuelKind, FuelPlan, FuelStation, LngLat, Motorcycle, RideMode, StationOnRoute } from './types';
+import { t } from '../i18n';
 
 let cache: { at: number; stations: FuelStation[] } | null = null;
 let inflight: Promise<FuelStation[]> | null = null;
@@ -26,12 +27,12 @@ export async function loadStations(): Promise<FuelStation[]> {
 
 async function downloadStations(): Promise<FuelStation[]> {
   const res = await fetch(FUEL_URL, { headers: { Accept: 'application/json' } });
-  if (!res.ok) throw new Error('El servei de preus del MITECO no respon ara mateix');
+  if (!res.ok) throw new Error(t("El servei de preus del MITECO no respon ara mateix"));
   const json = await res.json();
   const stations: FuelStation[] = (json.ListaEESSPrecio as Record<string, string>[])
     .map((e) => ({
       id: e['IDEESS'],
-      brand: e['Rótulo'] || 'Benzinera',
+      brand: e['Rótulo'] || t("Benzinera"),
       address: e['Dirección'] || '',
       town: e['Municipio'] || '',
       coord: [num(e['Longitud (WGS84)']) ?? NaN, num(e['Latitud']) ?? NaN] as LngLat,
@@ -123,14 +124,14 @@ export function planFuelStops(params: {
   const warnings: string[] = [];
   let lastKm = 0;
 
-  if (reach <= 0) warnings.push('Surts amb el dipòsit en reserva: reposta abans de començar.');
+  if (reach <= 0) warnings.push(t("Surts amb el dipòsit en reserva: reposta abans de començar."));
 
   while (reach < routeKm) {
     const window = usable.filter((s) => s.km > lastKm + 1 && s.km + s.offsetKm * 2 <= reach);
     if (!window.length) {
       warnings.push(
-        `No hi ha benzineres obertes entre el km ${Math.round(lastKm)} i el ${Math.round(reach)}: ` +
-          (lastKm === 0 ? 'surt amb el dipòsit ple.' : 'omple el dipòsit a la parada anterior.'),
+        t("No hi ha benzineres obertes entre el km {0} i el {1}: ", [Math.round(lastKm), Math.round(reach)]) +
+          (lastKm === 0 ? t("surt amb el dipòsit ple.") : t("omple el dipòsit a la parada anterior.")),
       );
       break;
     }
@@ -138,10 +139,10 @@ export function planFuelStops(params: {
     const late = window.filter((s) => s.km >= minKm);
     const pool = late.length ? late : window;
     const best = pool.reduce((a, b) => ((b.price ?? 99) < (a.price ?? 99) ? b : a));
-    const cheaper = pool.length > 1 ? `la més barata de les ${pool.length} opcions de la finestra segura` : 'l\'única opció segura';
+    const cheaper = pool.length > 1 ? t("la més barata de les {0} opcions de la finestra segura", [pool.length]) : t("l'única opció segura");
     stops.push({
       ...best,
-      reason: `Entraries en reserva cap al km ${Math.round(lastKm + (reach - lastKm) / 0.85)}. És ${cheaper}.`,
+      reason: t("Entraries en reserva cap al km {0}. És {1}.", [Math.round(lastKm + (reach - lastKm) / 0.85), cheaper]),
     });
     lastKm = best.km;
     reach = best.km + safeRange;
@@ -152,7 +153,7 @@ export function planFuelStops(params: {
   for (let i = 1; i < pts.length; i++) {
     if (pts[i] - pts[i - 1] > safeRange) {
       warnings.push(
-        `Tram de ${Math.round(pts[i] - pts[i - 1])} km sense benzineres (km ${Math.round(pts[i - 1])}–${Math.round(pts[i])}).`,
+        t("Tram de {0} km sense benzineres (km {1}–{2}).", [Math.round(pts[i] - pts[i - 1]), Math.round(pts[i - 1]), Math.round(pts[i])]),
       );
     }
   }

@@ -48,6 +48,7 @@ export interface SharedRoute {
   author_bike?: string | null;
   author_area?: string | null;
   author_avatar?: string | null;
+  author_country?: string | null;
 }
 
 export type FeedSort = 'recent' | 'popular' | 'near';
@@ -56,9 +57,9 @@ const PAGE = 20;
 function fail(error: { message: string; code?: string } | null, fallback: string): never {
   const msg = error?.message ?? '';
   if (/anonymous sign-ins are disabled/i.test(msg)) {
-    throw new Error('Cal activar «Allow anonymous sign-ins» a Supabase (Authentication → Sign In / Providers).');
+    throw new Error(tr("Cal activar «Allow anonymous sign-ins» a Supabase (Authentication → Sign In / Providers)."));
   }
-  if (/fetch|network/i.test(msg)) throw new Error('No hi ha connexió amb la comunitat. Torna-ho a provar.');
+  if (/fetch|network/i.test(msg)) throw new Error(tr("No hi ha connexió amb la comunitat. Torna-ho a provar."));
   throw new Error(`${fallback}${msg ? ` (${msg})` : ''}`);
 }
 
@@ -74,18 +75,18 @@ export async function getMe(): Promise<Me | null> {
 export async function join(username: string): Promise<Me> {
   const name = username.trim();
   if (!/^[A-Za-z0-9_.-]{3,24}$/.test(name)) {
-    throw new Error('El nom ha de tenir de 3 a 24 caràcters: lletres, números, punt, guió o guió baix.');
+    throw new Error(tr("El nom ha de tenir de 3 a 24 caràcters: lletres, números, punt, guió o guió baix."));
   }
   let session = (await sb().auth.getSession()).data.session;
   if (!session) {
     const { data, error } = await sb().auth.signInAnonymously();
-    if (error || !data.session) fail(error, 'No s\'ha pogut entrar a la comunitat');
+    if (error || !data.session) fail(error, tr("No s'ha pogut entrar a la comunitat"));
     session = data.session;
   }
   const { error } = await sb().from('profiles').upsert({ id: session.user.id, username: name });
   if (error) {
-    if (error.code === '23505') throw new Error('Aquest nom ja està agafat. Prova\'n un altre.');
-    fail(error, 'No s\'ha pogut desar el perfil');
+    if (error.code === '23505') throw new Error(tr("Aquest nom ja està agafat. Prova'n un altre."));
+    fail(error, tr("No s'ha pogut desar el perfil"));
   }
   return { id: session.user.id, username: name };
 }
@@ -101,7 +102,7 @@ export async function fetchFeed(opts: { sort: FeedSort; mode: RideMode | 'all'; 
     ? q.order('likes', { ascending: false }).order('created_at', { ascending: false })
     : q.order('created_at', { ascending: false });
   const { data, error } = await q.range(opts.page * PAGE, opts.page * PAGE + PAGE - 1);
-  if (error) fail(error, 'No s\'han pogut carregar les rutes');
+  if (error) fail(error, tr("No s'han pogut carregar les rutes"));
   let rows = (data ?? []) as SharedRoute[];
   if (opts.sort === 'near' && opts.near) {
     const p = opts.near;
@@ -125,11 +126,11 @@ export async function myReactions(ids: string[]): Promise<{ liked: Set<string>; 
 
 async function toggle(table: 'route_likes' | 'route_saves', routeId: string, on: boolean) {
   const me = (await sb().auth.getSession()).data.session?.user.id;
-  if (!me) throw new Error('Entra a la comunitat primer.');
+  if (!me) throw new Error(tr("Entra a la comunitat primer."));
   const { error } = on
     ? await sb().from(table).upsert({ route_id: routeId, user_id: me })
     : await sb().from(table).delete().eq('route_id', routeId).eq('user_id', me);
-  if (error) fail(error, 'No s\'ha pogut desar el canvi');
+  if (error) fail(error, tr("No s'ha pogut desar el canvi"));
 }
 export const setLike = (id: string, on: boolean) => toggle('route_likes', id, on);
 export const setSave = (id: string, on: boolean) => toggle('route_saves', id, on);
@@ -139,11 +140,11 @@ export async function fetchSaved(): Promise<SharedRoute[]> {
   if (!me) return [];
   const { data: saves, error } = await sb()
     .from('route_saves').select('route_id').eq('user_id', me).order('created_at', { ascending: false }).limit(200);
-  if (error) fail(error, 'No s\'han pogut carregar les rutes guardades');
+  if (error) fail(error, tr("No s'han pogut carregar les rutes guardades"));
   const ids = (saves ?? []).map((s) => s.route_id as string);
   if (!ids.length) return [];
   const { data, error: e2 } = await sb().from('shared_routes_feed').select('*').in('id', ids);
-  if (e2) fail(e2, 'No s\'han pogut carregar les rutes guardades');
+  if (e2) fail(e2, tr("No s'han pogut carregar les rutes guardades"));
   const byId = new Map((data as SharedRoute[]).map((r) => [r.id, r]));
   return ids.map((id) => byId.get(id)).filter(Boolean) as SharedRoute[];
 }
@@ -151,13 +152,13 @@ export async function fetchSaved(): Promise<SharedRoute[]> {
 export async function fetchMine(meId: string): Promise<SharedRoute[]> {
   const { data, error } = await sb()
     .from('shared_routes_feed').select('*').eq('author_id', meId).order('created_at', { ascending: false });
-  if (error) fail(error, 'No s\'han pogut carregar les teves rutes');
+  if (error) fail(error, tr("No s'han pogut carregar les teves rutes"));
   return (data ?? []) as SharedRoute[];
 }
 
 export async function deleteRoute(id: string) {
   const { error } = await sb().from('shared_routes').delete().eq('id', id);
-  if (error) fail(error, 'No s\'ha pogut eliminar la ruta');
+  if (error) fail(error, tr("No s'ha pogut eliminar la ruta"));
 }
 
 function downsample(values: number[], n = 200): number[] {
@@ -212,11 +213,12 @@ export async function publish(p: PublishInput): Promise<string> {
     elevations: downsample(elevations),
   };
   const { data, error } = await sb().from('shared_routes').insert(row).select('id').single();
-  if (error) fail(error, 'No s\'ha pogut publicar la ruta');
+  if (error) fail(error, tr("No s'ha pogut publicar la ruta"));
   return data.id as string;
 }
 
 import { ROUTE_RED as COLOR } from './theme';
+import { t as tr } from '../i18n';
 
 /** Converteix una ruta de la comunitat en una RouteResult per veure-la i planificar-la. */
 export function toRouteResult(s: SharedRoute): RouteResult {
@@ -268,7 +270,7 @@ export async function routeFromTrack(t: ParsedTrack, mode: RideMode): Promise<Ro
   const scoring = scoreRoute(mode, t.coords, profileKm, elev, []);
   return {
     id: `gpx-${Date.now()}`,
-    label: t.name ?? 'Ruta importada',
+    label: t.name ?? tr("Ruta importada"),
     color: COLOR,
     coords: t.coords,
     elevations: elev,

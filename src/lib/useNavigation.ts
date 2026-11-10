@@ -6,6 +6,7 @@ import {
 import { simplify } from './geo';
 import type { LiveFix } from './recorder';
 import type { Maneuver, PlanRequest, RouteResult } from './types';
+import { lang, t } from '../i18n';
 
 export type NavStatus = 'preparing' | 'guiding' | 'rerouting' | 'arrived' | 'no-instructions';
 
@@ -30,9 +31,11 @@ function speak(text: string) {
     if (!synth) return;
     const u = new SpeechSynthesisUtterance(text);
     const voices = synth.getVoices();
-    const v = voices.find((x) => x.lang.toLowerCase().startsWith('ca')) ?? voices.find((x) => x.lang.toLowerCase().startsWith('es'));
+    const want = lang().speech.toLowerCase();
+    const base = want.split('-')[0];
+    const v = voices.find((x) => x.lang.toLowerCase().replace('_', '-') === want) ?? voices.find((x) => x.lang.toLowerCase().startsWith(base));
     if (v) u.voice = v;
-    u.lang = v?.lang ?? 'ca-ES';
+    u.lang = v?.lang ?? lang().speech;
     u.rate = 1.02;
     synth.cancel(); // l'avís nou substitueix el que quedi pendent
     synth.speak(u);
@@ -91,7 +94,7 @@ export function useNavigation(route: RouteResult | null, fix: LiveFix | null, co
     if (!main || Date.now() - reroutingAt.current < 15000) return;
     reroutingAt.current = Date.now();
     setView((v) => ({ ...v, status: 'rerouting' }));
-    if (voice.current) speak('Recalculant per tornar a la ruta.');
+    if (voice.current) speak(t("Recalculant per tornar a la ruta."));
     const target = rejoinPoint(from, main, lastKm);
     try {
       const [r] = await callValhalla([{ coord: from, type: 'break' }, { coord: target.coord, type: 'break' }], costing);
@@ -100,7 +103,7 @@ export function useNavigation(route: RouteResult | null, fix: LiveFix | null, co
       offsets.current = [];
       setView((v) => ({ ...v, status: 'guiding' }));
     } catch {
-      setView((v) => ({ ...v, status: 'guiding', error: 'Sense connexió per recalcular: torna a la línia del mapa.' }));
+      setView((v) => ({ ...v, status: 'guiding', error: t("Sense connexió per recalcular: torna a la línia del mapa.") }));
     }
   }, [main, costing]);
 
@@ -119,7 +122,7 @@ export function useNavigation(route: RouteResult | null, fix: LiveFix | null, co
         km.current = Math.max(detour.rejoinKm, onMain.km);
         setDetour(null);
         offsets.current = [];
-        if (voice.current) speak('Has tornat a la ruta.');
+        if (voice.current) speak(t("Has tornat a la ruta."));
         return;
       }
       offsets.current = [...offsets.current.slice(-4), d.offset];
@@ -144,7 +147,7 @@ export function useNavigation(route: RouteResult | null, fix: LiveFix | null, co
 
     if (main.totalKm - km.current < 0.04 && loc.offset < 0.06) {
       arrived.current = true;
-      if (voice.current) speak('Has arribat al final de la ruta.');
+      if (voice.current) speak(t("Has arribat al final de la ruta."));
       setView((v) => ({ ...v, status: 'arrived', next: null, then: null, remainingKm: 0 }));
       return;
     }

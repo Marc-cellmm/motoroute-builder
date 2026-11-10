@@ -103,9 +103,12 @@ const FILLED = new Set(['play', 'stop']);
 
 export type IconName = keyof typeof P;
 
-export default function Icon({ name, size = 20, className, style, filled }: { name: IconName | string; size?: number; className?: string; style?: CSSProperties; filled?: boolean }) {
+export default function Icon({ name, size = 20, className: cls, style, filled }: { name: IconName | string; size?: number; className?: string; style?: CSSProperties; filled?: boolean }) {
+  let className = cls;
   const d = P[name] ?? P.info;
   const fill = filled ?? FILLED.has(name);
+  // en àrab (dreta a esquerra) les fletxes de navegar per l'app s'inverteixen
+  if (['chevron-left', 'chevron-right', 'arrow-right'].includes(name)) className = `${className ?? ''} flip`;
   if (name === 'record') {
     // anella amb punt ple: el botó de gravar de tota la vida
     return (

@@ -8,6 +8,7 @@ import { parseGpx } from '../../lib/gpxImport';
 import { reverseGeocode } from '../../lib/places';
 import type { LngLat, RideMode, RouteResult, SavedRoute } from '../../lib/types';
 import Icon from '../Icon';
+import { t } from '../../i18n';
 
 interface Props {
   me: Me | null;
@@ -70,7 +71,7 @@ export default function SocialScreen(p: Props) {
       const guessMode: RideMode = 'road';
       const route = await routeFromTrack(track, guessMode);
       const startName = await reverseGeocode(track.coords[0]);
-      setUpload({ route, title: track.name ?? `Ruta per ${startName.split(',')[0]}`, mode: guessMode, date: track.date, startName });
+      setUpload({ route, title: track.name ?? t("Ruta per {0}", [startName.split(',')[0]]), mode: guessMode, date: track.date, startName });
       p.onPreviewUpload(route);
       setUploadMenu(false);
     } catch (e) {
@@ -84,10 +85,10 @@ export default function SocialScreen(p: Props) {
   if (!socialEnabled) {
     return (
       <div>
-        <h2>Comunitat</h2>
+        <h2>{t("Comunitat")}</h2>
         <div className="alert info" style={{ marginTop: 12 }}>
-          L'apartat Social necessita connexió amb el servidor de la comunitat i aquí no està disponible.
-          {import.meta.env.VITE_DEMO === '1' ? ' Prova-ho a la web publicada.' : ' Falta configurar Supabase (vegeu el README).'}
+          {t("L'apartat Social necessita connexió amb el servidor de la comunitat i aquí no està disponible.")}
+          {import.meta.env.VITE_DEMO === '1' ? t(" Prova-ho a la web publicada.") : t(" Falta configurar Supabase (vegeu el README).")}
         </div>
       </div>
     );
@@ -117,28 +118,28 @@ export default function SocialScreen(p: Props) {
   return (
     <div>
       <div className="row" style={{ marginBottom: 6 }}>
-        <h2>Comunitat</h2>
-        <button className="btn small primary" style={{ flex: 'none' }} onClick={() => setUploadMenu(!uploadMenu)}><Icon name="plus" size={16} /> Puja una ruta</button>
+        <h2>{t("Comunitat")}</h2>
+        <button className="btn small primary" style={{ flex: 'none' }} onClick={() => setUploadMenu(!uploadMenu)}><Icon name="plus" size={16} /> {t("Puja una ruta")}</button>
       </div>
-      <p className="hint">Rutes que altres motoristes han fet. Dona-hi m'agrada o guarda-les per fer-les: les trobaràs a «Les meves rutes».</p>
+      <p className="hint">{t("Rutes que altres motoristes han fet. Dona-hi m'agrada o guarda-les per fer-les: les trobaràs a «Les meves rutes».")}</p>
 
-      {p.me?.username && <div className="hint" style={{ marginTop: 4 }}>Ets <b>@{p.me.username}</b></div>}
+      {p.me?.username && <div className="hint" style={{ marginTop: 4 }}>{t("Ets")}{' '}<b>@{p.me.username}</b></div>}
       {(askJoin || (!p.me?.username && uploadMenu)) && !p.me?.username && (
         <div style={{ marginTop: 12 }}><JoinForm onJoined={(m) => { p.setMe(m); setAskJoin(false); }} /></div>
       )}
 
       {uploadMenu && p.me?.username && (
         <div className="box" style={{ marginTop: 12 }}>
-          <h3>Quina ruta vols compartir?</h3>
-          <p className="hint">Puja el GPX del teu GPS, mòbil, Wikiloc, Strava o Calimoto, o tria una ruta que tinguis desada.</p>
+          <h3>{t("Quina ruta vols compartir?")}</h3>
+          <p className="hint">{t("Puja el GPX del teu GPS, mòbil, Wikiloc, Strava o Calimoto, o tria una ruta que tinguis desada.")}</p>
           <input ref={fileRef} type="file" accept=".gpx,application/gpx+xml" style={{ display: 'none' }}
             onChange={(e) => e.target.files?.[0] && onGpx(e.target.files[0])} />
           <button className="btn" style={{ width: '100%', marginTop: 10 }} disabled={importing} onClick={() => fileRef.current?.click()}>
-            <Icon name="upload" />{importing ? 'Llegint el GPX…' : 'Puja un fitxer GPX'}
+            <Icon name="upload" />{importing ? t("Llegint el GPX…") : t("Puja un fitxer GPX")}
           </button>
           {p.localRoutes.length > 0 && (
             <>
-              <div className="label" style={{ marginTop: 14 }}>O una de les teves rutes desades</div>
+              <div className="label" style={{ marginTop: 14 }}>{t("O una de les teves rutes desades")}</div>
               {p.localRoutes.slice(0, 8).map((s) => (
                 <button key={s.id} className="list-item" style={{ width: '100%', background: 'none', border: 0, borderBottom: '1px solid var(--line)', textAlign: 'left', cursor: 'pointer' }}
                   onClick={() => {
@@ -158,21 +159,21 @@ export default function SocialScreen(p: Props) {
 
       <div className="row" style={{ margin: '14px 0 10px', gap: 8 }}>
         <div className="chips" style={{ flex: 2 }}>
-          {([['recent', 'Recents'], ['popular', 'Més populars'], ['near', 'A prop']] as const).map(([id, label]) => (
+          {([['recent', t("Recents")], ['popular', t("Més populars")], ['near', t("A prop")]] as const).map(([id, label]) => (
             <button key={id} className={`chip ${sort === id ? 'on' : ''}`} disabled={id === 'near' && !p.near} onClick={() => setSort(id)}>{label}</button>
           ))}
         </div>
         <select className="input" style={{ flex: 1, minHeight: 40, padding: '6px 10px' }} value={mode} onChange={(e) => setMode(e.target.value as RideMode | 'all')}>
-          <option value="all">Totes</option>
-          <option value="road">Carretera</option>
-          <option value="trail">Trail</option>
+          <option value="all">{t("Totes")}</option>
+          <option value="road">{t("Carretera")}</option>
+          <option value="trail">{t("Trail")}</option>
         </select>
       </div>
-      {sort === 'near' && !p.near && <p className="hint">Tria un punt de sortida a Planificar per veure rutes a prop.</p>}
+      {sort === 'near' && !p.near && <p className="hint">{t("Tria un punt de sortida a Planificar per veure rutes a prop.")}</p>}
 
       {list.error && <div className="alert err">{list.error}</div>}
       {loading && !list.rows.length && (
-        <div aria-busy="true" aria-label="Carregant rutes de la comunitat">
+        <div aria-busy="true" aria-label={t("Carregant rutes de la comunitat")}>
           {[0, 1, 2].map((k) => (
             <div key={k} className="route-card skeleton">
               <div className="sk-row"><span className="sk sk-av" /><span className="sk sk-line" style={{ width: '40%' }} /></div>
@@ -183,7 +184,7 @@ export default function SocialScreen(p: Props) {
         </div>
       )}
       {!loading && !list.rows.length && !list.error && (
-        <div className="empty"><Icon name="bike" size={40} />Encara no hi ha rutes aquí. Sigues el primer a compartir-ne una!</div>
+        <div className="empty"><Icon name="bike" size={40} />{t("Encara no hi ha rutes aquí. Sigues el primer a compartir-ne una!")}</div>
       )}
       {list.rows.map((r) => (
         <SharedRouteCard
@@ -195,7 +196,7 @@ export default function SocialScreen(p: Props) {
           onSave={() => list.react(r.id, 'saved')}
         />
       ))}
-      {more && <button className="btn" style={{ width: '100%' }} disabled={loading} onClick={() => refresh(page + 1)}>{loading ? 'Carregant…' : 'Carrega\'n més'}</button>}
+      {more && <button className="btn" style={{ width: '100%' }} disabled={loading} onClick={() => refresh(page + 1)}>{loading ? t("Carregant…") : t("Carrega'n més")}</button>}
 
       {upload && (
         <ShareDialog

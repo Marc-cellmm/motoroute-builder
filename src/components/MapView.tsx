@@ -43,6 +43,7 @@ async function demoStyle() {
   };
 }
 import type { Accommodation, LngLat, Place, RouteResult, Stage, StationOnRoute, WeatherSample } from '../lib/types';
+import { t, locale } from '../i18n';
 
 const STYLES = {
   dark: 'https://tiles.openfreemap.org/styles/dark',
@@ -135,7 +136,7 @@ export default function MapView(p: Props) {
         m.on('mouseleave', layer, () => (m.getCanvas().style.cursor = ''));
       };
       popup('stations', (x) => `<b>${esc(x.brand)}</b><br>${esc(x.town)}<br>${x.price} €/l · km ${x.km}`);
-      popup('stops', (x) => `<b>Parada recomanada · ${esc(x.brand)}</b><br>${x.price} €/l · km ${x.km}`);
+      popup('stops', (x) => t("<b>Parada recomanada · {0}</b><br>{1} €/l · km {2}", [esc(x.brand), x.price, x.km]));
       popup('weather', (x) => `<b>km ${x.km} · ${x.eta}</b><br>${esc(x.reasons)}`);
       popup('accom', (x) => `<b>${esc(x.name)}</b><br>${esc(x.kind)}${x.stars ? ' · ' + x.stars + ' estrelles' : ''}`);
       m.on('click', 'routes-line', (e: MapLayerMouseEvent) => {
@@ -205,7 +206,7 @@ export default function MapView(p: Props) {
       level: w.level,
       color: LEVEL_COLOR[w.level],
       km: Math.round(w.km),
-      eta: w.eta.toLocaleString('ca-ES', { weekday: 'short', hour: '2-digit', minute: '2-digit' }),
+      eta: w.eta.toLocaleString(locale(), { weekday: 'short', hour: '2-digit', minute: '2-digit' }),
       reasons: w.reasons.join(' · '),
     }))));
     setData('stations', fc((q.stations ?? []).map((s) => pt(s.coord, { brand: s.brand, town: s.town, price: s.price?.toFixed(3), km: Math.round(s.km) }))));
@@ -281,7 +282,7 @@ export default function MapView(p: Props) {
     <>
       <div ref={el} className="map" />
       {!DEMO && (
-        <button className="map-style-btn" onClick={switchTheme} aria-label={theme === 'dark' ? 'Mapa clar' : 'Mapa fosc'} title={theme === 'dark' ? 'Mapa clar' : 'Mapa fosc'}>
+        <button className="map-style-btn" onClick={switchTheme} aria-label={theme === 'dark' ? t("Mapa clar") : t("Mapa fosc")} title={theme === 'dark' ? t("Mapa clar") : t("Mapa fosc")}>
           <Icon name="layers" size={18} />
         </button>
       )}

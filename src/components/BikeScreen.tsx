@@ -4,6 +4,7 @@ import { effectiveConsumption, realConsumption, usableRangeKm } from '../lib/fue
 import { uid } from '../lib/storage';
 import Icon from './Icon';
 import type { Motorcycle } from '../lib/types';
+import { t } from '../i18n';
 
 interface Props {
   bikes: Motorcycle[];
@@ -52,11 +53,11 @@ export default function BikeScreen({ bikes, setBikes, coverUrl }: Props) {
     const results = searchCatalog(query);
     return (
       <div>
-        <h2>Afegeix la meva moto</h2>
-        <p className="hint">Cerca el model: carregarem el dipòsit i el consum perquè puguis revisar-los.</p>
+        <h2>{t("Afegeix la meva moto")}</h2>
+        <p className="hint">{t("Cerca el model: carregarem el dipòsit i el consum perquè puguis revisar-los.")}</p>
         <div className="field search-field" style={{ marginTop: 14 }}>
           <Icon name="search" className="dim" />
-          <input className="input" autoFocus placeholder="Marca o model (p. ex. Ténéré, GS, MT-07)" value={query} onChange={(e) => setQuery(e.target.value)} />
+          <input className="input" autoFocus placeholder={t("Marca o model (p. ex. Ténéré, GS, MT-07)")} value={query} onChange={(e) => setQuery(e.target.value)} />
         </div>
         {results.map((m) => (
           <button
@@ -70,15 +71,15 @@ export default function BikeScreen({ bikes, setBikes, coverUrl }: Props) {
           >
             <div className="main">
               <b>{m.make} {m.model}</b>
-              <div className="hint">{CATEGORY_LABEL[m.category]} · {m.years} · {m.tankLiters} l · {m.consumption} l/100 km</div>
+              <div className="hint">{CATEGORY_LABEL[m.category]} · {m.years} · {m.tankLiters} l · {m.consumption} {t("l/100 km")}</div>
             </div>
             <Icon name="chevron-right" className="dim" />
           </button>
         ))}
         <div className="actions">
-          {bikes.length > 0 && <button className="btn" onClick={() => setMode('list')}>Cancel·la</button>}
+          {bikes.length > 0 && <button className="btn" onClick={() => setMode('list')}>{t("Cancel·la")}</button>}
           <button className="btn" onClick={() => { setDraft({ ...blank(), name: query }); setDraftVerified(null); setMode('edit'); }}>
-            No trobo el meu model
+            {t("No trobo el meu model")}
           </button>
         </div>
       </div>
@@ -91,30 +92,30 @@ export default function BikeScreen({ bikes, setBikes, coverUrl }: Props) {
     const range = usableRangeKm(d, d.consumptionWmtc);
     return (
       <div>
-        <h2>{bikes.some((b) => b.id === d.id) ? 'Edita la moto' : 'Revisa les dades'}</h2>
+        <h2>{bikes.some((b) => b.id === d.id) ? t("Edita la moto") : t("Revisa les dades")}</h2>
         {draftVerified === false && (
-          <div className="alert warn">Valors aproximats del catàleg: comprova'ls amb la fitxa tècnica o el manual de la teva moto.</div>
+          <div className="alert warn">{t("Valors aproximats del catàleg: comprova'ls amb la fitxa tècnica o el manual de la teva moto.")}</div>
         )}
-        {draftVerified === true && <div className="alert info">Dades de la fitxa oficial del fabricant.</div>}
+        {draftVerified === true && <div className="alert info">{t("Dades de la fitxa oficial del fabricant.")}</div>}
         <div className="field" style={{ marginTop: 10 }}>
-          <label>Nom</label>
-          <input className="input" value={d.name} onChange={(e) => set({ name: e.target.value })} placeholder="p. ex. La Ténéré" />
+          <label>{t("Nom")}</label>
+          <input className="input" value={d.name} onChange={(e) => set({ name: e.target.value })} placeholder={t("p. ex. La Ténéré")} />
         </div>
         <div className="grid2">
           <div className="field">
-            <label>Dipòsit (l)</label>
+            <label>{t("Dipòsit (l)")}</label>
             <input type="number" step="0.1" className="input" value={d.tankLiters} onChange={(e) => set({ tankLiters: +e.target.value })} />
           </div>
           <div className="field">
-            <label>Reserva (l)</label>
+            <label>{t("Reserva (l)")}</label>
             <input type="number" step="0.1" className="input" value={d.reserveLiters} onChange={(e) => set({ reserveLiters: +e.target.value })} />
           </div>
           <div className="field">
-            <label>Consum (l/100 km)</label>
+            <label>{t("Consum (l/100 km)")}</label>
             <input type="number" step="0.1" className="input" value={d.consumptionWmtc} onChange={(e) => set({ consumptionWmtc: +e.target.value })} />
           </div>
           <div className="field">
-            <label>Gasolina</label>
+            <label>{t("Gasolina")}</label>
             <select className="input" value={d.fuel} onChange={(e) => set({ fuel: e.target.value as Motorcycle['fuel'] })}>
               <option value="gasoline_95">95</option>
               <option value="gasoline_98">98</option>
@@ -122,25 +123,25 @@ export default function BikeScreen({ bikes, setBikes, coverUrl }: Props) {
           </div>
         </div>
         <div className="toggle">
-          <span>Normalment amb passatger</span>
+          <span>{t("Normalment amb passatger")}</span>
           <input type="checkbox" checked={d.carriesPassenger} onChange={(e) => set({ carriesPassenger: e.target.checked })} />
         </div>
         <div className="toggle">
-          <span>Normalment amb maletes o top case</span>
+          <span>{t("Normalment amb maletes o top case")}</span>
           <input type="checkbox" checked={d.carriesLuggage} onChange={(e) => set({ carriesLuggage: e.target.checked })} />
         </div>
         <div className="spec-grid" style={{ marginTop: 14 }}>
-          <div><span>Autonomia fins a la reserva</span><b>{Number.isFinite(range) ? Math.round(range) : '—'} <small>km</small></b></div>
-          <div><span>Autonomia segura (−15 %)</span><b>{Number.isFinite(range) ? Math.round(range * 0.85) : '—'} <small>km</small></b></div>
+          <div><span>{t("Autonomia fins a la reserva")}</span><b>{Number.isFinite(range) ? Math.round(range) : '—'} <small>{t("km")}</small></b></div>
+          <div><span>{t("Autonomia segura (−15 %)")}</span><b>{Number.isFinite(range) ? Math.round(range * 0.85) : '—'} <small>{t("km")}</small></b></div>
         </div>
         <div className="actions">
-          <button className="btn" onClick={() => setMode(bikes.length ? 'list' : 'search')}>Cancel·la</button>
+          <button className="btn" onClick={() => setMode(bikes.length ? 'list' : 'search')}>{t("Cancel·la")}</button>
           <button
             className="btn primary"
             disabled={!d.name || d.tankLiters <= d.reserveLiters || d.consumptionWmtc <= 0}
             onClick={() => save(d)}
           >
-            Desa la moto
+            {t("Desa la moto")}
           </button>
         </div>
       </div>
@@ -151,28 +152,28 @@ export default function BikeScreen({ bikes, setBikes, coverUrl }: Props) {
     const b = draft;
     return (
       <div>
-        <h2>He repostat</h2>
-        <p className="hint">Amb dos plens seguits calculem el consum real de la teva {b.name}.</p>
+        <h2>{t("He repostat")}</h2>
+        <p className="hint">{t("Amb dos plens seguits calculem el consum real de la teva")}{' '}{b.name}.</p>
         <div className="grid2" style={{ marginTop: 14 }}>
           <div className="field">
-            <label>Litres</label>
+            <label>{t("Litres")}</label>
             <input type="number" step="0.01" className="input" value={refuel.liters} onChange={(e) => setRefuel({ ...refuel, liters: e.target.value })} />
           </div>
           <div className="field">
-            <label>Km des de l'últim ple</label>
+            <label>{t("Km des de l'últim ple")}</label>
             <input type="number" className="input" value={refuel.km} onChange={(e) => setRefuel({ ...refuel, km: e.target.value })} />
           </div>
           <div className="field">
-            <label>Preu (€/l, opcional)</label>
+            <label>{t("Preu (€/l, opcional)")}</label>
             <input type="number" step="0.001" className="input" value={refuel.price} onChange={(e) => setRefuel({ ...refuel, price: e.target.value })} />
           </div>
         </div>
         <div className="toggle">
-          <span>He omplert el dipòsit</span>
+          <span>{t("He omplert el dipòsit")}</span>
           <input type="checkbox" checked={refuel.full} onChange={(e) => setRefuel({ ...refuel, full: e.target.checked })} />
         </div>
         <div className="actions">
-          <button className="btn" onClick={() => setMode('list')}>Cancel·la</button>
+          <button className="btn" onClick={() => setMode('list')}>{t("Cancel·la")}</button>
           <button
             className="btn primary"
             disabled={!(+refuel.liters > 0)}
@@ -193,7 +194,7 @@ export default function BikeScreen({ bikes, setBikes, coverUrl }: Props) {
               setRefuel({ liters: '', km: '', full: true, price: '' });
             }}
           >
-            Desa
+            {t("Desa")}
           </button>
         </div>
       </div>
@@ -204,8 +205,8 @@ export default function BikeScreen({ bikes, setBikes, coverUrl }: Props) {
     <div>
       <div className="page-head">
         <div>
-          <h2>La meva moto</h2>
-          <p className="hint">El dipòsit i el consum decideixen on et recomanem repostar a cada ruta.</p>
+          <h2>{t("La meva moto")}</h2>
+          <p className="hint">{t("El dipòsit i el consum decideixen on et recomanem repostar a cada ruta.")}</p>
         </div>
       </div>
       {bikes.map((b) => {
@@ -221,44 +222,44 @@ export default function BikeScreen({ bikes, setBikes, coverUrl }: Props) {
               <span className="icon-tile"><Icon name="bike" size={22} /></span>
               <div className="garage-title">
                 <h3>{b.name}</h3>
-                <div className="hint">{CATEGORY_LABEL[b.category] ?? b.category} · Gasolina {b.fuel === 'gasoline_98' ? '98' : '95'}</div>
+                <div className="hint">{CATEGORY_LABEL[b.category] ?? b.category} {t("· Gasolina")}{' '}{b.fuel === 'gasoline_98' ? '98' : '95'}</div>
               </div>
-              {b.isDefault && <span className="pill">Principal</span>}
+              {b.isDefault && <span className="pill">{t("Principal")}</span>}
             </header>
             <div className="garage-range">
               <div>
-                <span className="eyebrow">Autonomia segura</span>
-                <div className="metric go-text">{Number.isFinite(safe) ? safe : '—'}<small>km</small></div>
+                <span className="eyebrow">{t("Autonomia segura")}</span>
+                <div className="metric go-text">{Number.isFinite(safe) ? safe : '—'}<small>{t("km")}</small></div>
               </div>
               <Icon name="gauge" size={34} className="go-text" />
             </div>
             <div className="spec-grid">
-              <div><span>Dipòsit</span><b>{b.tankLiters} l</b></div>
-              <div><span>Reserva</span><b>{b.reserveLiters} l</b></div>
-              <div><span>Consum de fitxa</span><b>{b.consumptionWmtc} <small>l/100</small></b></div>
-              <div><span>Consum real</span><b>{real ? <>{real.avg.toFixed(2)} <small>l/100</small></> : <small>Sense dades</small>}</b></div>
+              <div><span>{t("Dipòsit")}</span><b>{b.tankLiters} l</b></div>
+              <div><span>{t("Reserva")}</span><b>{b.reserveLiters} l</b></div>
+              <div><span>{t("Consum de fitxa")}</span><b>{b.consumptionWmtc} <small>l/100</small></b></div>
+              <div><span>{t("Consum real")}</span><b>{real ? <>{real.avg.toFixed(2)} <small>l/100</small></> : <small>{t("Sense dades")}</small>}</b></div>
             </div>
-            <p className="hint">Consum efectiu: {road} l/100 en carretera · {trail} l/100 en pista{real ? ` · ${real.n} ${real.n === 1 ? 'mesura' : 'mesures'}` : ''}</p>
+            <p className="hint">{t("Consum efectiu:")}{' '}{road} {t("l/100 en carretera ·")}{' '}{trail} {t("l/100 en pista")}{real ? ` · ${real.n} ${real.n === 1 ? 'mesura' : 'mesures'}` : ''}</p>
             <div className="garage-actions">
-              <button className="btn primary" onClick={() => { setDraft(b); setMode('refuel'); }}><Icon name="fuel" /> He repostat</button>
-              <button className="btn" onClick={() => { setDraft(b); setDraftVerified(null); setMode('edit'); }}><Icon name="edit" /> Edita</button>
+              <button className="btn primary" onClick={() => { setDraft(b); setMode('refuel'); }}><Icon name="fuel" /> {t("He repostat")}</button>
+              <button className="btn" onClick={() => { setDraft(b); setDraftVerified(null); setMode('edit'); }}><Icon name="edit" /> {t("Edita")}</button>
             </div>
             <div className="garage-more">
-              {!b.isDefault && <button className="link-btn" onClick={() => setDefault(b.id)}>Fes-la principal</button>}
+              {!b.isDefault && <button className="link-btn" onClick={() => setDefault(b.id)}>{t("Fes-la principal")}</button>}
               {confirmRemove === b.id ? (
                 <span className="confirm">
-                  Segur?
-                  <button className="link-btn danger" onClick={() => { remove(b.id); setConfirmRemove(null); }}>Sí, elimina-la</button>
-                  <button className="link-btn" onClick={() => setConfirmRemove(null)}>No</button>
+                  {t("Segur?")}
+                  <button className="link-btn danger" onClick={() => { remove(b.id); setConfirmRemove(null); }}>{t("Sí, elimina-la")}</button>
+                  <button className="link-btn" onClick={() => setConfirmRemove(null)}>{t("No")}</button>
                 </span>
               ) : (
-                <button className="link-btn muted-link" onClick={() => setConfirmRemove(b.id)}><Icon name="trash" size={16} /> Elimina</button>
+                <button className="link-btn muted-link" onClick={() => setConfirmRemove(b.id)}><Icon name="trash" size={16} /> {t("Elimina")}</button>
               )}
             </div>
           </article>
         );
       })}
-      <button className="btn ghost wide-btn" onClick={() => { setQuery(''); setMode('search'); }}><Icon name="plus" /> Afegeix una moto</button>
+      <button className="btn ghost wide-btn" onClick={() => { setQuery(''); setMode('search'); }}><Icon name="plus" /> {t("Afegeix una moto")}</button>
     </div>
   );
 }

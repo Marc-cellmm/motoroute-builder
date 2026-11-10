@@ -7,16 +7,17 @@ import { effectiveConsumption, loadStations, planFuelStops, stationsOnRoute } fr
 import type { Motorcycle, PlanRequest, RouteResult, Stage } from './types';
 
 import { ROUTE_COLORS as COLORS } from './theme';
-const LABELS = ['Opció A', 'Opció B', 'Opció C'];
+import { t } from '../i18n';
+const LABELS = [t("Opció A"), t("Opció B"), t("Opció C")];
 const BREAK_FACTOR = 1.1; // parades curtes, fotos, cafè
 
 export async function buildRoutes(req: PlanRequest, progress: (msg: string) => void) {
-  progress('Calculant rutes amb el perfil de moto…');
+  progress(t("Calculant rutes amb el perfil de moto…"));
   const { routes, note } = await planRoutes(req);
   const out: RouteResult[] = [];
   for (let i = 0; i < routes.length; i++) {
     const r = routes[i];
-    progress(`Analitzant corbes i desnivell (${i + 1}/${routes.length})…`);
+    progress(t("Analitzant corbes i desnivell ({0}/{1})…", [i + 1, routes.length]));
     // El motor ja retorna l'elevació; Open-Meteo només com a alternativa.
     const prof = r.elevations && r.profileKm
       ? { km: r.profileKm, elev: r.elevations }

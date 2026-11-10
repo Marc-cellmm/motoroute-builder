@@ -1,0 +1,3577 @@
+[
+ {
+  "k": "13ittcw",
+  "s": "Bona nit",
+  "f": "App.tsx"
+ },
+ {
+  "k": "rfi1ca",
+  "s": "Bon dia",
+  "f": "App.tsx"
+ },
+ {
+  "k": "124y8iv",
+  "s": "Bona tarda",
+  "f": "App.tsx"
+ },
+ {
+  "k": "1g66p4j",
+  "s": "Comencem la ruta.",
+  "f": "App.tsx"
+ },
+ {
+  "k": "14frqdb",
+  "s": "Sortida",
+  "f": "App.tsx"
+ },
+ {
+  "k": "bofb91",
+  "s": "Arribada",
+  "f": "App.tsx"
+ },
+ {
+  "k": "vwo7us",
+  "s": "Preparant…",
+  "f": "App.tsx"
+ },
+ {
+  "k": "1yw1erb",
+  "s": "· circular",
+  "f": "App.tsx"
+ },
+ {
+  "k": "1t8b6gc",
+  "s": "Llegint el GPX…",
+  "f": "App.tsx"
+ },
+ {
+  "k": "1ckzatw",
+  "s": "Buscant on comença…",
+  "f": "App.tsx"
+ },
+ {
+  "k": "oxqi6p",
+  "s": "Inici",
+  "f": "App.tsx"
+ },
+ {
+  "k": "1fz95qv",
+  "s": "Final",
+  "f": "App.tsx"
+ },
+ {
+  "k": "1cnbbv1",
+  "s": "El meu perfil",
+  "f": "App.tsx"
+ },
+ {
+  "k": "1w9danq",
+  "s": "Mode demostració.",
+  "f": "App.tsx"
+ },
+ {
+  "k": "1oib69y",
+  "s": "Rutes, meteo, benzineres i allotjaments són simulats (els pobles de Catalunya són reals). La versió completa amb dades reals es publica a Vercel.",
+  "f": "App.tsx"
+ },
+ {
+  "k": "1pa4w47",
+  "s": "On anem avui?",
+  "f": "App.tsx"
+ },
+ {
+  "k": "1li3ag1",
+  "s": "Alternatives",
+  "f": "App.tsx"
+ },
+ {
+  "k": "v24gog",
+  "s": "Edita",
+  "f": "App.tsx"
+ },
+ {
+  "k": "x5mec0",
+  "s": "Veure el detall de",
+  "f": "App.tsx"
+ },
+ {
+  "k": "1vucnwc",
+  "s": "Toca una ruta per seleccionar-la; toca-la de nou per obrir-ne el detall.",
+  "f": "App.tsx"
+ },
+ {
+  "k": "1cybm2v",
+  "s": "Ruta",
+  "f": "App.tsx"
+ },
+ {
+  "k": "1q1zo4t",
+  "s": " · circular",
+  "f": "App.tsx"
+ },
+ {
+  "k": "1xtvxkq",
+  "s": "Planificar",
+  "f": "App.tsx"
+ },
+ {
+  "k": "dwuh6u",
+  "s": "Grava",
+  "f": "App.tsx"
+ },
+ {
+  "k": "1x37caa",
+  "s": "Social",
+  "f": "App.tsx"
+ },
+ {
+  "k": "1fjgs48",
+  "s": "Rutes",
+  "f": "App.tsx"
+ },
+ {
+  "k": "xm4c5w",
+  "s": "Moto",
+  "f": "App.tsx"
+ },
+ {
+  "k": "1vup7yb",
+  "s": "Perfil",
+  "f": "App.tsx"
+ },
+ {
+  "k": "1f6sc3z",
+  "s": "Afegeix la meva moto",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "14ij40c",
+  "s": "Cerca el model: carregarem el dipòsit i el consum perquè puguis revisar-los.",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "1c1uhmp",
+  "s": "Marca o model (p. ex. Ténéré, GS, MT-07)",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "10so8nh",
+  "s": "l/100 km",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "hhh7nf",
+  "s": "Cancel·la",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "68jipz",
+  "s": "No trobo el meu model",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "zvz8gs",
+  "s": "Edita la moto",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "181cy20",
+  "s": "Revisa les dades",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "1aynaaa",
+  "s": "Valors aproximats del catàleg: comprova'ls amb la fitxa tècnica o el manual de la teva moto.",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "anjw20",
+  "s": "Dades de la fitxa oficial del fabricant.",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "15eqct1",
+  "s": "Nom",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "wd56l8",
+  "s": "p. ex. La Ténéré",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "1wutfp7",
+  "s": "Dipòsit (l)",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "4eujl4",
+  "s": "Reserva (l)",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "c8dwqp",
+  "s": "Consum (l/100 km)",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "1rd9hax",
+  "s": "Gasolina",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "12e276w",
+  "s": "Normalment amb passatger",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "13yadlp",
+  "s": "Normalment amb maletes o top case",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "1953bza",
+  "s": "Autonomia fins a la reserva",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "ixm1z9",
+  "s": "km",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "1jwvrlx",
+  "s": "Autonomia segura (−15 %)",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "kk8uiy",
+  "s": "Desa la moto",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "17748n0",
+  "s": "He repostat",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "veiv37",
+  "s": "Amb dos plens seguits calculem el consum real de la teva",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "6o7tfs",
+  "s": "Litres",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "155iawo",
+  "s": "Km des de l'últim ple",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "1vq5y2q",
+  "s": "Preu (€/l, opcional)",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "1ovnmy7",
+  "s": "He omplert el dipòsit",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "1tg6vs6",
+  "s": "Desa",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "9qv44y",
+  "s": "La meva moto",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "1xqfn7p",
+  "s": "El dipòsit i el consum decideixen on et recomanem repostar a cada ruta.",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "6zn4t6",
+  "s": "· Gasolina",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "nql7t5",
+  "s": "Principal",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "16f02an",
+  "s": "Autonomia segura",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "1v81qs4",
+  "s": "Dipòsit",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "ph60jb",
+  "s": "Reserva",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "bs2knd",
+  "s": "Consum de fitxa",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "12hdpx6",
+  "s": "Consum real",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "1tkbl0",
+  "s": "Sense dades",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "5ihf21",
+  "s": "Consum efectiu:",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "xtj4b2",
+  "s": "l/100 en carretera ·",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "1chdzdh",
+  "s": "l/100 en pista",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "1ggate1",
+  "s": "Fes-la principal",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "8d37i2",
+  "s": "Segur?",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "rdykg4",
+  "s": "Sí, elimina-la",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "r5wqai",
+  "s": "No",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "yltftc",
+  "s": "Elimina",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "1dbtog7",
+  "s": "Afegeix una moto",
+  "f": "BikeScreen.tsx"
+ },
+ {
+  "k": "17h2l52",
+  "s": "Perfil d'elevació",
+  "f": "ElevationProfile.tsx"
+ },
+ {
+  "k": "iyiphp",
+  "s": "Franges: dificultat · meteo",
+  "f": "ElevationProfile.tsx"
+ },
+ {
+  "k": "1j2nuw5",
+  "s": " · línies: benzina",
+  "f": "ElevationProfile.tsx"
+ },
+ {
+  "k": "3jmt3x",
+  "s": "Tria l'idioma",
+  "f": "FirstRun.tsx"
+ },
+ {
+  "k": "1wbrn1k",
+  "s": "D'on ets?",
+  "f": "FirstRun.tsx"
+ },
+ {
+  "k": "12g5jcs",
+  "s": "Pots canviar-lo quan vulguis des del perfil.",
+  "f": "FirstRun.tsx"
+ },
+ {
+  "k": "bukae",
+  "s": "Idioma",
+  "f": "FirstRun.tsx"
+ },
+ {
+  "k": "1aerg2g",
+  "s": "Continua",
+  "f": "FirstRun.tsx"
+ },
+ {
+  "k": "psr689",
+  "s": "Sortirà al teu perfil i ens ajuda a proposar-te rutes a prop.",
+  "f": "FirstRun.tsx"
+ },
+ {
+  "k": "108nkd",
+  "s": "Cerca el país",
+  "f": "FirstRun.tsx"
+ },
+ {
+  "k": "1o6z5he",
+  "s": "País",
+  "f": "FirstRun.tsx"
+ },
+ {
+  "k": "mufpne",
+  "s": "Condicions i privacitat",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "1jzr6vd",
+  "s": "Les teves dades",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "11qtt28",
+  "s": "Tanca",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "1nya25w",
+  "s": "Privacitat",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "1s0gv6a",
+  "s": "Condicions",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "10hgxvx",
+  "s": "Seguretat",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "cktj9a",
+  "s": "Què guardem",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "16u9ph1",
+  "s": "Compte:",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "1pmyqxy",
+  "s": "el correu i la contrasenya (xifrada pel servidor d'autenticació).",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "12njamd",
+  "s": "Perfil públic:",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "1c5siyw",
+  "s": "nom de motorista, nom, zona, estil, moto, interessos, frase, foto de perfil i fotos de la moto. Ho veu tothom a la comunitat.",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "flit8s",
+  "s": "Dades privades:",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "1iuoulh",
+  "s": "any de naixement, experiència, preferències i les teves motos. Només les veus tu.",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "vqaege",
+  "s": "Rutes publicades:",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "7kgzz",
+  "s": "el traçat, la distància i el desnivell. Per defecte s'amaguen uns 400 m a l'inici i al final.",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "cldo2f",
+  "s": "Què no guardem",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "1e83rp9",
+  "s": "La teva ubicació no surt del mòbil mentre graves o navegues, tret que publiquis la ruta o activis el seguiment en directe.",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "13512rm",
+  "s": "El seguiment en directe no es desa enlloc: només el veu qui té l'enllaç i s'atura quan acabes.",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "9kfsvw",
+  "s": "No venem dades ni posem publicitat.",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "1dcxtcg",
+  "s": "Els teus drets",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "10uw5on",
+  "s": "Pots consultar i corregir les teves dades des de Perfil, i esborrar el compte amb totes les fotos i rutes des de Perfil → Compte → Esborra el compte.",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "o9x907",
+  "s": "Les dades s'allotgen a Supabase. Els mapes són d'OpenStreetMap (OpenFreeMap), la meteo d'Open-Meteo i els preus de la benzina del Ministeri per a la Transició Ecològica.",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "9xofby",
+  "s": "Has de tenir",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "mt4q6d",
+  "s": "18 anys o més",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "3q320w",
+  "s": "per crear un compte.",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "v2bgwb",
+  "s": "Publica només rutes i fotos que siguin teves. No pugis fotos de matrícules ni de persones que no ho hagin acceptat.",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "p9ajd9",
+  "s": "Res d'insults, spam ni contingut il·legal. Els comptes que no ho respectin es poden esborrar.",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "rw2tc2",
+  "s": "L'app és gratuïta i es dona tal com és: rutes, meteo i preus poden tenir errors o estar desactualitzats.",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "1i6odq7",
+  "s": "Mira la carretera, no el mòbil. Configura la ruta abans de sortir i fes servir la veu.",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "z4v4yg",
+  "s": "Respecta sempre els senyals i el Reglament de circulació: manen per sobre de les indicacions de l'app.",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "2j7h0e",
+  "s": "Moltes pistes forestals tenen la circulació motoritzada restringida o prohibida. Abans de fer un tram de trail, comprova la normativa de la zona.",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "hd46zc",
+  "s": "La meteo és una previsió. A muntanya pot canviar ràpid: porta roba adequada i no t'hi arrisquis.",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "vtty38",
+  "s": "Entesos",
+  "f": "Legal.tsx"
+ },
+ {
+  "k": "18yt7wa",
+  "s": "Segueix la meva sortida en moto en directe",
+  "f": "LiveShareControl.tsx"
+ },
+ {
+  "k": "udnpf",
+  "s": "MotoRoute · en directe",
+  "f": "LiveShareControl.tsx"
+ },
+ {
+  "k": "npno6l",
+  "s": "Copia aquest enllaç:",
+  "f": "LiveShareControl.tsx"
+ },
+ {
+  "k": "1crmadw",
+  "s": "Comparteix la ubicació en directe",
+  "f": "LiveShareControl.tsx"
+ },
+ {
+  "k": "x99oli",
+  "s": "En directe",
+  "f": "LiveShareControl.tsx"
+ },
+ {
+  "k": "e5z0lu",
+  "s": "persona et segueix",
+  "f": "LiveShareControl.tsx"
+ },
+ {
+  "k": "ct5yrg",
+  "s": "persones et segueixen",
+  "f": "LiveShareControl.tsx"
+ },
+ {
+  "k": "mtwh7e",
+  "s": "ningú mirant encara",
+  "f": "LiveShareControl.tsx"
+ },
+ {
+  "k": "1mqdu32",
+  "s": "Enllaç copiat",
+  "f": "LiveShareControl.tsx"
+ },
+ {
+  "k": "4jszrc",
+  "s": "Envia l'enllaç",
+  "f": "LiveShareControl.tsx"
+ },
+ {
+  "k": "vq8b92",
+  "s": "Deixa de compartir",
+  "f": "LiveShareControl.tsx"
+ },
+ {
+  "k": "1t60q4f",
+  "s": "Qui tingui l'enllaç veu on ets fins que acabis la gravació. No es desa enlloc.",
+  "f": "LiveShareControl.tsx"
+ },
+ {
+  "k": "d4djte",
+  "s": "fa {0} min",
+  "f": "LiveViewer.tsx"
+ },
+ {
+  "k": "ijeepq",
+  "s": "El motorista",
+  "f": "LiveViewer.tsx"
+ },
+ {
+  "k": "m5962z",
+  "s": "No s'ha pogut obrir el seguiment. Comprova l'enllaç.",
+  "f": "LiveViewer.tsx"
+ },
+ {
+  "k": "m4sqfs",
+  "s": "Esperant la ubicació… El telèfon de qui grava envia la posició cada 10 segons.",
+  "f": "LiveViewer.tsx"
+ },
+ {
+  "k": "1azp6xi",
+  "s": " · ha acabat la sortida",
+  "f": "LiveViewer.tsx"
+ },
+ {
+  "k": "1yu5n99",
+  "s": " · en pausa",
+  "f": "LiveViewer.tsx"
+ },
+ {
+  "k": "1n37h3z",
+  "s": " · sense senyal ({0})",
+  "f": "LiveViewer.tsx"
+ },
+ {
+  "k": "rwh4jw",
+  "s": " · actualitzat {0}",
+  "f": "LiveViewer.tsx"
+ },
+ {
+  "k": "v75tqz",
+  "s": "km fets",
+  "f": "LiveViewer.tsx"
+ },
+ {
+  "k": "16xsu2q",
+  "s": "km/h",
+  "f": "LiveViewer.tsx"
+ },
+ {
+  "k": "1lnu2m9",
+  "s": "Planifica les teves rutes amb corbes, meteo i benzina a",
+  "f": "LiveViewer.tsx"
+ },
+ {
+  "k": "1au6vca",
+  "s": "MotoRoute Builder",
+  "f": "LiveViewer.tsx"
+ },
+ {
+  "k": "1mh3h3f",
+  "s": "Cerca un poble, ciutat o lloc",
+  "f": "LocationInput.tsx"
+ },
+ {
+  "k": "1wrxy08",
+  "s": "Localitzant…",
+  "f": "LocationInput.tsx"
+ },
+ {
+  "k": "1g04n0o",
+  "s": "La meva ubicació",
+  "f": "LocationInput.tsx"
+ },
+ {
+  "k": "1oaevv0",
+  "s": "Toca el mapa…",
+  "f": "LocationInput.tsx"
+ },
+ {
+  "k": "2sabrv",
+  "s": "Tria al mapa",
+  "f": "LocationInput.tsx"
+ },
+ {
+  "k": "1nsivqq",
+  "s": "<b>Parada recomanada · {0}</b><br>{1} €/l · km {2}",
+  "f": "MapView.tsx"
+ },
+ {
+  "k": "1sdk0rc",
+  "s": "Mapa clar",
+  "f": "MapView.tsx"
+ },
+ {
+  "k": "1yimggt",
+  "s": "Mapa fosc",
+  "f": "MapView.tsx"
+ },
+ {
+  "k": "1rpinf8",
+  "s": "Preparant les instruccions…",
+  "f": "NavigationPanel.tsx"
+ },
+ {
+  "k": "n153vl",
+  "s": "Has arribat al final de la ruta",
+  "f": "NavigationPanel.tsx"
+ },
+ {
+  "k": "hzw7er",
+  "s": "Repeteix la instrucció",
+  "f": "NavigationPanel.tsx"
+ },
+ {
+  "k": "dqh4n1",
+  "s": "Recalculant",
+  "f": "NavigationPanel.tsx"
+ },
+ {
+  "k": "1ovngjf",
+  "s": "Busquem com tornar a la ruta per davant",
+  "f": "NavigationPanel.tsx"
+ },
+ {
+  "k": "jtr2br",
+  "s": "Segueix la línia de la ruta",
+  "f": "NavigationPanel.tsx"
+ },
+ {
+  "k": "tppq41",
+  "s": "Després:",
+  "f": "NavigationPanel.tsx"
+ },
+ {
+  "k": "1dcit19",
+  "s": "Desviament per tornar a la ruta. No tornarem als punts que ja has passat.",
+  "f": "NavigationPanel.tsx"
+ },
+ {
+  "k": "6ky92h",
+  "s": "queden",
+  "f": "NavigationPanel.tsx"
+ },
+ {
+  "k": "1blut1x",
+  "s": "arribada",
+  "f": "NavigationPanel.tsx"
+ },
+ {
+  "k": "1dt2hb6",
+  "s": "km fets ·",
+  "f": "NavigationPanel.tsx"
+ },
+ {
+  "k": "w2plrh",
+  "s": "· gravant",
+  "f": "NavigationPanel.tsx"
+ },
+ {
+  "k": "13m94lh",
+  "s": "Mira la carretera: t'avisem amb la veu",
+  "f": "NavigationPanel.tsx"
+ },
+ {
+  "k": "dstvns",
+  "s": "Veu activada",
+  "f": "NavigationPanel.tsx"
+ },
+ {
+  "k": "1iokfvc",
+  "s": "Veu silenciada",
+  "f": "NavigationPanel.tsx"
+ },
+ {
+  "k": "19t9ztl",
+  "s": "Acaba",
+  "f": "NavigationPanel.tsx"
+ },
+ {
+  "k": "19o2gni",
+  "s": "La gravació amb GPS necessita el permís de localització del telèfon i aquí no està disponible. Prova-ho a la web publicada.",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1eovkbt",
+  "s": "Grava la ruta",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "17m1rqc",
+  "s": "Gravant",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "wfoehw",
+  "s": "En pausa",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "uhyi6s",
+  "s": "Com Strava: el GPS del telèfon segueix la teva ruta. Quan acabis, la pots desar i compartir a la comunitat.",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "girync",
+  "s": "Aquest navegador no té GPS disponible.",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "6zmlnm",
+  "s": "Permís de localització denegat.",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "19174t3",
+  "s": "Activa'l a Configuració → MotoRoute → Ubicació →",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1m6qhgh",
+  "s": "Sempre",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "tajdd5",
+  "s": "Obre la configuració",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "2kgmkp",
+  "s": "Activa'l per a aquest web:",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1brrl66",
+  "s": "iPhone:",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1ljk8t7",
+  "s": "Configuració → Privacitat → Localització → Safari (o el navegador) → «Mentre s'usa l'app». Després recarrega.",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "b22nol",
+  "s": "Android (Chrome):",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1ous28r",
+  "s": "toca el cadenat a la barra d'adreces → Permisos → Ubicació → Permet.",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "8uptqa",
+  "s": "Permís de localització",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "8gom0j",
+  "s": "L'iPhone et preguntarà si permets la ubicació. Tria «Mentre s'usa l'app»; quan comencis a gravar et proposarà «Permet sempre»: accepta-ho per gravar amb la pantalla apagada.",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "pjl8w4",
+  "s": "El telèfon et preguntarà si permets la ubicació. Tria «Permet» (o «Mentre s'usa l'app»).",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1vij35t",
+  "s": "Activa la ubicació",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "10ndarn",
+  "s": "GPS",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1xztje9",
+  "s": "a punt",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "c1mi7p",
+  "s": "buscant senyal",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "sgrecj",
+  "s": "Comença a gravar",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1ytr42k",
+  "s": "Abans de sortir",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1aql43p",
+  "s": "Pots apagar la pantalla o guardar el mòbil: l'app continua gravant (veuràs l'indicador blau d'ubicació a dalt).",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "d1ztgj",
+  "s": "Perquè funcioni amb la pantalla apagada, la ubicació ha d'estar a «Sempre» o «Mentre s'usa l'app» (Configuració → MotoRoute).",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1dou711",
+  "s": "Posa el mòbil al suport amb la pantalla encesa: l'app la manté activa mentre graves.",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "mkvku7",
+  "s": "Si bloqueges la pantalla o canvies d'app, el telèfon pot aturar el GPS. En tornar, la gravació continua.",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "cfoe4v",
+  "s": "Porta el mòbil carregat o connectat a la moto: el GPS gasta bateria.",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1ciwxfg",
+  "s": "km/h ara",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1j3q34k",
+  "s": "km/h mitjana",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "17b55oq",
+  "s": "km/h màxima",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1t2lvpr",
+  "s": "m altitud",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "17pn0nl",
+  "s": "GPS ±{0} m",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "ilub1x",
+  "s": "Buscant senyal GPS…",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1yqhgfv",
+  "s": "pots apagar la pantalla",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "12qzvut",
+  "s": "pantalla mantinguda encesa",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "jcc7mb",
+  "s": "mantén la pantalla encesa manualment",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "17okwwa",
+  "s": "pantalla: toca-la si s'enfosqueix",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1gr97tq",
+  "s": "Gravació en pausa. El GPS està aturat.",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "i10sf5",
+  "s": "Pausa",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "zqp01v",
+  "s": "Vols acabar la gravació?",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "16y5ag2",
+  "s": "Encara no",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "swoid",
+  "s": "Sí, acaba",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1cqkp8f",
+  "s": "Descarta la gravació",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "uxdvr9",
+  "s": "Segur? Es perdrà el traçat.",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1ha3p8o",
+  "s": "Sí, descarta",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1ch7m70",
+  "s": "Ruta per {0} · {1}",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "11qmp8g",
+  "s": "Ruta del {0}",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "j08s3h",
+  "s": "Gravació massa curta",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "jy876j",
+  "s": "No s'han registrat prou punts per desar una ruta (cal moure's almenys 200 m amb senyal GPS).",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "u8q43w",
+  "s": "Torna a començar",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1qqhsk2",
+  "s": "Ruta acabada",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1tup34z",
+  "s": "en moviment",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1ll3wz5",
+  "s": "m desnivell +",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "d9tew0",
+  "s": "litres aprox.",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "t0wyjm",
+  "s": "sense moto",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "dovmhs",
+  "s": "Calculant desnivell, corbes i dificultat…",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "zwq3aw",
+  "s": "Índex de corbes",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "exc0jt",
+  "s": "· dificultat estimada",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1xak077",
+  "s": "Nom de la ruta",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "12xnetm",
+  "s": "Per on has anat?",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1md9po2",
+  "s": "Carretera",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "r28i8o",
+  "s": "Trail / Off-road",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "oaiq6x",
+  "s": "Desa i comparteix",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "bnfocs",
+  "s": "Descarta",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "yzkazq",
+  "s": "Desada a «Les meves rutes → Gravades».",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "10p2rb3",
+  "s": "Exporta GPX",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1cc0he7",
+  "s": "Comparteix",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "15c7jmg",
+  "s": "Les meves rutes",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1lqu2d7",
+  "s": "Nova gravació",
+  "f": "RecordScreen.tsx"
+ },
+ {
+  "k": "1wawir4",
+  "s": "Principiant",
+  "f": "RouteCard.tsx"
+ },
+ {
+  "k": "gt1iho",
+  "s": "Intermedi",
+  "f": "RouteCard.tsx"
+ },
+ {
+  "k": "1b0kvrz",
+  "s": "Avançat",
+  "f": "RouteCard.tsx"
+ },
+ {
+  "k": "1rt2lug",
+  "s": "índex de corbes",
+  "f": "RouteCard.tsx"
+ },
+ {
+  "k": "1o8l19i",
+  "s": "desnivell +",
+  "f": "RouteCard.tsx"
+ },
+ {
+  "k": "15ceyha",
+  "s": "% terra",
+  "f": "RouteCard.tsx"
+ },
+ {
+  "k": "4oif17",
+  "s": "km autopista",
+  "f": "RouteCard.tsx"
+ },
+ {
+  "k": "1d5ssgq",
+  "s": "màx.",
+  "f": "RouteCard.tsx"
+ },
+ {
+  "k": "8p03bh",
+  "s": "Meteo sense alertes",
+  "f": "RouteCard.tsx"
+ },
+ {
+  "k": "1bk5lzs",
+  "s": "Meteo: precaució",
+  "f": "RouteCard.tsx"
+ },
+ {
+  "k": "1yiqt76",
+  "s": "Meteo: alerta",
+  "f": "RouteCard.tsx"
+ },
+ {
+  "k": "17xn6sx",
+  "s": "Meteo: perill",
+  "f": "RouteCard.tsx"
+ },
+ {
+  "k": "6bl0vx",
+  "s": "Inclou",
+  "f": "RouteCard.tsx"
+ },
+ {
+  "k": "1bh7e5e",
+  "s": "km de nivell Avançat.",
+  "f": "RouteCard.tsx"
+ },
+ {
+  "k": "fvx4g7",
+  "s": "Sense alertes",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "6c1lam",
+  "s": "Precaució",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "apk7l4",
+  "s": "Alerta",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "zu8bjr",
+  "s": "Perill",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "109p0r",
+  "s": "Resum",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "12xzrxt",
+  "s": "Meteo",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "1q80a7e",
+  "s": "Benzina",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "f028nz",
+  "s": "Etapes i allotjament",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "d7cl96",
+  "s": "Allotjament",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "13cayrz",
+  "s": "Navega aquesta ruta",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "cvsnot",
+  "s": "amb parades",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "1tqs5tg",
+  "s": "Dificultat per trams de 5 km",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "1vcjbrx",
+  "s": "Sense asfaltar",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "wdfk2l",
+  "s": "Autopista / autovia",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "1m2p2tw",
+  "s": "Altitud màxima",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "q6gpfp",
+  "s": "Desada",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "7xek21",
+  "s": "Desa la ruta",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "ovcoqx",
+  "s": "Comparteix a la comunitat",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "1bepvjr",
+  "s": "Consultant la previsió a l'hora de pas…",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "dbxegt",
+  "s": "Millors hores de sortida",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "1cb265z",
+  "s": "°C · pluja",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "1x5wh6e",
+  "s": "% · ratxes",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "u7ielj",
+  "s": "Afegeix La meva moto per calcular on repostar segons el teu dipòsit i consum.",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "guptgv",
+  "s": "Descarregant preus del MITECO i calculant parades…",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "1k7kcrg",
+  "s": "Consum efectiu en aquesta ruta",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "jqd8zf",
+  "s": "Combustible necessari",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "1m6ctvz",
+  "s": "Cost estimat",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "3vz32x",
+  "s": "Parades recomanades",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "tcqa5l",
+  "s": "No cal repostar si surts amb el dipòsit indicat",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "1gyfjk2",
+  "s": "Totes les benzineres del recorregut (",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "1sl87vq",
+  "s": "Tots els tipus",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "9seph9",
+  "s": "Hotel",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "112gj0s",
+  "s": "Casa rural / pensió",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "11xjwci",
+  "s": "Alberg",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "257onp",
+  "s": "Càmping",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "13oe2ng",
+  "s": "Apartament",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "14qzumi",
+  "s": "Motel",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "6w9a5w",
+  "s": "Qualsevol categoria",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "pgjc05",
+  "s": "o més",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "qk4c07",
+  "s": "Allotjaments d'OpenStreetMap a 10 km del final de cada etapa. Els preus i la disponibilitat requereixen un acord amb Booking o Expedia (fase 2), i el criteri biker-friendly, confirmacions d'usuaris.",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "1lgw6n2",
+  "s": "Etapa {0}",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "12wrwlw",
+  "s": "Final de ruta",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "6nsq84",
+  "s": "km)",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "1pavffx",
+  "s": "Cerca on dormir",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "2xezsr",
+  "s": "Cercant allotjaments…",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "iid04a",
+  "s": "Cap resultat amb aquests filtres.",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "vqmn1t",
+  "s": "Web",
+  "f": "RouteDetail.tsx"
+ },
+ {
+  "k": "1eq8tpo",
+  "s": "50–100 km",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "pyiadv",
+  "s": "Sortida ràpida",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "18vikub",
+  "s": "100–200 km",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "19wtw3i",
+  "s": "Mig dia",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "1j5m3k6",
+  "s": "200–400 km",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "13bht1x",
+  "s": "Jornada completa",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "52ibj8",
+  "s": "400+ km",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "10cprww",
+  "s": "Gran travessa",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "vxmotq",
+  "s": "Carreteres amples, corbes obertes i pendents suaus.",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "u5akdg",
+  "s": "Secundàries amb corbes enllaçades i ports moderats.",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "m7jz6o",
+  "s": "Carreteres estretes, forquilles i ports amb pendents forts.",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "oo7x62",
+  "s": "Asfalt d'enllaç i pistes amples i compactades.",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "1kd1qua",
+  "s": "Pistes de grava i terra amb algun tram trencat.",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "114ls5e",
+  "s": "Pistes amb pedra solta i pendents tècnics.",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "ywxclm",
+  "s": "Modalitat i moto",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "zi4en3",
+  "s": "Tria per on vols rodar i amb quina moto.",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "vqc7cy",
+  "s": "Ja tens la ruta? Obre un GPX",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "j5vrbb",
+  "s": "(Calimoto, Kurviger, Garmin, Wikiloc…)",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "bgoeqz",
+  "s": "100 % asfalt, prioritza secundàries amb corbes",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "12rxxdv",
+  "s": "Asfalt d'enllaç + pistes transitables",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "jq65q0",
+  "s": "Circula només per pistes autoritzades. El motor respecta les restriccions d'accés d'OpenStreetMap, però pot haver-hi tancaments locals (per exemple, risc d'incendi) que no hi constin.",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "k5d05a",
+  "s": "Sense moto (no es calcularan parades de benzina)",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "eiegxb",
+  "s": "Afegeix la meva moto per calcular la benzina",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "1mn2del",
+  "s": "Amb quant dipòsit surts?",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "1ou01o4",
+  "s": "Ple",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "1vb7swr",
+  "s": "Origen i destinació",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "pung1s",
+  "s": "Ruta circular",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "79f084",
+  "s": "Sortida i arribada al mateix punt",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "1o2ofe6",
+  "s": "Destinació",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "13jxojx",
+  "s": "Punt de pas {0}",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "9eou4i",
+  "s": "Treu el punt de pas",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "iqvbnc",
+  "s": "Afegeix punt de pas",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "199spv0",
+  "s": "Distància i dificultat",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "y04zey",
+  "s": "Quilometratge",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "8h6dhp",
+  "s": "Nivell",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "10f4ugu",
+  "s": "Evitar autopistes i autovies",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "i1rtdz",
+  "s": "Evitar peatges",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "ftezi1",
+  "s": "Suggereix-me rutes circulars des de",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "1mnrsqb",
+  "s": "Dates i etapes",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "1cfjl7q",
+  "s": "Dies",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "1vl5gy6",
+  "s": "1 dia",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "1t7e6nr",
+  "s": "Màxim km per dia",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "10yakcx",
+  "s": "La meteo es consulta a l'hora estimada de pas per cada tram (previsió fins a 16 dies).",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "i082cu",
+  "s": "Enrere",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "yqy0u3",
+  "s": "Següent",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "15id93v",
+  "s": "Calcula les rutes",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "gdrftf",
+  "s": "Ports de muntanya",
+  "f": "account.ts"
+ },
+ {
+  "k": "xnneon",
+  "s": "Corbes enllaçades",
+  "f": "account.ts"
+ },
+ {
+  "k": "11vkhl6",
+  "s": "Carreteres de costa",
+  "f": "account.ts"
+ },
+ {
+  "k": "9jglh3",
+  "s": "Pistes i grava",
+  "f": "account.ts"
+ },
+ {
+  "k": "11mcz1t",
+  "s": "Parar a dinar bé",
+  "f": "account.ts"
+ },
+ {
+  "k": "1uznp0o",
+  "s": "Miradors i fotos",
+  "f": "account.ts"
+ },
+ {
+  "k": "fglgmj",
+  "s": "Viatges de diversos dies",
+  "f": "account.ts"
+ },
+ {
+  "k": "jn1nt3",
+  "s": "Acampada",
+  "f": "account.ts"
+ },
+ {
+  "k": "1d658jd",
+  "s": "Sortides curtes de tarda",
+  "f": "account.ts"
+ },
+ {
+  "k": "179xmat",
+  "s": "Sortides en grup",
+  "f": "account.ts"
+ },
+ {
+  "k": "1bnhddn",
+  "s": "Pobles amb encant",
+  "f": "account.ts"
+ },
+ {
+  "k": "7jqyss",
+  "s": "Off-road tècnic",
+  "f": "account.ts"
+ },
+ {
+  "k": "1ocurbu",
+  "s": "El correu o la contrasenya no són correctes.",
+  "f": "account.ts"
+ },
+ {
+  "k": "1jf6cky",
+  "s": "Ja hi ha un compte amb aquest correu. Entra amb la teva contrasenya.",
+  "f": "account.ts"
+ },
+ {
+  "k": "45kwvt",
+  "s": "Has de confirmar el correu abans d'entrar. Mira la safata d'entrada (i el correu brossa).",
+  "f": "account.ts"
+ },
+ {
+  "k": "1wi8cp6",
+  "s": "La contrasenya és massa feble: posa'n una de 8 caràcters o més.",
+  "f": "account.ts"
+ },
+ {
+  "k": "30c7ei",
+  "s": "Aquest correu no és vàlid.",
+  "f": "account.ts"
+ },
+ {
+  "k": "12fq9db",
+  "s": "S'han enviat massa correus en poca estona. Espera una mica i torna-ho a provar.",
+  "f": "account.ts"
+ },
+ {
+  "k": "16sboik",
+  "s": "Ara mateix el servidor no pot enviar correus a aquesta adreça. Avisa l'administrador de l'app.",
+  "f": "account.ts"
+ },
+ {
+  "k": "e5ztqf",
+  "s": "Ara mateix no es poden crear comptes nous.",
+  "f": "account.ts"
+ },
+ {
+  "k": "2ufurk",
+  "s": "No hi ha connexió. Comprova la cobertura i torna-ho a provar.",
+  "f": "account.ts"
+ },
+ {
+  "k": "1hjstu4",
+  "s": "Aquest nom de motorista ja està agafat. Prova'n un altre.",
+  "f": "account.ts"
+ },
+ {
+  "k": "3x6d8i",
+  "s": "No s'ha pogut carregar el perfil",
+  "f": "account.ts"
+ },
+ {
+  "k": "spiife",
+  "s": "Escriu un correu vàlid.",
+  "f": "account.ts"
+ },
+ {
+  "k": "6cirmw",
+  "s": "La contrasenya ha de tenir 8 caràcters o més.",
+  "f": "account.ts"
+ },
+ {
+  "k": "1acbk6w",
+  "s": "No s'ha pogut crear el compte",
+  "f": "account.ts"
+ },
+ {
+  "k": "14bok8a",
+  "s": "No s'ha pogut entrar",
+  "f": "account.ts"
+ },
+ {
+  "k": "cuutb8",
+  "s": "Escriu el correu del teu compte.",
+  "f": "account.ts"
+ },
+ {
+  "k": "1sei4iq",
+  "s": "No s'ha pogut enviar el correu",
+  "f": "account.ts"
+ },
+ {
+  "k": "10qmq14",
+  "s": "No s'ha pogut canviar la contrasenya",
+  "f": "account.ts"
+ },
+ {
+  "k": "79spx2",
+  "s": "No s'ha pogut desar el perfil",
+  "f": "account.ts"
+ },
+ {
+  "k": "jwp8id",
+  "s": "No s'han pogut desar les preferències",
+  "f": "account.ts"
+ },
+ {
+  "k": "1ofh0c3",
+  "s": "No s'ha pogut esborrar el compte",
+  "f": "account.ts"
+ },
+ {
+  "k": "1czn0bg",
+  "s": "No s'ha pogut desar la foto",
+  "f": "account.ts"
+ },
+ {
+  "k": "b0p6w4",
+  "s": "Esportiva",
+  "f": "bikes.ts"
+ },
+ {
+  "k": "15togu6",
+  "s": "Turisme",
+  "f": "bikes.ts"
+ },
+ {
+  "k": "nn3d08",
+  "s": "El servei de preus del MITECO no respon ara mateix",
+  "f": "fuel.ts"
+ },
+ {
+  "k": "12kfn0f",
+  "s": "Benzinera",
+  "f": "fuel.ts"
+ },
+ {
+  "k": "1as07qr",
+  "s": "Surts amb el dipòsit en reserva: reposta abans de començar.",
+  "f": "fuel.ts"
+ },
+ {
+  "k": "pc60mj",
+  "s": "No hi ha benzineres obertes entre el km {0} i el {1}: ",
+  "f": "fuel.ts"
+ },
+ {
+  "k": "1q5q9pu",
+  "s": "surt amb el dipòsit ple.",
+  "f": "fuel.ts"
+ },
+ {
+  "k": "ne1bj3",
+  "s": "omple el dipòsit a la parada anterior.",
+  "f": "fuel.ts"
+ },
+ {
+  "k": "bmtjpv",
+  "s": "la més barata de les {0} opcions de la finestra segura",
+  "f": "fuel.ts"
+ },
+ {
+  "k": "10lc69s",
+  "s": "l'única opció segura",
+  "f": "fuel.ts"
+ },
+ {
+  "k": "row69t",
+  "s": "Entraries en reserva cap al km {0}. És {1}.",
+  "f": "fuel.ts"
+ },
+ {
+  "k": "3z20m6",
+  "s": "Tram de {0} km sense benzineres (km {1}–{2}).",
+  "f": "fuel.ts"
+ },
+ {
+  "k": "1ct6d56",
+  "s": "Benzina: {0}",
+  "f": "gpx.ts"
+ },
+ {
+  "k": "a2h07m",
+  "s": "El fitxer no és un GPX vàlid.",
+  "f": "gpxImport.ts"
+ },
+ {
+  "k": "bys9qw",
+  "s": "El GPX no conté cap traçat.",
+  "f": "gpxImport.ts"
+ },
+ {
+  "k": "eqnkhk",
+  "s": "No s'ha pogut connectar amb el servidor de seguiment.",
+  "f": "live.ts"
+ },
+ {
+  "k": "1si7urf",
+  "s": "Gravant la ruta",
+  "f": "location.ts"
+ },
+ {
+  "k": "1trtcwj",
+  "s": "Tria una imatge (JPG, PNG o HEIC).",
+  "f": "media.ts"
+ },
+ {
+  "k": "tidhg8",
+  "s": "La imatge és massa gran (màxim 25 MB).",
+  "f": "media.ts"
+ },
+ {
+  "k": "sw7c5x",
+  "s": "No s'ha pogut llegir la imatge.",
+  "f": "media.ts"
+ },
+ {
+  "k": "vcuvaf",
+  "s": "El dispositiu no pot processar la imatge.",
+  "f": "media.ts"
+ },
+ {
+  "k": "m4jiei",
+  "s": "No s'ha pogut comprimir la imatge.",
+  "f": "media.ts"
+ },
+ {
+  "k": "dkj6np",
+  "s": "Falta configurar l'espai de fotos al servidor.",
+  "f": "media.ts"
+ },
+ {
+  "k": "1aro8w",
+  "s": "No tens permís per pujar fotos. Torna a entrar al compte.",
+  "f": "media.ts"
+ },
+ {
+  "k": "1sgxemj",
+  "s": "La foto és massa gran.",
+  "f": "media.ts"
+ },
+ {
+  "k": "1qa5k8e",
+  "s": "No s'ha pogut pujar la foto ({0})",
+  "f": "media.ts"
+ },
+ {
+  "k": "188b9jo",
+  "s": "Ara, {text}",
+  "f": "navigation.ts"
+ },
+ {
+  "k": "1j7yluq",
+  "s": "1 quilòmetre",
+  "f": "navigation.ts"
+ },
+ {
+  "k": "iia35k",
+  "s": "{n} quilòmetres",
+  "f": "navigation.ts"
+ },
+ {
+  "k": "dewfrl",
+  "s": "{n} metres",
+  "f": "navigation.ts"
+ },
+ {
+  "k": "6rgwo4",
+  "s": "D'aquí a {dist} arribaràs al final de la ruta",
+  "f": "navigation.ts"
+ },
+ {
+  "k": "dnst6g",
+  "s": "D'aquí a {dist}, {text}",
+  "f": "navigation.ts"
+ },
+ {
+  "k": "rrg5g4",
+  "s": "Opció A",
+  "f": "pipeline.ts"
+ },
+ {
+  "k": "sleyj1",
+  "s": "Opció B",
+  "f": "pipeline.ts"
+ },
+ {
+  "k": "sbfcu2",
+  "s": "Opció C",
+  "f": "pipeline.ts"
+ },
+ {
+  "k": "1n2z34a",
+  "s": "Calculant rutes amb el perfil de moto…",
+  "f": "pipeline.ts"
+ },
+ {
+  "k": "h27ccj",
+  "s": "Analitzant corbes i desnivell ({0}/{1})…",
+  "f": "pipeline.ts"
+ },
+ {
+  "k": "1w9sd6j",
+  "s": "Xalet",
+  "f": "places.ts"
+ },
+ {
+  "k": "1it6v9d",
+  "s": "El servei d'allotjaments (Overpass) està saturat; torna-ho a provar.",
+  "f": "places.ts"
+ },
+ {
+  "k": "1bsj4ue",
+  "s": "Sense permís de localització.",
+  "f": "recorder.ts"
+ },
+ {
+  "k": "1x6akgx",
+  "s": "Buscant senyal GPS… Surt a l'exterior si pots.",
+  "f": "recorder.ts"
+ },
+ {
+  "k": "1f1aqdf",
+  "s": "El GPS triga a respondre. Continuem intentant-ho.",
+  "f": "recorder.ts"
+ },
+ {
+  "k": "jmzdpp",
+  "s": "No s'ha pogut activar el GPS.",
+  "f": "recorder.ts"
+ },
+ {
+  "k": "1xehc99",
+  "s": "No s'ha pogut connectar amb el servei de rutes. Comprova la connexió i torna-ho a provar.",
+  "f": "routing.ts"
+ },
+ {
+  "k": "1tba45t",
+  "s": "El servei de rutes ha fallat: {0}",
+  "f": "routing.ts"
+ },
+ {
+  "k": "d1hz31",
+  "s": "No s'ha pogut generar cap ruta circular des d'aquest origen.",
+  "f": "routing.ts"
+ },
+ {
+  "k": "xzyf4g",
+  "s": "La ruta directa fa {0} km; s'hi han afegit desviaments per acostar-la al rang triat.",
+  "f": "routing.ts"
+ },
+ {
+  "k": "pra62u",
+  "s": "Tria un punt de sortida.",
+  "f": "routing.ts"
+ },
+ {
+  "k": "1s61ek3",
+  "s": "No s'han pogut preparar les instruccions de navegació per a aquesta ruta.",
+  "f": "routing.ts"
+ },
+ {
+  "k": "1su2ros",
+  "s": "Cal activar «Allow anonymous sign-ins» a Supabase (Authentication → Sign In / Providers).",
+  "f": "social.ts"
+ },
+ {
+  "k": "p85ggx",
+  "s": "No hi ha connexió amb la comunitat. Torna-ho a provar.",
+  "f": "social.ts"
+ },
+ {
+  "k": "wj7b1",
+  "s": "El nom ha de tenir de 3 a 24 caràcters: lletres, números, punt, guió o guió baix.",
+  "f": "social.ts"
+ },
+ {
+  "k": "1aku7re",
+  "s": "No s'ha pogut entrar a la comunitat",
+  "f": "social.ts"
+ },
+ {
+  "k": "znxazh",
+  "s": "Aquest nom ja està agafat. Prova'n un altre.",
+  "f": "social.ts"
+ },
+ {
+  "k": "3rukkw",
+  "s": "No s'han pogut carregar les rutes",
+  "f": "social.ts"
+ },
+ {
+  "k": "tm7uju",
+  "s": "Entra a la comunitat primer.",
+  "f": "social.ts"
+ },
+ {
+  "k": "3re0xb",
+  "s": "No s'ha pogut desar el canvi",
+  "f": "social.ts"
+ },
+ {
+  "k": "ww1eto",
+  "s": "No s'han pogut carregar les rutes guardades",
+  "f": "social.ts"
+ },
+ {
+  "k": "1b56gnz",
+  "s": "No s'han pogut carregar les teves rutes",
+  "f": "social.ts"
+ },
+ {
+  "k": "300oy8",
+  "s": "No s'ha pogut eliminar la ruta",
+  "f": "social.ts"
+ },
+ {
+  "k": "gs1m3d",
+  "s": "No s'ha pogut publicar la ruta",
+  "f": "social.ts"
+ },
+ {
+  "k": "1iajqgg",
+  "s": "Ruta importada",
+  "f": "social.ts"
+ },
+ {
+  "k": "1a4kcca",
+  "s": "Recalculant per tornar a la ruta.",
+  "f": "useNavigation.ts"
+ },
+ {
+  "k": "1h0oc9q",
+  "s": "Sense connexió per recalcular: torna a la línia del mapa.",
+  "f": "useNavigation.ts"
+ },
+ {
+  "k": "z4xyn5",
+  "s": "Has tornat a la ruta.",
+  "f": "useNavigation.ts"
+ },
+ {
+  "k": "y630f1",
+  "s": "Has arribat al final de la ruta.",
+  "f": "useNavigation.ts"
+ },
+ {
+  "k": "f0z3c3",
+  "s": "El servei de meteo està saturat; torna-ho a provar d'aquí a un minut.",
+  "f": "weather.ts"
+ },
+ {
+  "k": "vrw0mc",
+  "s": "No s'ha pogut obtenir la previsió meteorològica",
+  "f": "weather.ts"
+ },
+ {
+  "k": "1tgtv8w",
+  "s": "Ratxes de {0} km/h",
+  "f": "weather.ts"
+ },
+ {
+  "k": "dnxhe1",
+  "s": "Pluja forta ({0} mm/h)",
+  "f": "weather.ts"
+ },
+ {
+  "k": "1w5ziio",
+  "s": "Pluja probable ({0} %)",
+  "f": "weather.ts"
+ },
+ {
+  "k": "1bdvbcf",
+  "s": "Risc de pluja ({0} %)",
+  "f": "weather.ts"
+ },
+ {
+  "k": "1rf6ohl",
+  "s": "Tempesta amb calamarsa",
+  "f": "weather.ts"
+ },
+ {
+  "k": "1kwvmgw",
+  "s": "Tempesta",
+  "f": "weather.ts"
+ },
+ {
+  "k": "121v6a3",
+  "s": "Neu",
+  "f": "weather.ts"
+ },
+ {
+  "k": "kzkulg",
+  "s": "Cota de congelació propera: risc de gel",
+  "f": "weather.ts"
+ },
+ {
+  "k": "zhjy08",
+  "s": "Temperatura baixa ({0} °C): risc de gel",
+  "f": "weather.ts"
+ },
+ {
+  "k": "bq0x74",
+  "s": "Calor extrema ({0} °C)",
+  "f": "weather.ts"
+ },
+ {
+  "k": "mic1vh",
+  "s": "Molta calor ({0} °C)",
+  "f": "weather.ts"
+ },
+ {
+  "k": "zo3qs0",
+  "s": "Calor ({0} °C)",
+  "f": "weather.ts"
+ },
+ {
+  "k": "w4iqte",
+  "s": "Fora de l'horitzó de previsió",
+  "f": "weather.ts"
+ },
+ {
+  "k": "1nvvodf",
+  "s": "arribada de nit",
+  "f": "weather.ts"
+ },
+ {
+  "k": "1wfe64v",
+  "s": "arribes {0} h abans de la posta",
+  "f": "weather.ts"
+ },
+ {
+  "k": "pz4uck",
+  "s": "sense alertes · {0}",
+  "f": "weather.ts"
+ },
+ {
+  "k": "1aowjng",
+  "s": "Carregant…",
+  "f": "AccountGate.tsx"
+ },
+ {
+  "k": "jv1v5v",
+  "s": "No hi ha connexió.",
+  "f": "AccountGate.tsx"
+ },
+ {
+  "k": "xq5j2k",
+  "s": "Torna-ho a provar",
+  "f": "AccountGate.tsx"
+ },
+ {
+  "k": "11z030v",
+  "s": "T'hem enviat un correu a {0}. Obre l'enllaç per confirmar el compte i després entra aquí.",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "1aivwte",
+  "s": "Si hi ha un compte amb aquest correu, t'arribarà un enllaç per posar una contrasenya nova.",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "olw2eb",
+  "s": "Rutes amb corbes, meteo a l'hora de pas, benzina segons la teva moto, navegació i comunitat. Gratis.",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "gl0c31",
+  "s": "Crea el compte",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "1s3trmg",
+  "s": "Ja tinc compte",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "1h46o36",
+  "s": "Recupera la contrasenya",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "yyo8u8",
+  "s": "Correu electrònic",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "4r3y4o",
+  "s": "Contrasenya",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "th6zkm",
+  "s": "Mínim 8 caràcters",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "pmtuy2",
+  "s": "Amaga la contrasenya",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "dur719",
+  "s": "Mostra la contrasenya",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "1ytyykc",
+  "s": "Un moment…",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "1e5gpob",
+  "s": "Entra",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "25mbx5",
+  "s": "Has oblidat la contrasenya?",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "1ulrs9a",
+  "s": "Torna a entrar",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "1cxg73t",
+  "s": "Rutes i motos a tots els teus dispositius",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "1b22yoj",
+  "s": "L'edat i les preferències són privades",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "y9z91e",
+  "s": "Gratis, sense anuncis ni subscripcions",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "8e2iyc",
+  "s": "En crear el compte confirmes que tens 18 anys o més i acceptes les",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "eqryxp",
+  "s": "condicions i la política de privacitat",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "1f69g0w",
+  "s": "Torna a veure què pots fer amb l'app",
+  "f": "AuthScreen.tsx"
+ },
+ {
+  "k": "q0w8k9",
+  "s": "Posa una contrasenya nova",
+  "f": "NewPassword.tsx"
+ },
+ {
+  "k": "x3iuiu",
+  "s": "Desant…",
+  "f": "NewPassword.tsx"
+ },
+ {
+  "k": "1dcsz9h",
+  "s": "Desa i entra",
+  "f": "NewPassword.tsx"
+ },
+ {
+  "k": "sa4zkw",
+  "s": "Qui ets",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "1rxiekz",
+  "s": "Com rodes",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "m06m4x",
+  "s": "La teva moto",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "y6e25s",
+  "s": "Què t'agrada",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "1cvmx5v",
+  "s": "Surt",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "191vmv5",
+  "s": "Edita el perfil",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "qxmq97",
+  "s": "Pas {0} de {1}",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "amgjm4",
+  "s": "Canvia el que vulguis.",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "9xp5aw",
+  "s": "Benvingut! Configura el teu perfil en 1 minut. Tot es pot canviar després.",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "1jhuwtw",
+  "s": "Foto de perfil",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "1y05xh",
+  "s": "Opcional · la veuran a la comunitat",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "kfk1rs",
+  "s": "Nom de motorista *",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "1jfer1s",
+  "s": "p. ex. marc_trail",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "zn7l1k",
+  "s": "De 3 a 24 caràcters: lletres, números, punt, guió o guió baix.",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "2audrl",
+  "s": "Nom (opcional)",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "k52325",
+  "s": "Any de naixement *",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "1c41drl",
+  "s": "Tria…",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "1775gnu",
+  "s": "anys · només ho veus tu",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "13tyxfr",
+  "s": "D'on ets",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "1t3gfy2",
+  "s": "Poble o comarca",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "8wgmw3",
+  "s": "Posa la comarca si no vols concretar el poble: es mostra al teu perfil públic.",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "1bhnh0q",
+  "s": "Què t'agrada més? *",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "1w8g5rh",
+  "s": "Corbes i asfalt",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "mv9gn0",
+  "s": "Muntanya",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "p7eina",
+  "s": "Pistes i trail",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "7k2kdy",
+  "s": "Les dues",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "wphnnf",
+  "s": "Segons el dia",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "1u9lke1",
+  "s": "Experiència *",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "1ca9nwz",
+  "s": "Començo",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "58vjxp",
+  "s": "Mitjana",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "1vb492s",
+  "s": "Molta",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "t85162",
+  "s": "Serveix per proposar-te rutes de la dificultat adequada.",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "10exsjg",
+  "s": "Vas en moto des de",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "qbizpe",
+  "s": "Normalment vas…",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "j2r96p",
+  "s": "Sol",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "1aqz04t",
+  "s": "Amb passatger",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "1ie0866",
+  "s": "En grup",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "4ylkna",
+  "s": "Amb el consum i el dipòsit de la teva moto calculem on repostar. Ho pots afinar a l'apartat Moto.",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "1du27b0",
+  "s": "Una altra moto",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "16ax3ov",
+  "s": "Busca la teva moto",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "1kogbz3",
+  "s": "Marca o model, p. ex. Ténéré",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "11ha12g",
+  "s": "No la tenim al catàleg. Continua i afegeix-la a mà a l'apartat Moto.",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "5f4ev6",
+  "s": "Sortides que fas normalment",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "1yde9zc",
+  "s": "Evita autopistes i autovies",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "4iwzzt",
+  "s": "Evita peatges",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "64vdrt",
+  "s": "Què t'agrada trobar a la ruta?",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "fu8v44",
+  "s": "Una frase sobre tu (opcional)",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "r0700k",
+  "s": "p. ex. Sortides de diumenge pel Montseny i algun viatge llarg a l'estiu",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "1c0v6sp",
+  "s": "Ara no, continua",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "p8mrws",
+  "s": "Desa els canvis",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "t1bmg0",
+  "s": "Comença a rodar",
+  "f": "Onboarding.tsx"
+ },
+ {
+  "k": "eacueh",
+  "s": "Muntanya i pistes",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "v23mgu",
+  "s": "Carretera i muntanya",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "10guc5j",
+  "s": "Començant",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "1fytt6t",
+  "s": "Més de 400 km",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "194phul",
+  "s": "Sense compte (mode demostració).",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "c3dkb3",
+  "s": "Com a màxim {0} fotos: n'hem pujat {1}.",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "s3v1gx",
+  "s": "Afegeix una foto de la teva moto",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "62639v",
+  "s": "Canvia la foto de perfil",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "1cnvkgw",
+  "s": "Rutes publicades",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "fatjm1",
+  "s": "Any en moto",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "8hyvzy",
+  "s": "Anys en moto",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "17tglut",
+  "s": "Motos",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "1rw1gup",
+  "s": "Les teves sortides",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "19ckr55",
+  "s": "gravades en aquest dispositiu",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "13q5t4c",
+  "s": "Quilòmetres gravats",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "1hkufqr",
+  "s": "km aquest mes",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "18vnlhc",
+  "s": "Sortides",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "8tas3n",
+  "s": "En moviment",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "rnm8ci",
+  "s": "Velocitat màxima",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "1nbscmc",
+  "s": "Punt més alt",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "16o71cc",
+  "s": "Grava la primera sortida i aquí veuràs els quilòmetres, les hores i el punt més alt.",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "1fg1j6z",
+  "s": "Fotos de la moto",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "4apm2x",
+  "s": "Foto {0}",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "1libwc6",
+  "s": "Portada",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "aowxfl",
+  "s": "Pujant…",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "1vchmys",
+  "s": "Afegeix",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "ve6r8y",
+  "s": "Estil",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "1j2ms37",
+  "s": "Experiència",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "12oljhe",
+  "s": "Normalment",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "1dmj589",
+  "s": "Edat",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "d8nhup",
+  "s": "privat",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "qkp8eg",
+  "s": "Aplicació",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "4m43jd",
+  "s": "Text més gran",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "k1atvl",
+  "s": "Instal·la l'app al mòbil",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "h974aq",
+  "s": "Privacitat, condicions i seguretat",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "s8go3h",
+  "s": "A Safari, toca",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "1tw8ck8",
+  "s": "Compartir",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "1i8eco6",
+  "s": "i després",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "1pxevh4",
+  "s": "Afegeix a la pantalla d'inici",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "1ozfdl2",
+  "s": ". S'obrirà com una app, a pantalla completa.",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "zin299",
+  "s": "Compte",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "pmqm6h",
+  "s": "Correu",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "1v81yqy",
+  "s": "T'hem enviat un enllaç per canviar la contrasenya.",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "6ullna",
+  "s": "Esborra el compte",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "1odnbrt",
+  "s": "S'esborraran el perfil, les fotos, les rutes publicades, els m'agrada i els guardats. No es pot desfer. Escriu",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "e5uup9",
+  "s": "ESBORRA",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "1cfpcob",
+  "s": "per confirmar.",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "144s8rx",
+  "s": "Esborra",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "zc8f7p",
+  "s": "Anterior",
+  "f": "ProfileScreen.tsx"
+ },
+ {
+  "k": "9gh8dt",
+  "s": "Planifica la primera ruta",
+  "f": "ReadyScreen.tsx"
+ },
+ {
+  "k": "1c9j1hg",
+  "s": "Pistes i trams d'enllaç al teu nivell.",
+  "f": "ReadyScreen.tsx"
+ },
+ {
+  "k": "lalyka",
+  "s": "Corbes a prop de casa, amb meteo i benzina.",
+  "f": "ReadyScreen.tsx"
+ },
+ {
+  "k": "1qc180l",
+  "s": "Explora la comunitat",
+  "f": "ReadyScreen.tsx"
+ },
+ {
+  "k": "1c10e67",
+  "s": "Rutes que han fet altres motoristes.",
+  "f": "ReadyScreen.tsx"
+ },
+ {
+  "k": "1odaxfk",
+  "s": "Grava una sortida",
+  "f": "ReadyScreen.tsx"
+ },
+ {
+  "k": "1f7ddzw",
+  "s": "Com Strava, però per a la moto.",
+  "f": "ReadyScreen.tsx"
+ },
+ {
+  "k": "1jrf0ki",
+  "s": "Posa fotos de la moto",
+  "f": "ReadyScreen.tsx"
+ },
+ {
+  "k": "1uysl49",
+  "s": "La primera serà la portada del perfil.",
+  "f": "ReadyScreen.tsx"
+ },
+ {
+  "k": "1tlsrzc",
+  "s": "Afegeix la moto",
+  "f": "ReadyScreen.tsx"
+ },
+ {
+  "k": "xn6h5j",
+  "s": "Per saber on has de repostar.",
+  "f": "ReadyScreen.tsx"
+ },
+ {
+  "k": "1hjvtrx",
+  "s": "Perfil a punt",
+  "f": "ReadyScreen.tsx"
+ },
+ {
+  "k": "simjaz",
+  "s": "Benvingut,",
+  "f": "ReadyScreen.tsx"
+ },
+ {
+  "k": "1ngrcsv",
+  "s": "Per on vols començar? Tot es pot fer després des de la barra inferior.",
+  "f": "ReadyScreen.tsx"
+ },
+ {
+  "k": "virhtz",
+  "s": "Corbes 82",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "7sein7",
+  "s": "Trail",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "82z1a2",
+  "s": "186 km",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "1boj5qp",
+  "s": "Port del Cantó · 11:40",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "v3w5nv",
+  "s": "Reposta al km 142",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "9a7z9o",
+  "s": "214 km",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "1nh7w9y",
+  "s": "Gira a la dreta cap a la C-26",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "uf337j",
+  "s": "48 km",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "1uo84nh",
+  "s": "Ports del Pirineu · 312 km",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "so97ym",
+  "s": "Guardada",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "1sczlyq",
+  "s": "2 persones et segueixen",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "7vz3yo",
+  "s": "Etapes amb allotjament",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "17f862q",
+  "s": "Inici i final amagats",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "1qa6ajw",
+  "s": "Planifica",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "15b5l",
+  "s": "Rutes pensades per a la moto",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "pz3dzj",
+  "s": "Tria carretera o trail, el nivell i els quilòmetres. Te'n proposem diverses, ordenades per corbes i desnivell.",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "1frpgh9",
+  "s": "Circulars o d'un punt a un altre",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "hjfhn5",
+  "s": "Evita autopistes i peatges",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "x4d2no",
+  "s": "Obre els GPX d'altres apps",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "1ficd1j",
+  "s": "Prepara la sortida",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "6tv1su",
+  "s": "Meteo i benzina a l'hora que hi passaràs",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "1qthbgu",
+  "s": "La previsió de cada tram a l'hora que hi arribaràs, i on repostar segons el dipòsit i el consum de la teva moto.",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "yyasmu",
+  "s": "Avisos de pluja, vent i fred",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "dpmvg3",
+  "s": "Preus reals de les benzineres",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "15icwdk",
+  "s": "Millor hora per sortir",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "1ig9e4t",
+  "s": "Roda",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "1e3qzi6",
+  "s": "Navega amb veu i grava la sortida",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "p8yh1f",
+  "s": "Indicacions amb veu en el teu idioma que s'avancen si vas ràpid. Si et surts de la ruta, et retorna per davant, mai enrere.",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "1bxyq3t",
+  "s": "Grava amb la pantalla apagada (iPhone)",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "19s82eu",
+  "s": "Velocitat, temps i desnivell",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "14sk2gs",
+  "s": "Exporta a GPX",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "ielvkd",
+  "s": "Comunitat",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "afs8hr",
+  "s": "Descobreix les rutes d'altres motoristes",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "1ebsq69",
+  "s": "Publica les teves sortides, dona m'agrada i guarda les que vulguis fer. Amb el teu perfil, la teva moto i les teves fotos.",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "ygnoa6",
+  "s": "Rutes a prop teu",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "1ha5cty",
+  "s": "Les més populars",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "jjut5f",
+  "s": "Guarda-les per fer-les",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "olavuk",
+  "s": "Tranquil·litat",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "lj3znk",
+  "s": "Que a casa sàpiguen per on vas",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "1qo4e4z",
+  "s": "Comparteix la ubicació en directe amb un enllaç. Ningú ha d'instal·lar res, i s'atura sol quan acabes.",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "xpuy22",
+  "s": "Etapes de diversos dies",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "1nt9w0b",
+  "s": "Privacitat en publicar",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "1yvscje",
+  "s": "Gratis, sense subscripcions",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "1dt54w",
+  "s": "Salta",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "1qnkn7n",
+  "s": "Diapositives",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "13tcudg",
+  "s": "Diapositiva {0}",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "8ff2rb",
+  "s": "Crea el compte gratis",
+  "f": "Welcome.tsx"
+ },
+ {
+  "k": "1cmmbhh",
+  "s": "Entra a la comunitat",
+  "f": "JoinForm.tsx"
+ },
+ {
+  "k": "ezmt0a",
+  "s": "Tria un nom de motorista per a la comunitat.",
+  "f": "JoinForm.tsx"
+ },
+ {
+  "k": "1wwxfd1",
+  "s": "Entrant…",
+  "f": "JoinForm.tsx"
+ },
+ {
+  "k": "1hopgta",
+  "s": "Gravades",
+  "f": "MyRoutes.tsx"
+ },
+ {
+  "k": "19hh79n",
+  "s": "Guardades",
+  "f": "MyRoutes.tsx"
+ },
+ {
+  "k": "1hf7jh8",
+  "s": "Planificades",
+  "f": "MyRoutes.tsx"
+ },
+ {
+  "k": "rzj121",
+  "s": "Publicades",
+  "f": "MyRoutes.tsx"
+ },
+ {
+  "k": "izimmk",
+  "s": "Rutes que has gravat amb el GPS del telèfon.",
+  "f": "MyRoutes.tsx"
+ },
+ {
+  "k": "1hk4od9",
+  "s": "Encara no has gravat cap ruta. Fes-ho des de l'apartat «Grava».",
+  "f": "MyRoutes.tsx"
+ },
+ {
+  "k": "1l2odqw",
+  "s": "km ·",
+  "f": "MyRoutes.tsx"
+ },
+ {
+  "k": "9g9ieb",
+  "s": "km/h ·",
+  "f": "MyRoutes.tsx"
+ },
+ {
+  "k": "1oim8n5",
+  "s": "Compartida",
+  "f": "MyRoutes.tsx"
+ },
+ {
+  "k": "wkkcfa",
+  "s": "Amaga",
+  "f": "MyRoutes.tsx"
+ },
+ {
+  "k": "1xvt60l",
+  "s": "Al mapa",
+  "f": "MyRoutes.tsx"
+ },
+ {
+  "k": "1359q0e",
+  "s": "GPX",
+  "f": "MyRoutes.tsx"
+ },
+ {
+  "k": "57x7z3",
+  "s": "Rutes que has calculat i desat en aquest navegador.",
+  "f": "MyRoutes.tsx"
+ },
+ {
+  "k": "ysfklz",
+  "s": "Encara no has desat cap ruta.",
+  "f": "MyRoutes.tsx"
+ },
+ {
+  "k": "1m7tufj",
+  "s": "· desada el",
+  "f": "MyRoutes.tsx"
+ },
+ {
+  "k": "i11k7p",
+  "s": "Obre",
+  "f": "MyRoutes.tsx"
+ },
+ {
+  "k": "lakg1c",
+  "s": "Rutes de la comunitat que has guardat per fer-les.",
+  "f": "MyRoutes.tsx"
+ },
+ {
+  "k": "1mamoz9",
+  "s": "Rutes que has compartit amb la comunitat.",
+  "f": "MyRoutes.tsx"
+ },
+ {
+  "k": "12elcyx",
+  "s": "Encara no has guardat cap ruta. Busca'n a l'apartat Social.",
+  "f": "MyRoutes.tsx"
+ },
+ {
+  "k": "ulikxy",
+  "s": "Encara no has publicat cap ruta.",
+  "f": "MyRoutes.tsx"
+ },
+ {
+  "k": "1mskim8",
+  "s": "Comparteix la ruta",
+  "f": "ShareDialog.tsx"
+ },
+ {
+  "k": "1bdq5zd",
+  "s": "Ruta publicada a la comunitat. Ja la pot veure tothom a l'apartat Social.",
+  "f": "ShareDialog.tsx"
+ },
+ {
+  "k": "4vbdnk",
+  "s": "Fet",
+  "f": "ShareDialog.tsx"
+ },
+ {
+  "k": "apb59b",
+  "s": "m + · índex de corbes",
+  "f": "ShareDialog.tsx"
+ },
+ {
+  "k": "161pdin",
+  "s": "· publicaràs com a",
+  "f": "ShareDialog.tsx"
+ },
+ {
+  "k": "rudtsp",
+  "s": "Títol",
+  "f": "ShareDialog.tsx"
+ },
+ {
+  "k": "i28iss",
+  "s": "Com va anar? (opcional)",
+  "f": "ShareDialog.tsx"
+ },
+ {
+  "k": "19dlk9j",
+  "s": "Estat de la carretera, on vas parar a dinar, millor època…",
+  "f": "ShareDialog.tsx"
+ },
+ {
+  "k": "wd1i70",
+  "s": "Quan la vas fer",
+  "f": "ShareDialog.tsx"
+ },
+ {
+  "k": "kq0nc6",
+  "s": "Modalitat",
+  "f": "ShareDialog.tsx"
+ },
+ {
+  "k": "jyqkjm",
+  "s": "Dificultat",
+  "f": "ShareDialog.tsx"
+ },
+ {
+  "k": "1kh5tet",
+  "s": "Amaga l'inici i el final",
+  "f": "ShareDialog.tsx"
+ },
+ {
+  "k": "1kg4ltm",
+  "s": "(~400 m a cada extrem) perquè ningú vegi on vius o on aparques.",
+  "f": "ShareDialog.tsx"
+ },
+ {
+  "k": "1eyar99",
+  "s": "Publicant…",
+  "f": "ShareDialog.tsx"
+ },
+ {
+  "k": "19l2s7x",
+  "s": "Publica a la comunitat",
+  "f": "ShareDialog.tsx"
+ },
+ {
+  "k": "1t2rbq9",
+  "s": "fa {0} dies",
+  "f": "SharedRouteCard.tsx"
+ },
+ {
+  "k": "176e8a7",
+  "s": "Guarda-la",
+  "f": "SharedRouteCard.tsx"
+ },
+ {
+  "k": "10cooon",
+  "s": "Tornar",
+  "f": "SharedRouteCard.tsx"
+ },
+ {
+  "k": "1ptk8cd",
+  "s": " · feta el {0}",
+  "f": "SharedRouteCard.tsx"
+ },
+ {
+  "k": "f50r12",
+  "s": "Planifica-la: meteo i benzina",
+  "f": "SharedRouteCard.tsx"
+ },
+ {
+  "k": "ciq77",
+  "s": "Elimina la meva publicació",
+  "f": "SharedRouteCard.tsx"
+ },
+ {
+  "k": "15z2uiu",
+  "s": "Ruta per {0}",
+  "f": "SocialScreen.tsx"
+ },
+ {
+  "k": "e0ucza",
+  "s": "L'apartat Social necessita connexió amb el servidor de la comunitat i aquí no està disponible.",
+  "f": "SocialScreen.tsx"
+ },
+ {
+  "k": "8eorx4",
+  "s": " Prova-ho a la web publicada.",
+  "f": "SocialScreen.tsx"
+ },
+ {
+  "k": "hojmxp",
+  "s": " Falta configurar Supabase (vegeu el README).",
+  "f": "SocialScreen.tsx"
+ },
+ {
+  "k": "1owm4t5",
+  "s": "Puja una ruta",
+  "f": "SocialScreen.tsx"
+ },
+ {
+  "k": "1e6ffs9",
+  "s": "Rutes que altres motoristes han fet. Dona-hi m'agrada o guarda-les per fer-les: les trobaràs a «Les meves rutes».",
+  "f": "SocialScreen.tsx"
+ },
+ {
+  "k": "1qvsnul",
+  "s": "Ets",
+  "f": "SocialScreen.tsx"
+ },
+ {
+  "k": "1tqublh",
+  "s": "Quina ruta vols compartir?",
+  "f": "SocialScreen.tsx"
+ },
+ {
+  "k": "1o46ajj",
+  "s": "Puja el GPX del teu GPS, mòbil, Wikiloc, Strava o Calimoto, o tria una ruta que tinguis desada.",
+  "f": "SocialScreen.tsx"
+ },
+ {
+  "k": "1nezjsp",
+  "s": "Puja un fitxer GPX",
+  "f": "SocialScreen.tsx"
+ },
+ {
+  "k": "fzq68u",
+  "s": "O una de les teves rutes desades",
+  "f": "SocialScreen.tsx"
+ },
+ {
+  "k": "1t7xlh3",
+  "s": "Recents",
+  "f": "SocialScreen.tsx"
+ },
+ {
+  "k": "1qaba0q",
+  "s": "Més populars",
+  "f": "SocialScreen.tsx"
+ },
+ {
+  "k": "1l6c6kd",
+  "s": "A prop",
+  "f": "SocialScreen.tsx"
+ },
+ {
+  "k": "1iyfo7o",
+  "s": "Totes",
+  "f": "SocialScreen.tsx"
+ },
+ {
+  "k": "1xhmma1",
+  "s": "Tria un punt de sortida a Planificar per veure rutes a prop.",
+  "f": "SocialScreen.tsx"
+ },
+ {
+  "k": "1cg1f85",
+  "s": "Carregant rutes de la comunitat",
+  "f": "SocialScreen.tsx"
+ },
+ {
+  "k": "1a70ovc",
+  "s": "Encara no hi ha rutes aquí. Sigues el primer a compartir-ne una!",
+  "f": "SocialScreen.tsx"
+ },
+ {
+  "k": "1vx4q6u",
+  "s": "Carrega'n més",
+  "f": "SocialScreen.tsx"
+ }
+]

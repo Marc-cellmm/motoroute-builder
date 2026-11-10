@@ -7,6 +7,7 @@ import NewPassword from './NewPassword';
 import { loadAccount, onAuthChange, signOut, type Account } from '../../lib/account';
 import { socialEnabled } from '../../lib/social';
 import { Logo } from '../Icon';
+import { t } from '../../i18n';
 
 interface Ctx {
   account: Account | null;
@@ -70,7 +71,7 @@ export default function AccountGate({ children }: { children: ReactNode }) {
   if (stage === 'loading') {
     return (
       <div className="auth-page">
-        <div className="auth-card"><div className="auth-logo"><Logo size={52} /></div><p className="hint" style={{ textAlign: 'center' }}>Carregant…</p></div>
+        <div className="auth-card"><div className="auth-logo"><Logo size={52} /></div><p className="hint" style={{ textAlign: 'center' }}>{t("Carregant…")}</p></div>
       </div>
     );
   }
@@ -79,8 +80,8 @@ export default function AccountGate({ children }: { children: ReactNode }) {
       <div className="auth-page">
         <div className="auth-card">
           <div className="auth-logo"><Logo size={52} /></div>
-          <div className="alert warn">{error ?? 'No hi ha connexió.'}</div>
-          <button className="btn primary" style={{ width: '100%' }} onClick={refresh}>Torna-ho a provar</button>
+          <div className="alert warn">{error ?? t("No hi ha connexió.")}</div>
+          <button className="btn primary" style={{ width: '100%' }} onClick={refresh}>{t("Torna-ho a provar")}</button>
         </div>
       </div>
     );

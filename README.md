@@ -78,7 +78,7 @@ Els motoristes publiquen rutes que han fet (des d'un GPX o d'una ruta desada), h
 
 1. Crea un projecte gratuït a [supabase.com](https://supabase.com).
 2. **SQL Editor → New query**: enganxa i executa `supabase/schema.sql`.
-3. **SQL Editor → New query**: enganxa i executa `supabase/accounts.sql` (perfil, dades privades i esborrar el compte) i després `supabase/photos.sql` (foto de perfil i fotos de la moto a Supabase Storage).
+3. **SQL Editor → New query**: enganxa i executa `supabase/accounts.sql` (perfil, dades privades i esborrar el compte) després `supabase/photos.sql` (foto de perfil i fotos de la moto a Supabase Storage) i `supabase/country.sql` (país del perfil).
 4. **Authentication → Sign In / Providers → Email**: desactiva *Confirm email* mentre no tinguis un servidor de correu propi. El servidor de correu de Supabase només envia a membres de l'equip del projecte i 2 correus per hora. Per enviar confirmacions i recuperar contrasenyes a qualsevol usuari, configura un SMTP propi (Brevo o Resend tenen pla gratuït) a **Authentication → Emails → SMTP Settings** i torna a activar *Confirm email*.
 5. Entrar amb el mòbil (SMS) necessita un proveïdor de SMS de pagament (Twilio, Vonage o MessageBird) a **Authentication → Sign In / Providers → Phone**.
 6. Posa la *Project URL* i la clau *anon/publishable* a `src/config.ts` (o a les variables `VITE_SUPABASE_URL` i `VITE_SUPABASE_ANON_KEY`). Aquestes dues són públiques per disseny. La clau *service_role* no ha d'anar mai a la web.
@@ -94,6 +94,14 @@ Si algú ja tenia un nom de motorista amb l'accés anònim antic, en crear el co
 3. Les funcions de la carpeta `api/` fan de pont amb Valhalla i el MITECO (que no permeten crides directes des del navegador).
 
 Un cop publicada, des del mòbil pots fer «Afegeix a la pantalla d'inici» perquè s'obri com una app.
+
+## Idiomes
+
+L'app està en 12 idiomes: espanyol, català, anglès, francès, alemany, italià, portuguès, neerlandès, romanès, rus, àrab marroquí (darija, de dreta a esquerra) i xinès. El primer cop que s'obre pregunta l'idioma i el país; després es pot canviar a Perfil → Idioma.
+
+- El text original (català) és la clau: `t("Text")`. Les traduccions són a `src/i18n/locales/<codi>.json`.
+- Després de canviar textos: `node scripts/i18n-extract.mjs` actualitza `src/i18n/catalog.json`. Un text sense traducció es mostra en català.
+- Les indicacions de veu de la navegació les genera Valhalla, que no té àrab ni xinès: en darija surten en francès i en xinès, en anglès.
 
 ## Com funciona
 

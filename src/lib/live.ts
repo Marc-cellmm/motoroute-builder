@@ -10,6 +10,7 @@ import { decodePolyline, encodePolyline, simplify } from './geo';
 import { PUBLIC_URL } from '../config';
 import type { LiveFix, RecState } from './recorder';
 import type { LngLat } from './types';
+import { t } from '../i18n';
 
 export interface LivePayload {
   c: LngLat | null; // posició actual
@@ -94,7 +95,7 @@ export function useLiveShare(rec: RecState, fix: LiveFix | null, name: string | 
       })
       .subscribe((status) => {
         if (status === 'SUBSCRIBED') send();
-        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') setError('No s\'ha pogut connectar amb el servidor de seguiment.');
+        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') setError(t("No s'ha pogut connectar amb el servidor de seguiment."));
       });
     channel.current = ch;
     setId(newChannel);

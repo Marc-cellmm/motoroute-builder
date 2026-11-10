@@ -1,5 +1,6 @@
 import { cumulativeKm, decodePolyline, destination, bearing, haversine } from './geo';
 import type { DistanceBand, LngLat, Maneuver, PlanRequest } from './types';
+import { t, lang } from '../i18n';
 
 const ELEVATION_INTERVAL = 200; // metres
 const VALHALLA_URL: string = import.meta.env.VITE_VALHALLA_URL || '/api/valhalla';
@@ -131,7 +132,7 @@ export async function callValhalla(locations: Stop[], req: Pick<PlanRequest, 'mo
     })),
     costing: 'motorcycle',
     costing_options: costingOptions(req),
-    directions_options: { units: 'kilometers', language: 'ca-ES' },
+    directions_options: { units: 'kilometers', language: lang().valhalla },
     elevation_interval: ELEVATION_INTERVAL, // perfil d'elevació inclòs a la resposta
     ...(alternates ? { alternates } : {}),
   };
@@ -147,12 +148,12 @@ export async function callValhalla(locations: Stop[], req: Pick<PlanRequest, 'mo
           body: JSON.stringify(body),
         });
   } catch {
-    throw new Error('No s\'ha pogut connectar amb el servei de rutes. Comprova la connexió i torna-ho a provar.');
+    throw new Error(t("No s'ha pogut connectar amb el servei de rutes. Comprova la connexió i torna-ho a provar."));
   }
   const json = await res.json().catch(() => null);
   if (!res.ok || !json?.trip) {
     const msg = json?.error || json?.status_message || `error ${res.status}`;
-    throw new Error(`El servei de rutes ha fallat: ${msg}`);
+    throw new Error(t("El servei de rutes ha fallat: {0}", [msg]));
   }
   const trips: ValhallaTrip[] = [json.trip, ...((json.alternates ?? []).map((a: { trip: ValhallaTrip }) => a.trip))];
   return trips.map(parseTrip);
@@ -201,7 +202,7 @@ async function circularRoutes(req: PlanRequest): Promise<RawRoute[]> {
     }
     await sleep(400);
   }
-  if (!out.length) throw new Error('No s\'ha pogut generar cap ruta circular des d\'aquest origen.');
+  if (!out.length) throw new Error(t("No s'ha pogut generar cap ruta circular des d'aquest origen."));
   return out;
 }
 
@@ -241,12 +242,12 @@ async function pointToPointRoutes(req: PlanRequest): Promise<{ routes: RawRoute[
   }
   return {
     routes: [...detours, direct[0]].slice(0, 3),
-    note: `La ruta directa fa ${Math.round(direct[0].distanceKm)} km; s'hi han afegit desviaments per acostar-la al rang triat.`,
+    note: t("La ruta directa fa {0} km; s'hi han afegit desviaments per acostar-la al rang triat.", [Math.round(direct[0].distanceKm)]),
   };
 }
 
 export async function planRoutes(req: PlanRequest): Promise<{ routes: RawRoute[]; note?: string }> {
-  if (!req.origin) throw new Error('Tria un punt de sortida.');
+  if (!req.origin) throw new Error(t("Tria un punt de sortida."));
   if (req.circular || !req.destination) return { routes: await circularRoutes(req) };
   return pointToPointRoutes(req);
 }
@@ -260,13 +261,13 @@ export async function traceManeuvers(coords: LngLat[]): Promise<{ coords: LngLat
     shape: coords.map(([lon, lat]) => ({ lat, lon })),
     costing: 'motorcycle',
     shape_match: 'map_snap',
-    directions_options: { units: 'kilometers', language: 'ca-ES' },
+    directions_options: { units: 'kilometers', language: lang().valhalla },
   };
   const url = VALHALLA_URL.startsWith('http') ? VALHALLA_URL.replace(/\/route$/, '/trace_route') : '/api/valhalla-trace';
   // text/plain: petició simple, sense preflight CORS
   const res = await fetch(url, { method: 'POST', body: JSON.stringify(body) });
   const json = await res.json().catch(() => null);
-  if (!res.ok || !json?.trip) throw new Error('No s\'han pogut preparar les instruccions de navegació per a aquesta ruta.');
+  if (!res.ok || !json?.trip) throw new Error(t("No s'han pogut preparar les instruccions de navegació per a aquesta ruta."));
   const r = parseTrip(json.trip as ValhallaTrip);
   return { coords: r.coords, maneuvers: r.maneuvers };
 }

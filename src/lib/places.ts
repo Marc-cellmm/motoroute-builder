@@ -1,5 +1,6 @@
 import type { Accommodation, LngLat, Place } from './types';
 import { haversine } from './geo';
+import { t } from '../i18n';
 
 /** Autocompletat amb Photon (OpenStreetMap), esbiaixat cap a Catalunya. */
 export async function searchPlaces(q: string, near?: LngLat): Promise<Place[]> {
@@ -22,20 +23,20 @@ export async function reverseGeocode(coord: LngLat): Promise<string> {
     const res = await fetch(`https://photon.komoot.io/reverse?lon=${coord[0]}&lat=${coord[1]}`);
     const json = await res.json();
     const p = json.features?.[0]?.properties;
-    return p ? [p.name, p.city].filter(Boolean).join(', ') : 'La meva ubicació';
+    return p ? [p.name, p.city].filter(Boolean).join(', ') : t("La meva ubicació");
   } catch {
-    return 'La meva ubicació';
+    return t("La meva ubicació");
   }
 }
 
 const KIND_LABEL: Record<string, string> = {
-  hotel: 'Hotel',
-  motel: 'Motel',
-  guest_house: 'Casa rural / pensió',
-  hostel: 'Alberg',
-  camp_site: 'Càmping',
-  apartment: 'Apartament',
-  chalet: 'Xalet',
+  hotel: t("Hotel"),
+  motel: t("Motel"),
+  guest_house: t("Casa rural / pensió"),
+  hostel: t("Alberg"),
+  camp_site: t("Càmping"),
+  apartment: t("Apartament"),
+  chalet: t("Xalet"),
 };
 
 /** Allotjaments d'OpenStreetMap en un radi (Overpass API). */
@@ -48,7 +49,7 @@ out center 60;`;
     body: 'data=' + encodeURIComponent(q),
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   });
-  if (!res.ok) throw new Error('El servei d\'allotjaments (Overpass) està saturat; torna-ho a provar.');
+  if (!res.ok) throw new Error(t("El servei d'allotjaments (Overpass) està saturat; torna-ho a provar."));
   const json = await res.json();
   return (json.elements as {
     id: number;

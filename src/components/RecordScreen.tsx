@@ -13,6 +13,7 @@ import { uid } from '../lib/storage';
 import { isNativeApp, openAppSettings } from '../lib/location';
 import type { Motorcycle, RecordedRoute, RideMode, RouteResult } from '../lib/types';
 import Icon from './Icon';
+import { locale, t as tr } from '../i18n';
 
 type Recorder = ReturnType<typeof useRecorder>;
 
@@ -46,9 +47,9 @@ export default function RecordScreen({ rec, bike, me, setMe, onSave, onMarkShare
   if (demo) {
     return (
       <div>
-        <h2>Grava</h2>
+        <h2>{tr("Grava")}</h2>
         <div className="alert info" style={{ marginTop: 12 }}>
-          La gravació amb GPS necessita el permís de localització del telèfon i aquí no està disponible. Prova-ho a la web publicada.
+          {tr("La gravació amb GPS necessita el permís de localització del telèfon i aquí no està disponible. Prova-ho a la web publicada.")}
         </div>
       </div>
     );
@@ -70,69 +71,69 @@ export default function RecordScreen({ rec, bike, me, setMe, onSave, onMarkShare
   return (
     <div>
       <div className="row" style={{ marginBottom: 8 }}>
-        <h2>Grava la ruta</h2>
+        <h2>{tr("Grava la ruta")}</h2>
         {state.status !== 'idle' && (
           <span className={`rec-badge ${state.status}`} style={{ flex: 'none' }}>
-            {state.status === 'recording' ? <><span className="rec-dot" /> Gravant</> : <><Icon name="pause" size={14} /> En pausa</>}
+            {state.status === 'recording' ? <><span className="rec-dot" /> {tr("Gravant")}</> : <><Icon name="pause" size={14} /> {tr("En pausa")}</>}
           </span>
         )}
       </div>
 
       {state.status === 'idle' && (
         <>
-          <p className="hint">Com Strava: el GPS del telèfon segueix la teva ruta. Quan acabis, la pots desar i compartir a la comunitat.</p>
-          {perm === 'unsupported' && <div className="alert err">Aquest navegador no té GPS disponible.</div>}
+          <p className="hint">{tr("Com Strava: el GPS del telèfon segueix la teva ruta. Quan acabis, la pots desar i compartir a la comunitat.")}</p>
+          {perm === 'unsupported' && <div className="alert err">{tr("Aquest navegador no té GPS disponible.")}</div>}
           {perm === 'denied' && isNativeApp && (
             <div className="alert err">
-              <b>Permís de localització denegat.</b> Activa'l a Configuració → MotoRoute → Ubicació → <b>Sempre</b>.
-              <button className="btn small" style={{ marginTop: 8 }} onClick={openAppSettings}>Obre la configuració</button>
+              <b>{tr("Permís de localització denegat.")}</b> {tr("Activa'l a Configuració → MotoRoute → Ubicació →")}{' '}<b>{tr("Sempre")}</b>.
+              <button className="btn small" style={{ marginTop: 8 }} onClick={openAppSettings}>{tr("Obre la configuració")}</button>
             </div>
           )}
           {perm === 'denied' && !isNativeApp && (
             <div className="alert err">
-              <b>Permís de localització denegat.</b> Activa'l per a aquest web:
+              <b>{tr("Permís de localització denegat.")}</b> {tr("Activa'l per a aquest web:")}
               <ul style={{ margin: '6px 0 0', paddingLeft: 18 }}>
-                <li><b>iPhone:</b> Configuració → Privacitat → Localització → Safari (o el navegador) → «Mentre s'usa l'app». Després recarrega.</li>
-                <li><b>Android (Chrome):</b> toca el cadenat a la barra d'adreces → Permisos → Ubicació → Permet.</li>
+                <li><b>{tr("iPhone:")}</b> {tr("Configuració → Privacitat → Localització → Safari (o el navegador) → «Mentre s'usa l'app». Després recarrega.")}</li>
+                <li><b>{tr("Android (Chrome):")}</b> {tr("toca el cadenat a la barra d'adreces → Permisos → Ubicació → Permet.")}</li>
               </ul>
             </div>
           )}
           {(perm === 'prompt' || perm === 'unknown') && !fix && (
             <div className="box">
-              <b>Permís de localització</b>
+              <b>{tr("Permís de localització")}</b>
               <p className="hint">
                 {isNativeApp
-                  ? 'L\'iPhone et preguntarà si permets la ubicació. Tria «Mentre s\'usa l\'app»; quan comencis a gravar et proposarà «Permet sempre»: accepta-ho per gravar amb la pantalla apagada.'
-                  : 'El telèfon et preguntarà si permets la ubicació. Tria «Permet» (o «Mentre s\'usa l\'app»).'}
+                  ? tr("L'iPhone et preguntarà si permets la ubicació. Tria «Mentre s'usa l'app»; quan comencis a gravar et proposarà «Permet sempre»: accepta-ho per gravar amb la pantalla apagada.")
+                  : tr("El telèfon et preguntarà si permets la ubicació. Tria «Permet» (o «Mentre s'usa l'app»).")}
               </p>
-              <button className="btn" style={{ width: '100%', marginTop: 8 }} onClick={rec.requestPermission}><Icon name="locate" /> Activa la ubicació</button>
+              <button className="btn" style={{ width: '100%', marginTop: 8 }} onClick={rec.requestPermission}><Icon name="locate" /> {tr("Activa la ubicació")}</button>
             </div>
           )}
           {fix && (
             <div className={`gps-pill ${gpsOk ? 'ok' : ''}`}>
               <span className="gps-dot" />
-              GPS {gpsOk ? 'a punt' : 'buscant senyal'} <span className="dim">· ±{Math.round(fix.accuracy)} m</span>
+              {tr("GPS")}{' '}{gpsOk ? tr("a punt") : tr("buscant senyal")} <span className="dim">· ±{Math.round(fix.accuracy)} m</span>
             </div>
           )}
           {gpsError && <div className="alert warn">{gpsError}</div>}
           <button className="rec-start" disabled={perm === 'denied' || perm === 'unsupported'} onClick={rec.start}>
-            <Icon name="record" size={26} filled /> Comença a gravar
+            <Icon name="record" size={26} filled /> {tr("Comença a gravar")}
           </button>
           <div className="box" style={{ marginTop: 14 }}>
-            <div className="label">Abans de sortir</div>
+            <div className="label">{tr("Abans de sortir")}</div>
             <ul className="hint" style={{ margin: '6px 0 0', paddingLeft: 18 }}>
               {isNativeApp ? (
                 <>
-                  <li>Pots apagar la pantalla o guardar el mòbil: l'app continua gravant (veuràs l'indicador blau d'ubicació a dalt).</li>
-                  <li>Perquè funcioni amb la pantalla apagada, la ubicació ha d'estar a «Sempre» o «Mentre s'usa l'app» (Configuració → MotoRoute).</li>
+                  <li>{tr("Pots apagar la pantalla o guardar el mòbil: l'app continua gravant (veuràs l'indicador blau d'ubicació a dalt).")}</li>
+                  <li>{tr("Perquè funcioni amb la pantalla apagada, la ubicació ha d'estar a «Sempre» o «Mentre s'usa l'app» (Configuració → MotoRoute).")}</li>
                 </>
               ) : (
                 <>
-                  <li>Posa el mòbil al suport amb la pantalla encesa: l'app la manté activa mentre graves.</li>
-                  <li>Si bloqueges la pantalla o canvies d'app, el telèfon pot aturar el GPS. En tornar, la gravació continua.</li>
+                  <li>{tr("Posa el mòbil al suport amb la pantalla encesa: l'app la manté activa mentre graves.")}</li>
+                  <li>{tr("Si bloqueges la pantalla o canvies d'app, el telèfon pot aturar el GPS. En tornar, la gravació continua.")}</li>
                 </>
               )}
-              <li>Porta el mòbil carregat o connectat a la moto: el GPS gasta bateria.</li>
+              <li>{tr("Porta el mòbil carregat o connectat a la moto: el GPS gasta bateria.")}</li>
             </ul>
           </div>
         </>
@@ -143,22 +144,22 @@ export default function RecordScreen({ rec, bike, me, setMe, onSave, onMarkShare
           <div className="rec-grid">
             <Stat big value={state.distanceKm.toFixed(2)} label="km" />
             <Stat big value={fmtClock(elapsedMs)} label="temps" />
-            <Stat value={speed != null && state.status === 'recording' ? Math.round(speed).toString() : '—'} label="km/h ara" />
-            <Stat value={avg ? Math.round(avg).toString() : '—'} label="km/h mitjana" />
-            <Stat value={Math.round(state.maxSpeedKmh).toString()} label="km/h màxima" />
-            <Stat value={fix?.alt != null ? `${Math.round(fix.alt)}` : '—'} label="m altitud" />
+            <Stat value={speed != null && state.status === 'recording' ? Math.round(speed).toString() : '—'} label={tr("km/h ara")} />
+            <Stat value={avg ? Math.round(avg).toString() : '—'} label={tr("km/h mitjana")} />
+            <Stat value={Math.round(state.maxSpeedKmh).toString()} label={tr("km/h màxima")} />
+            <Stat value={fix?.alt != null ? `${Math.round(fix.alt)}` : '—'} label={tr("m altitud")} />
           </div>
           <div className="hint" style={{ margin: '8px 0' }}>
             {state.status === 'recording' && (
               <>
-                <span className={gpsOk ? 'go-text' : ''}>{gpsOk ? `GPS ±${Math.round(fix!.accuracy)} m` : 'Buscant senyal GPS…'}</span>
+                <span className={gpsOk ? 'go-text' : ''}>{gpsOk ? tr("GPS ±{0} m", [Math.round(fix!.accuracy)]) : tr("Buscant senyal GPS…")}</span>
                 {' · '}
                 {isNativeApp
-                  ? 'pots apagar la pantalla'
-                  : wakeLock === 'on' ? 'pantalla mantinguda encesa' : wakeLock === 'unsupported' ? 'mantén la pantalla encesa manualment' : 'pantalla: toca-la si s\'enfosqueix'}
+                  ? tr("pots apagar la pantalla")
+                  : wakeLock === 'on' ? tr("pantalla mantinguda encesa") : wakeLock === 'unsupported' ? tr("mantén la pantalla encesa manualment") : tr("pantalla: toca-la si s'enfosqueix")}
               </>
             )}
-            {state.status === 'paused' && 'Gravació en pausa. El GPS està aturat.'}
+            {state.status === 'paused' && tr("Gravació en pausa. El GPS està aturat.")}
           </div>
           {gpsError && state.status === 'recording' && <div className="alert warn">{gpsError}</div>}
           {extra}
@@ -166,27 +167,27 @@ export default function RecordScreen({ rec, bike, me, setMe, onSave, onMarkShare
           {!confirmStop ? (
             <div className="actions">
               {state.status === 'recording'
-                ? <button className="btn" onClick={rec.pause}><Icon name="pause" size={16} /> Pausa</button>
-                : <button className="btn" onClick={rec.resume}><Icon name="play" size={16} /> Continua</button>}
-              <button className="btn primary" onClick={() => setConfirmStop(true)}><Icon name="stop" size={16} /> Acaba</button>
+                ? <button className="btn" onClick={rec.pause}><Icon name="pause" size={16} /> {tr("Pausa")}</button>
+                : <button className="btn" onClick={rec.resume}><Icon name="play" size={16} /> {tr("Continua")}</button>}
+              <button className="btn primary" onClick={() => setConfirmStop(true)}><Icon name="stop" size={16} /> {tr("Acaba")}</button>
             </div>
           ) : (
             <div className="box" style={{ marginTop: 14 }}>
-              <b>Vols acabar la gravació?</b>
+              <b>{tr("Vols acabar la gravació?")}</b>
               <div className="actions" style={{ marginTop: 10 }}>
-                <button className="btn" onClick={() => setConfirmStop(false)}>Encara no</button>
-                <button className="btn primary" onClick={() => { setConfirmStop(false); rec.finish(); }}>Sí, acaba</button>
+                <button className="btn" onClick={() => setConfirmStop(false)}>{tr("Encara no")}</button>
+                <button className="btn primary" onClick={() => { setConfirmStop(false); rec.finish(); }}>{tr("Sí, acaba")}</button>
               </div>
             </div>
           )}
           {state.status === 'paused' && (
             !confirmDiscard
-              ? <button className="btn small ghost" style={{ marginTop: 12 }} onClick={() => setConfirmDiscard(true)}>Descarta la gravació</button>
+              ? <button className="btn small ghost" style={{ marginTop: 12 }} onClick={() => setConfirmDiscard(true)}>{tr("Descarta la gravació")}</button>
               : (
                 <div className="alert warn">
-                  Segur? Es perdrà el traçat.{' '}
-                  <button className="btn small" onClick={() => { setConfirmDiscard(false); rec.discard(); }}>Sí, descarta</button>{' '}
-                  <button className="btn small ghost" onClick={() => setConfirmDiscard(false)}>No</button>
+                  {tr("Segur? Es perdrà el traçat.")}{' '}
+                  <button className="btn small" onClick={() => { setConfirmDiscard(false); rec.discard(); }}>{tr("Sí, descarta")}</button>{' '}
+                  <button className="btn small ghost" onClick={() => setConfirmDiscard(false)}>{tr("No")}</button>
                 </div>
               )
           )}
@@ -208,7 +209,7 @@ function Summary({ rec, bike, me, setMe, onSave, onMarkShared, goToMyRoutes }: O
 
   const coords = trackCoords(state.points);
   const tooShort = coords.length < 2 || state.distanceKm < 0.2;
-  const dateLabel = new Date(state.startedAt ?? Date.now()).toLocaleDateString('ca-ES', { day: 'numeric', month: 'long' });
+  const dateLabel = new Date(state.startedAt ?? Date.now()).toLocaleDateString(locale(), { day: 'numeric', month: 'long' });
 
   useEffect(() => {
     if (tooShort) return;
@@ -218,9 +219,9 @@ function Summary({ rec, bike, me, setMe, onSave, onMarkShared, goToMyRoutes }: O
         const name = await reverseGeocode(coords[0]);
         if (cancelled) return;
         setStartName(name);
-        setTitle((t) => t || `Ruta per ${name.split(',')[0]} · ${dateLabel}`);
+        setTitle((t) => t || tr("Ruta per {0} · {1}", [name.split(',')[0], dateLabel]));
       } catch {
-        setTitle((t) => t || `Ruta del ${dateLabel}`);
+        setTitle((t) => t || tr("Ruta del {0}", [dateLabel]));
       }
     })();
     return () => { cancelled = true; };
@@ -256,7 +257,7 @@ function Summary({ rec, bike, me, setMe, onSave, onMarkShared, goToMyRoutes }: O
     void _w; void _f; void _s; void _b;
     return {
       id: uid(),
-      title: title.trim() || `Ruta del ${dateLabel}`,
+      title: title.trim() || tr("Ruta del {0}", [dateLabel]),
       recordedAt: new Date(state.startedAt ?? Date.now()).toISOString(),
       mode,
       startName,
@@ -282,32 +283,32 @@ function Summary({ rec, bike, me, setMe, onSave, onMarkShared, goToMyRoutes }: O
   if (tooShort) {
     return (
       <div>
-        <h2>Gravació massa curta</h2>
-        <p className="hint">No s'han registrat prou punts per desar una ruta (cal moure's almenys 200 m amb senyal GPS).</p>
-        <button className="btn" style={{ width: '100%', marginTop: 12 }} onClick={rec.discard}>Torna a començar</button>
+        <h2>{tr("Gravació massa curta")}</h2>
+        <p className="hint">{tr("No s'han registrat prou punts per desar una ruta (cal moure's almenys 200 m amb senyal GPS).")}</p>
+        <button className="btn" style={{ width: '100%', marginTop: 12 }} onClick={rec.discard}>{tr("Torna a començar")}</button>
       </div>
     );
   }
 
   return (
     <div>
-      <h2>Ruta acabada</h2>
+      <h2>{tr("Ruta acabada")}</h2>
       <div className="rec-grid" style={{ marginTop: 12 }}>
         <Stat big value={state.distanceKm.toFixed(1)} label="km" />
-        <Stat big value={fmtClock(state.movingMs)} label="en moviment" />
-        <Stat value={Math.round(avg).toString()} label="km/h mitjana" />
-        <Stat value={Math.round(state.maxSpeedKmh).toString()} label="km/h màxima" />
-        <Stat value={route ? `${route.elevationGain}` : '…'} label="m desnivell +" />
-        <Stat value={liters != null ? liters.toFixed(1) : '—'} label={liters != null ? 'litres aprox.' : 'sense moto'} />
+        <Stat big value={fmtClock(state.movingMs)} label={tr("en moviment")} />
+        <Stat value={Math.round(avg).toString()} label={tr("km/h mitjana")} />
+        <Stat value={Math.round(state.maxSpeedKmh).toString()} label={tr("km/h màxima")} />
+        <Stat value={route ? `${route.elevationGain}` : '…'} label={tr("m desnivell +")} />
+        <Stat value={liters != null ? liters.toFixed(1) : '—'} label={liters != null ? tr("litres aprox.") : tr("sense moto")} />
       </div>
 
-      {!route && !error && <Loader text="Calculant desnivell, corbes i dificultat…" />}
+      {!route && !error && <Loader text={tr("Calculant desnivell, corbes i dificultat…")} />}
       {error && <div className="alert err">{error}</div>}
       {route && (
         <>
           <div style={{ marginTop: 12 }}><ElevationProfile route={route} /></div>
           <div className="hint" style={{ marginTop: 6 }}>
-            Índex de corbes {route.curvatureScore} · dificultat estimada <b>{DIFF_LABEL[route.difficulty]}</b>
+            {tr("Índex de corbes")}{' '}{route.curvatureScore} {tr("· dificultat estimada")}{' '}<b>{DIFF_LABEL[route.difficulty]}</b>
           </div>
         </>
       )}
@@ -315,32 +316,32 @@ function Summary({ rec, bike, me, setMe, onSave, onMarkShared, goToMyRoutes }: O
       {!saved ? (
         <>
           <div className="field" style={{ marginTop: 14 }}>
-            <label>Nom de la ruta</label>
+            <label>{tr("Nom de la ruta")}</label>
             <input className="input" value={title} maxLength={80} onChange={(e) => setTitle(e.target.value)} />
           </div>
           <div className="field">
-            <label>Per on has anat?</label>
+            <label>{tr("Per on has anat?")}</label>
             <div className="seg">
-              <button className={mode === 'road' ? 'on' : ''} onClick={() => setMode('road')}>Carretera</button>
-              <button className={mode === 'trail' ? 'on' : ''} onClick={() => setMode('trail')}>Trail / Off-road</button>
+              <button className={mode === 'road' ? 'on' : ''} onClick={() => setMode('road')}>{tr("Carretera")}</button>
+              <button className={mode === 'trail' ? 'on' : ''} onClick={() => setMode('trail')}>{tr("Trail / Off-road")}</button>
             </div>
           </div>
           <div className="actions">
-            <button className="btn" disabled={!route} onClick={() => save(false)}>Desa</button>
-            {socialEnabled && <button className="btn primary" disabled={!route} onClick={() => save(true)}>Desa i comparteix</button>}
+            <button className="btn" disabled={!route} onClick={() => save(false)}>{tr("Desa")}</button>
+            {socialEnabled && <button className="btn primary" disabled={!route} onClick={() => save(true)}>{tr("Desa i comparteix")}</button>}
           </div>
-          <button className="btn small ghost" style={{ marginTop: 10 }} onClick={rec.discard}>Descarta</button>
+          <button className="btn small ghost" style={{ marginTop: 10 }} onClick={rec.discard}>{tr("Descarta")}</button>
         </>
       ) : (
         <>
-          <div className="alert ok" style={{ marginTop: 14 }}><Icon name="check" size={16} className="inline-ico" /> Desada a «Les meves rutes → Gravades».</div>
+          <div className="alert ok" style={{ marginTop: 14 }}><Icon name="check" size={16} className="inline-ico" /> {tr("Desada a «Les meves rutes → Gravades».")}</div>
           <div className="actions">
-            <button className="btn" onClick={() => downloadText(`${saved.title.replace(/[^\w-]+/g, '_')}.gpx`, saved.gpx)}>Exporta GPX</button>
-            {socialEnabled && <button className="btn" onClick={() => setSharing(true)}>Comparteix</button>}
+            <button className="btn" onClick={() => downloadText(`${saved.title.replace(/[^\w-]+/g, '_')}.gpx`, saved.gpx)}>{tr("Exporta GPX")}</button>
+            {socialEnabled && <button className="btn" onClick={() => setSharing(true)}>{tr("Comparteix")}</button>}
           </div>
           <div className="actions">
-            <button className="btn" onClick={goToMyRoutes}>Les meves rutes</button>
-            <button className="btn primary" onClick={rec.discard}>Nova gravació</button>
+            <button className="btn" onClick={goToMyRoutes}>{tr("Les meves rutes")}</button>
+            <button className="btn primary" onClick={rec.discard}>{tr("Nova gravació")}</button>
           </div>
         </>
       )}

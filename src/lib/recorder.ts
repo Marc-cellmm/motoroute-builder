@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { haversine } from './geo';
 import { isNativeApp, watchLocation, type Watch } from './location';
 import type { LngLat } from './types';
+import { t } from '../i18n';
 
 export interface TrackPoint {
   lat: number;
@@ -195,18 +196,18 @@ export function useRecorder() {
       (err) => {
         if (err === 'denied') {
           setPerm('denied');
-          setGpsError('Sense permís de localització.');
+          setGpsError(t("Sense permís de localització."));
         } else if (err === 'unavailable') {
-          setGpsError('Buscant senyal GPS… Surt a l\'exterior si pots.');
+          setGpsError(t("Buscant senyal GPS… Surt a l'exterior si pots."));
         } else {
-          setGpsError('El GPS triga a respondre. Continuem intentant-ho.');
+          setGpsError(t("El GPS triga a respondre. Continuem intentant-ho."));
         }
       },
     ).then((w) => {
       // si mentrestant s'ha aturat o reiniciat el GPS, tanca aquest seguiment
       if (seq !== watchSeq.current) w.stop();
       else watch.current = w;
-    }).catch(() => setGpsError('No s\'ha pogut activar el GPS.'));
+    }).catch(() => setGpsError(t("No s'ha pogut activar el GPS.")));
   }, [stopWatch]);
 
   /** Demana el permís (el navegador mostra el diàleg del telèfon) i comença a seguir la posició. */
