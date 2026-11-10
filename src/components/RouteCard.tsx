@@ -1,4 +1,5 @@
 import type { RouteResult } from '../lib/types';
+import Icon from './Icon';
 
 export const DIFF_LABEL = { beginner: 'Principiant', intermediate: 'Intermedi', expert: 'Avançat' } as const;
 
@@ -30,13 +31,13 @@ export default function RouteCard({ route, selected, onClick, userLevel }: {
         <div className="stat"><b>{route.elevationGain} m</b><span>desnivell +</span></div>
       </div>
       <div className="badges">
-        {route.unpavedKm > 0.5 && <span className="badge">🟫 {Math.round((route.unpavedKm / route.distanceKm) * 100)} % terra</span>}
-        {route.motorwayKm > 0.5 && <span className="badge">🛣️ {Math.round(route.motorwayKm)} km autopista</span>}
-        <span className="badge">⛰️ màx. {route.maxAltitude} m</span>
+        {route.unpavedKm > 0.5 && <span className="badge"><Icon name="dirt" size={14} />{Math.round((route.unpavedKm / route.distanceKm) * 100)} % terra</span>}
+        {route.motorwayKm > 0.5 && <span className="badge"><Icon name="motorway" size={14} />{Math.round(route.motorwayKm)} km autopista</span>}
+        <span className="badge"><Icon name="mountain" size={14} />màx. {route.maxAltitude} m</span>
         {worstWeather !== undefined && (
-          <span className="badge"><span className={`lvl${worstWeather}`}>●</span> {['Meteo sense alertes', 'Meteo: precaució', 'Meteo: alerta', 'Meteo: perill'][worstWeather]}</span>
+          <span className="badge"><span className={`lvl-dot lvl${worstWeather}`} /> {['Meteo sense alertes', 'Meteo: precaució', 'Meteo: alerta', 'Meteo: perill'][worstWeather]}</span>
         )}
-        {route.fuel?.cost != null && <span className="badge">⛽ ~{route.fuel.cost.toFixed(0)} €</span>}
+        {route.fuel?.cost != null && <span className="badge"><Icon name="fuel" size={14} />~{route.fuel.cost.toFixed(0)} €</span>}
       </div>
       {harder && hardKm > 0 && (
         <div className="alert warn" style={{ marginBottom: 0 }}>Inclou {Math.round(hardKm)} km de nivell Avançat.</div>

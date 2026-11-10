@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import MapView from './MapView';
+import { Logo } from './Icon';
 import { useLiveFollow } from '../lib/live';
 
 const ago = (ms: number) => {
@@ -25,8 +26,8 @@ export default function LiveViewer({ id }: { id: string }) {
     <div className="app">
       <aside className="panel">
         <div className="brand">
-          <div className="brand-mark">M</div>
-          <h1>MotoRoute · en directe</h1>
+          <Logo size={34} />
+          <h1>MotoRoute<span>En directe</span></h1>
         </div>
         <div className="panel-body">
           {status === 'error' && <div className="alert err">No s'ha pogut obrir el seguiment. Comprova l'enllaç.</div>}

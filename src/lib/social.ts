@@ -47,6 +47,7 @@ export interface SharedRoute {
   saves: number;
   author_bike?: string | null;
   author_area?: string | null;
+  author_avatar?: string | null;
 }
 
 export type FeedSort = 'recent' | 'popular' | 'near';
@@ -215,7 +216,7 @@ export async function publish(p: PublishInput): Promise<string> {
   return data.id as string;
 }
 
-const COLOR = '#ff6b2c';
+import { ROUTE_RED as COLOR } from './theme';
 
 /** Converteix una ruta de la comunitat en una RouteResult per veure-la i planificar-la. */
 export function toRouteResult(s: SharedRoute): RouteResult {

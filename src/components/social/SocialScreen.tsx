@@ -8,6 +8,7 @@ import { deleteRoute, fetchFeed, routeFromTrack, socialEnabled, type FeedSort, t
 import { parseGpx } from '../../lib/gpxImport';
 import { reverseGeocode } from '../../lib/places';
 import type { LngLat, RideMode, RouteResult, SavedRoute } from '../../lib/types';
+import Icon from '../Icon';
 
 interface Props {
   me: Me | null;
@@ -118,7 +119,7 @@ export default function SocialScreen(p: Props) {
     <div>
       <div className="row" style={{ marginBottom: 6 }}>
         <h2>Comunitat</h2>
-        <button className="btn small primary" style={{ flex: 'none' }} onClick={() => setUploadMenu(!uploadMenu)}>＋ Puja una ruta</button>
+        <button className="btn small primary" style={{ flex: 'none' }} onClick={() => setUploadMenu(!uploadMenu)}><Icon name="plus" size={16} /> Puja una ruta</button>
       </div>
       <p className="hint">Rutes que altres motoristes han fet. Dona-hi m'agrada o guarda-les per fer-les: les trobaràs a «Les meves rutes».</p>
 
@@ -134,7 +135,7 @@ export default function SocialScreen(p: Props) {
           <input ref={fileRef} type="file" accept=".gpx,application/gpx+xml" style={{ display: 'none' }}
             onChange={(e) => e.target.files?.[0] && onGpx(e.target.files[0])} />
           <button className="btn" style={{ width: '100%', marginTop: 10 }} disabled={importing} onClick={() => fileRef.current?.click()}>
-            {importing ? 'Llegint el GPX…' : '📁 Puja un fitxer GPX'}
+            <Icon name="upload" />{importing ? 'Llegint el GPX…' : 'Puja un fitxer GPX'}
           </button>
           {p.localRoutes.length > 0 && (
             <>
@@ -147,7 +148,7 @@ export default function SocialScreen(p: Props) {
                     p.onPreviewUpload(route);
                     setUploadMenu(false);
                   }}>
-                  <div className="main"><b>{s.title}</b></div><span className="muted">›</span>
+                  <div className="main"><b>{s.title}</b></div><Icon name="chevron-right" className="dim" />
                 </button>
               ))}
             </>
@@ -173,7 +174,7 @@ export default function SocialScreen(p: Props) {
       {list.error && <div className="alert err">{list.error}</div>}
       {loading && !list.rows.length && <Loader text="Carregant rutes de la comunitat…" />}
       {!loading && !list.rows.length && !list.error && (
-        <div className="empty"><span className="ico">🏍️</span>Encara no hi ha rutes aquí. Sigues el primer a compartir-ne una!</div>
+        <div className="empty"><Icon name="bike" size={40} />Encara no hi ha rutes aquí. Sigues el primer a compartir-ne una!</div>
       )}
       {list.rows.map((r) => (
         <SharedRouteCard

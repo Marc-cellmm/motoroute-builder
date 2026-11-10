@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { resetPassword, signIn, signUp, validEmail, type Account } from '../../lib/account';
+import Icon, { Logo } from '../Icon';
 
 type Mode = 'signup' | 'login' | 'forgot';
 
@@ -46,7 +47,7 @@ export default function AuthScreen({ onDone }: { onDone: (a: Account | null) => 
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <div className="auth-logo">M</div>
+        <div className="auth-logo"><Logo size={60} /></div>
         <h1 className="auth-title">MotoRoute Builder</h1>
         <p className="auth-sub">Rutes amb corbes, meteo a l'hora de pas, benzina segons la teva moto, navegació i comunitat. Gratis.</p>
 
@@ -72,7 +73,7 @@ export default function AuthScreen({ onDone }: { onDone: (a: Account | null) => 
                   autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
                   onChange={(e) => setPassword(e.target.value)} placeholder={mode === 'signup' ? 'Mínim 8 caràcters' : ''} required />
                 <button type="button" className="btn ghost" style={{ flex: 'none' }} onClick={() => setShow(!show)} aria-label={show ? 'Amaga la contrasenya' : 'Mostra la contrasenya'}>
-                  {show ? '🙈' : '👁️'}
+                  <Icon name={show ? 'eye-off' : 'eye'} />
                 </button>
               </div>
             </div>
@@ -86,7 +87,7 @@ export default function AuthScreen({ onDone }: { onDone: (a: Account | null) => 
         </form>
 
         {mode === 'login' && <button className="link-btn" onClick={() => go('forgot')}>Has oblidat la contrasenya?</button>}
-        {mode === 'forgot' && <button className="link-btn" onClick={() => go('login')}>← Torna a entrar</button>}
+        {mode === 'forgot' && <button className="link-btn" onClick={() => go('login')}>Torna a entrar</button>}
 
         <p className="hint" style={{ marginTop: 18 }}>
           Amb el compte tens les rutes, les motos i el perfil a tots els teus dispositius. L'edat i les preferències són privades: a la comunitat només es veu el nom de motorista, la zona, l'estil i la moto.

@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import LocationInput from './LocationInput';
 import { DEMO } from './MapView';
 import type { Difficulty, DistanceBand, Motorcycle, Place, PlanRequest } from '../lib/types';
+import Icon from './Icon';
 
 export type PickTarget = 'origin' | 'destination' | null;
 
@@ -65,7 +66,7 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
           {onImportGpx && (
             <>
               <button className="btn ghost import-gpx" disabled={busy} onClick={() => gpxRef.current?.click()}>
-                📂 Ja tens la ruta? Obre un GPX <small>(Calimoto, Kurviger, Garmin, Wikiloc…)</small>
+                <Icon name="upload" /> Ja tens la ruta? Obre un GPX <small>(Calimoto, Kurviger, Garmin, Wikiloc…)</small>
               </button>
               <input ref={gpxRef} type="file" accept=".gpx,application/gpx+xml" hidden
                 onChange={(e) => { const f = e.target.files?.[0]; if (f) onImportGpx(f); e.target.value = ''; }} />
@@ -74,12 +75,12 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
           )}
           <div className="cards2" style={{ marginTop: 14 }}>
             <button className={`choice ${req.mode === 'road' ? 'on' : ''}`} onClick={() => set({ mode: 'road' })}>
-              <span className="ico">🛣️</span>
+              <span className="icon-tile"><Icon name="road" size={22} /></span>
               <b>Carretera</b>
               <small>100 % asfalt, prioritza secundàries amb corbes</small>
             </button>
             <button className={`choice ${req.mode === 'trail' ? 'on' : ''}`} onClick={() => set({ mode: 'trail', avoidMotorways: true })}>
-              <span className="ico">⛰️</span>
+              <span className="icon-tile"><Icon name="mountain" size={22} /></span>
               <b>Trail / Off-road</b>
               <small>Asfalt d'enllaç + pistes transitables</small>
             </button>
@@ -98,7 +99,7 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
                 <option value="">Sense moto (no es calcularan parades de benzina)</option>
               </select>
             ) : (
-              <button className="btn" onClick={goToBike}>＋ Afegeix la meva moto per calcular la benzina</button>
+              <button className="btn" onClick={goToBike}><Icon name="plus" size={16} /> Afegeix la meva moto per calcular la benzina</button>
             )}
           </div>
           {req.bikeId && (
@@ -162,7 +163,7 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
                 />
               )}
               {req.vias.length < 3 && !addingVia && (
-                <button className="btn small" onClick={() => setAddingVia(true)}>＋ Afegeix punt de pas</button>
+                <button className="btn small" onClick={() => setAddingVia(true)}><Icon name="plus" size={16} /> Afegeix punt de pas</button>
               )}
             </>
           )}
@@ -211,7 +212,7 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
               disabled={busy}
               onClick={() => onSubmit({ ...req, circular: true, vias: [] })}
             >
-              ✨ Suggereix-me rutes circulars des de {req.origin.name.split(',')[0]}
+              <Icon name="sparkle" /> Suggereix-me rutes circulars des de {req.origin.name.split(',')[0]}
             </button>
           )}
         </>

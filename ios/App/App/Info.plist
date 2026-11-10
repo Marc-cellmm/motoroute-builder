@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>UIUserInterfaceStyle</key>
+	<string>Dark</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Per fer fotos de la teva moto i la foto de perfil.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Per triar fotos de la teva moto i la foto de perfil.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>MotoRoute fa servir la ubicació per gravar les teves rutes i mostrar-te on ets al mapa.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>

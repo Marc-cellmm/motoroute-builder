@@ -210,7 +210,7 @@ describe('perfil de motorista', () => {
     expect(planDefaults(null)).toEqual({});
     const d = planDefaults({
       ...base,
-      profile: { username: 'x_y', display_name: null, home_area: null, riding_style: 'trail', bike_name: null, riding_since: null, bio: null, interests: [], onboarded: true },
+      profile: { username: 'x_y', display_name: null, home_area: null, riding_style: 'trail', bike_name: null, riding_since: null, bio: null, interests: [], onboarded: true, avatar_url: null, bike_photos: [] },
       settings: { birth_year: 1990, experience: 'beginner', ride_with: null, pref_band: '50_100', avoid_motorways: false, avoid_tolls: false, bikes: null },
     });
     expect(d).toEqual({ mode: 'trail', difficulty: 'beginner', band: '50_100', avoidMotorways: true, avoidTolls: false });

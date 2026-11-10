@@ -78,7 +78,7 @@ Els motoristes publiquen rutes que han fet (des d'un GPX o d'una ruta desada), h
 
 1. Crea un projecte gratuït a [supabase.com](https://supabase.com).
 2. **SQL Editor → New query**: enganxa i executa `supabase/schema.sql`.
-3. **SQL Editor → New query**: enganxa i executa `supabase/accounts.sql` (perfil, dades privades i esborrar el compte).
+3. **SQL Editor → New query**: enganxa i executa `supabase/accounts.sql` (perfil, dades privades i esborrar el compte) i després `supabase/photos.sql` (foto de perfil i fotos de la moto a Supabase Storage).
 4. **Authentication → Sign In / Providers → Email**: desactiva *Confirm email* mentre no tinguis un servidor de correu propi. El servidor de correu de Supabase només envia a membres de l'equip del projecte i 2 correus per hora. Per enviar confirmacions i recuperar contrasenyes a qualsevol usuari, configura un SMTP propi (Brevo o Resend tenen pla gratuït) a **Authentication → Emails → SMTP Settings** i torna a activar *Confirm email*.
 5. Entrar amb el mòbil (SMS) necessita un proveïdor de SMS de pagament (Twilio, Vonage o MessageBird) a **Authentication → Sign In / Providers → Phone**.
 6. Posa la *Project URL* i la clau *anon/publishable* a `src/config.ts` (o a les variables `VITE_SUPABASE_URL` i `VITE_SUPABASE_ANON_KEY`). Aquestes dues són públiques per disseny. La clau *service_role* no ha d'anar mai a la web.

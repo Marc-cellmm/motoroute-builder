@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { reverseGeocode, searchPlaces } from '../lib/places';
 import type { Place } from '../lib/types';
+import Icon from './Icon';
 
 interface Props {
   label: string;
@@ -79,12 +80,12 @@ export default function LocationInput({ label, value, onChange, allowMyLocation,
       <div className="row" style={{ flex: 'none', gap: 8 }}>
         {allowMyLocation && (
           <button type="button" className="btn small" onClick={myLocation} disabled={locating}>
-            {locating ? 'Localitzant…' : '📍 La meva ubicació'}
+            <Icon name="locate" size={18} />{locating ? 'Localitzant…' : 'La meva ubicació'}
           </button>
         )}
         {onPickOnMap && (
           <button type="button" className={`btn small ${picking ? 'primary' : ''}`} onClick={onPickOnMap}>
-            {picking ? 'Toca el mapa…' : '🗺️ Tria al mapa'}
+            <Icon name="map" size={18} />{picking ? 'Toca el mapa…' : 'Tria al mapa'}
           </button>
         )}
       </div>

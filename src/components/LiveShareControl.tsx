@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { LiveShare } from '../lib/live';
+import Icon from './Icon';
 
 /** Botó per compartir la ubicació en directe mentre grava o navega. */
 export default function LiveShareControl({ live }: { live: LiveShare }) {
@@ -28,7 +29,7 @@ export default function LiveShareControl({ live }: { live: LiveShare }) {
   if (!live.id) {
     return (
       <button className="btn ghost live-btn" onClick={() => { live.start(); }}>
-        📡 Comparteix la ubicació en directe
+        <Icon name="live" /> Comparteix la ubicació en directe
       </button>
     );
   }
@@ -40,7 +41,7 @@ export default function LiveShareControl({ live }: { live: LiveShare }) {
       </div>
       {live.error && <div className="alert warn">{live.error}</div>}
       <div className="actions" style={{ marginTop: 8 }}>
-        <button className="btn" onClick={share}>{copied ? 'Enllaç copiat ✓' : 'Envia l\'enllaç'}</button>
+        <button className="btn" onClick={share}>{copied ? <><Icon name="check" /> Enllaç copiat</> : <><Icon name="share" /> Envia l'enllaç</>}</button>
         <button className="btn ghost" onClick={live.stop}>Deixa de compartir</button>
       </div>
       <div className="hint" style={{ marginTop: 6 }}>Qui tingui l'enllaç veu on ets fins que acabis la gravació. No es desa enlloc.</div>

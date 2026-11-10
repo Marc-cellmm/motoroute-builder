@@ -5,8 +5,10 @@ const config: CapacitorConfig = {
   appId: 'com.marccellmm.motoroute',
   appName: 'MotoRoute',
   webDir: 'dist',
+  backgroundColor: '#08080a',
   ios: {
     contentInset: 'never',
+    backgroundColor: '#08080a',
   },
 };
 

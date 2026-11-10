@@ -8,6 +8,7 @@ import { deleteRoute, fetchMine, fetchSaved, socialEnabled, type Me, type Shared
 import { downloadText } from '../../lib/gpx';
 import { fmtClock } from '../../lib/recorder';
 import type { RecordedRoute, SavedRoute } from '../../lib/types';
+import Icon from '../Icon';
 
 type Section = 'recorded' | 'planned' | 'saved' | 'mine';
 
@@ -84,7 +85,7 @@ export default function MyRoutes(p: Props) {
       {section === 'recorded' && (
         <>
           <p className="hint">Rutes que has gravat amb el GPS del telèfon.</p>
-          {!p.recorded.length && <div className="empty"><span className="ico">⏺️</span>Encara no has gravat cap ruta. Fes-ho des de l'apartat «Grava».</div>}
+          {!p.recorded.length && <div className="empty"><Icon name="record" size={40} />Encara no has gravat cap ruta. Fes-ho des de l'apartat «Grava».</div>}
           {p.recorded.map((r) => (
             <div key={r.id} className={`box ${shownRec === r.id ? 'box-on' : ''}`}>
               <div className="row" style={{ alignItems: 'flex-start' }}>
@@ -95,7 +96,7 @@ export default function MyRoutes(p: Props) {
                     {r.route.distanceKm.toFixed(1)} km · {fmtClock(r.movingMin * 60000)} · {r.avgKmh} km/h · {r.route.elevationGain} m +
                   </div>
                 </div>
-                {r.sharedAt && <span className="badge" style={{ flex: 'none' }}>👥 Compartida</span>}
+                {r.sharedAt && <span className="badge" style={{ flex: 'none' }}><Icon name="social" size={14} />Compartida</span>}
               </div>
               <div className="row" style={{ marginTop: 10, flexWrap: 'wrap', gap: 8 }}>
                 <button className="btn small" onClick={() => { const on = shownRec !== r.id; setShownRec(on ? r.id : null); p.onShowRecorded(on ? r : null); }}>
@@ -114,7 +115,7 @@ export default function MyRoutes(p: Props) {
       {section === 'planned' && (
         <>
           <p className="hint">Rutes que has calculat i desat en aquest navegador.</p>
-          {!p.planned.length && <div className="empty"><span className="ico">🗺️</span>Encara no has desat cap ruta.</div>}
+          {!p.planned.length && <div className="empty"><Icon name="map" size={40} />Encara no has desat cap ruta.</div>}
           {p.planned.map((s) => (
             <div key={s.id} className="box">
               <h3>{s.title}</h3>
@@ -142,7 +143,7 @@ export default function MyRoutes(p: Props) {
           {loading && <Loader text="Carregant…" />}
           {!loading && p.me?.username && !list.rows.length && !list.error && (
             <div className="empty">
-              <span className="ico">{section === 'saved' ? '🔖' : '📤'}</span>
+              <Icon name={section === 'saved' ? 'bookmark' : 'upload'} size={40} />
               {section === 'saved' ? 'Encara no has guardat cap ruta. Busca\'n a l\'apartat Social.' : 'Encara no has publicat cap ruta.'}
             </div>
           )}

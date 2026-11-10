@@ -3,6 +3,7 @@ import ElevationProfile from './ElevationProfile';
 import { DIFF_LABEL, fmtDuration } from './RouteCard';
 import { weatherIcon } from '../lib/weather';
 import type { Accommodation, Motorcycle, PlanRequest, RouteResult } from '../lib/types';
+import Icon from './Icon';
 
 interface Props {
   route: RouteResult;
@@ -33,7 +34,7 @@ export default function RouteDetail(p: Props) {
 
   return (
     <div>
-      <button className="btn small ghost" onClick={p.onBack}>‹ Alternatives</button>
+      <button className="btn small ghost" onClick={p.onBack}><Icon name="chevron-left" size={16} /> Alternatives</button>
       <div className="row" style={{ marginTop: 8, alignItems: 'flex-start' }}>
         <div>
           <h2 style={{ color: route.color }}>{route.label}</h2>
@@ -58,7 +59,7 @@ export default function RouteDetail(p: Props) {
       {tab === 'summary' && (
         <>
           {p.onNavigate && (
-            <button className="btn primary nav-go" onClick={p.onNavigate}>▶ Navega aquesta ruta</button>
+            <button className="btn primary nav-go" onClick={p.onNavigate}><Icon name="play" size={18} /> Navega aquesta ruta</button>
           )}
           <div className="stats" style={{ marginBottom: 12 }}>
             <div className="stat"><b>{Math.round(route.distanceKm)} km</b><span>{fmtDuration(route.durationMin)} amb parades</span></div>
@@ -84,10 +85,10 @@ export default function RouteDetail(p: Props) {
           </div>
           <div className="actions">
             {p.onGpx && <button className="btn" onClick={p.onGpx}>Exporta GPX</button>}
-            <button className="btn primary" onClick={p.onSave} disabled={p.saved}>{p.saved ? 'Desada ✓' : 'Desa la ruta'}</button>
+            <button className="btn primary" onClick={p.onSave} disabled={p.saved}>{p.saved ? <><Icon name="check" /> Desada</> : <><Icon name="bookmark" /> Desa la ruta</>}</button>
           </div>
           {p.onShare && (
-            <button className="btn" style={{ width: '100%', marginTop: 10 }} onClick={p.onShare}>👥 Comparteix a la comunitat</button>
+            <button className="btn" style={{ width: '100%', marginTop: 10 }} onClick={p.onShare}><Icon name="social" /> Comparteix a la comunitat</button>
           )}
         </>
       )}
@@ -114,7 +115,7 @@ export default function RouteDetail(p: Props) {
                 <div><b>{multiDay ? `${day(w.eta)} ` : ''}{time(w.eta)}</b> · {Math.round(w.altitude)} m</div>
                 {Number.isFinite(w.tempC) ? (
                   <div className="muted">
-                    {weatherIcon(w.weatherCode)} {Math.round(w.tempC)} °C · pluja {w.precipProb ?? 0} % · ratxes {Math.round(w.gustKmh)} km/h
+                    <Icon name={weatherIcon(w.weatherCode)} size={16} className="inline-ico" /> {Math.round(w.tempC)} °C · pluja {w.precipProb ?? 0} % · ratxes {Math.round(w.gustKmh)} km/h
                   </div>
                 ) : <div className="muted">{w.reasons[0]}</div>}
                 {w.level > 0 && <div className={`lvl${w.level}`}>{LEVEL_TXT[w.level]}: {w.reasons.join(' · ')}</div>}
@@ -179,7 +180,7 @@ export default function RouteDetail(p: Props) {
             </select>
             <select className="input" value={minStars} onChange={(e) => setMinStars(+e.target.value)}>
               <option value={0}>Qualsevol categoria</option>
-              {[1, 2, 3, 4, 5].map((s) => <option key={s} value={s}>{'★'.repeat(s)} o més</option>)}
+              {[1, 2, 3, 4, 5].map((s) => <option key={s} value={s}>{s} {s === 1 ? 'estrella' : 'estrelles'} o més</option>)}
             </select>
           </div>
           <p className="hint">Allotjaments d'OpenStreetMap a 10 km del final de cada etapa. Els preus i la disponibilitat
@@ -208,7 +209,7 @@ export default function RouteDetail(p: Props) {
                         <span className="km">{a.distanceKm} km</span>
                         <div className="main">
                           <b>{a.name}</b>
-                          <div className="muted">{a.kind}{a.stars ? ` · ${'★'.repeat(a.stars)}` : ''}</div>
+                          <div className="muted">{a.kind}{a.stars ? ` · ${a.stars} ${a.stars === 1 ? 'estrella' : 'estrelles'}` : ''}</div>
                           {a.website && <a href={a.website} target="_blank" rel="noreferrer" style={{ color: 'var(--accent)' }}>Web</a>}
                           {a.phone && <span className="muted"> · {a.phone}</span>}
                         </div>

@@ -2,6 +2,9 @@ import { useMemo, useState } from 'react';
 import { INTERESTS, saveProfile, validUsername, loadAccount, type Account, type Experience, type RideWith, type RiderProfile, type RiderSettings, type RidingStyle } from '../../lib/account';
 import { bikeFromModel, CATEGORY_LABEL, searchCatalog } from '../../lib/bikes';
 import { loadBikes, saveBikes, uid } from '../../lib/storage';
+import { uploadPhoto } from '../../lib/media';
+import Icon from '../Icon';
+import Avatar from '../Avatar';
 import type { DistanceBand, Motorcycle } from '../../lib/types';
 
 interface Props {
@@ -44,6 +47,8 @@ export default function Onboarding({ account, onDone, onLogout, onCancel }: Prop
   const [avoidTolls, setAvoidTolls] = useState(s0?.avoid_tolls ?? true);
   const [interests, setInterests] = useState<string[]>(p0?.interests ?? []);
   const [bio, setBio] = useState(p0?.bio ?? '');
+  const [avatar, setAvatar] = useState<string | null>(p0?.avatar_url ?? null);
+  const [uploading, setUploading] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -82,6 +87,8 @@ export default function Onboarding({ account, onDone, onLogout, onCancel }: Prop
         bio: bio.trim() || null,
         interests,
         onboarded: true,
+        avatar_url: avatar,
+        bike_photos: p0?.bike_photos ?? [],
       };
       const settings: RiderSettings = {
         birth_year: birthYear === '' ? null : birthYear,
@@ -103,6 +110,19 @@ export default function Onboarding({ account, onDone, onLogout, onCancel }: Prop
     }
   }
 
+  async function pickAvatar(f: File | undefined) {
+    if (!f) return;
+    setUploading(true);
+    setError(null);
+    try {
+      setAvatar(await uploadPhoto(account.id, 'avatar', f));
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setUploading(false);
+    }
+  }
+
   const toggleInterest = (id: string) => setInterests((l) => (l.includes(id) ? l.filter((x) => x !== id) : [...l, id]));
 
   return (
@@ -114,11 +134,18 @@ export default function Onboarding({ account, onDone, onLogout, onCancel }: Prop
         </div>
       )}
       <div className="stepper">{steps.map((_, i) => <span key={i} className={i <= step ? 'on' : ''} />)}</div>
-      <h2>{editing ? 'Edita el perfil · ' : ''}{steps[step]}</h2>
+      <div className="eyebrow">{editing ? 'Edita el perfil' : `Pas ${step + 1} de ${steps.length}`}</div>
+      <h2>{steps[step]}</h2>
 
       {step === 0 && (
         <>
           <p className="hint" style={{ marginBottom: 14 }}>{editing ? 'Canvia el que vulguis.' : 'Benvingut! Configura el teu perfil en 1 minut. Tot es pot canviar després.'}</p>
+          <label className="avatar-pick">
+            <Avatar url={avatar} name={displayName || username} size={76} />
+            <span className="avatar-pick-cam">{uploading ? <span className="spin" /> : <Icon name="camera" size={18} />}</span>
+            <input type="file" accept="image/*" hidden disabled={uploading} onChange={(e) => { void pickAvatar(e.target.files?.[0]); e.target.value = ''; }} />
+            <span className="avatar-pick-text"><b>Foto de perfil</b><small>Opcional · la veuran a la comunitat</small></span>
+          </label>
           <div className="field">
             <label htmlFor="ob-user">Nom de motorista *</label>
             <input id="ob-user" className="input" value={username} maxLength={24} autoComplete="nickname" placeholder="p. ex. marc_trail"
@@ -153,13 +180,13 @@ export default function Onboarding({ account, onDone, onLogout, onCancel }: Prop
           <div className="label" style={{ margin: '12px 0 8px' }}>Què t'agrada més? *</div>
           <div className="cards3">
             <button type="button" className={`choice ${style === 'road' ? 'on' : ''}`} onClick={() => setStyle('road')}>
-              <span className="ico">🛣️</span><b>Carretera</b><small>Corbes i asfalt</small>
+              <span className="icon-tile"><Icon name="road" size={22} /></span><b>Carretera</b><small>Corbes i asfalt</small>
             </button>
             <button type="button" className={`choice ${style === 'trail' ? 'on' : ''}`} onClick={() => setStyle('trail')}>
-              <span className="ico">⛰️</span><b>Muntanya</b><small>Pistes i trail</small>
+              <span className="icon-tile"><Icon name="mountain" size={22} /></span><b>Muntanya</b><small>Pistes i trail</small>
             </button>
             <button type="button" className={`choice ${style === 'both' ? 'on' : ''}`} onClick={() => setStyle('both')}>
-              <span className="ico">🔀</span><b>Les dues</b><small>Segons el dia</small>
+              <span className="icon-tile"><Icon name="route" size={22} /></span><b>Les dues</b><small>Segons el dia</small>
             </button>
           </div>
           <div className="field">
@@ -197,9 +224,9 @@ export default function Onboarding({ account, onDone, onLogout, onCancel }: Prop
           <p className="hint" style={{ margin: '4px 0 12px' }}>Amb el consum i el dipòsit de la teva moto calculem on repostar. Ho pots afinar a l'apartat Moto.</p>
           {defaultBike && (
             <div className="box chosen-bike">
-              <span className="ico">🏍️</span>
+              <span className="icon-tile"><Icon name="bike" size={22} /></span>
               <div><b>{defaultBike.name}</b><div className="hint">{defaultBike.tankLiters} l · {defaultBike.consumptionWmtc} l/100 km</div></div>
-              <span className="ok">✓</span>
+              <span className="ok"><Icon name="check" size={22} /></span>
             </div>
           )}
           {bikes.length > 1 && (
@@ -219,6 +246,7 @@ export default function Onboarding({ account, onDone, onLogout, onCancel }: Prop
               <button key={m.id} type="button" className="bike-row" onClick={() => pickModel(m.id)}>
                 <b>{m.make} {m.model}</b>
                 <small>{CATEGORY_LABEL[m.category] ?? m.category} · {m.years} · {m.tankLiters} l</small>
+                <Icon name="plus" className="dim" />
               </button>
             ))}
             {!results.length && <p className="hint">No la tenim al catàleg. Continua i afegeix-la a mà a l'apartat Moto.</p>}
@@ -239,7 +267,7 @@ export default function Onboarding({ account, onDone, onLogout, onCancel }: Prop
           <div className="label" style={{ margin: '6px 0 8px' }}>Què t'agrada trobar a la ruta?</div>
           <div className="chips" style={{ marginBottom: 14 }}>
             {INTERESTS.map((i) => (
-              <button key={i.id} type="button" className={`chip ${interests.includes(i.id) ? 'on' : ''}`} onClick={() => toggleInterest(i.id)}>{i.label}</button>
+              <button key={i.id} type="button" className={`chip ${interests.includes(i.id) ? 'on' : ''}`} onClick={() => toggleInterest(i.id)}><Icon name={i.icon} size={16} />{i.label}</button>
             ))}
           </div>
           <div className="field">
@@ -260,7 +288,7 @@ export default function Onboarding({ account, onDone, onLogout, onCancel }: Prop
               {step === 2 && !defaultBike ? 'Ara no, continua' : 'Continua'}
             </button>
           : <button type="button" className="btn primary" disabled={busy || !valid[0] || !valid[1]} onClick={finish}>
-              {busy ? 'Desant…' : editing ? 'Desa els canvis' : 'Comença a rodar 🏍️'}
+              {busy ? 'Desant…' : editing ? 'Desa els canvis' : 'Comença a rodar'}
             </button>}
       </div>
     </div>

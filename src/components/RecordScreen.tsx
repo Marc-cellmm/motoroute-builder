@@ -12,6 +12,7 @@ import { downloadText } from '../lib/gpx';
 import { uid } from '../lib/storage';
 import { isNativeApp, openAppSettings } from '../lib/location';
 import type { Motorcycle, RecordedRoute, RideMode, RouteResult } from '../lib/types';
+import Icon from './Icon';
 
 type Recorder = ReturnType<typeof useRecorder>;
 
@@ -72,7 +73,7 @@ export default function RecordScreen({ rec, bike, me, setMe, onSave, onMarkShare
         <h2>Grava la ruta</h2>
         {state.status !== 'idle' && (
           <span className={`rec-badge ${state.status}`} style={{ flex: 'none' }}>
-            {state.status === 'recording' ? '● Gravant' : 'Ⅱ En pausa'}
+            {state.status === 'recording' ? <><span className="rec-dot" /> Gravant</> : <><Icon name="pause" size={14} /> En pausa</>}
           </span>
         )}
       </div>
@@ -104,7 +105,7 @@ export default function RecordScreen({ rec, bike, me, setMe, onSave, onMarkShare
                   ? 'L\'iPhone et preguntarà si permets la ubicació. Tria «Mentre s\'usa l\'app»; quan comencis a gravar et proposarà «Permet sempre»: accepta-ho per gravar amb la pantalla apagada.'
                   : 'El telèfon et preguntarà si permets la ubicació. Tria «Permet» (o «Mentre s\'usa l\'app»).'}
               </p>
-              <button className="btn" style={{ width: '100%', marginTop: 8 }} onClick={rec.requestPermission}>📍 Activa la ubicació</button>
+              <button className="btn" style={{ width: '100%', marginTop: 8 }} onClick={rec.requestPermission}><Icon name="locate" /> Activa la ubicació</button>
             </div>
           )}
           {fix && (
@@ -114,7 +115,7 @@ export default function RecordScreen({ rec, bike, me, setMe, onSave, onMarkShare
           )}
           {gpsError && <div className="alert warn">{gpsError}</div>}
           <button className="rec-start" disabled={perm === 'denied' || perm === 'unsupported'} onClick={rec.start}>
-            <span>●</span> Comença a gravar
+            <Icon name="record" size={26} filled /> Comença a gravar
           </button>
           <div className="box" style={{ marginTop: 14 }}>
             <div className="label">Abans de sortir</div>
@@ -164,9 +165,9 @@ export default function RecordScreen({ rec, bike, me, setMe, onSave, onMarkShare
           {!confirmStop ? (
             <div className="actions">
               {state.status === 'recording'
-                ? <button className="btn" onClick={rec.pause}>Ⅱ Pausa</button>
-                : <button className="btn" onClick={rec.resume}>▶ Continua</button>}
-              <button className="btn primary" onClick={() => setConfirmStop(true)}>■ Acaba</button>
+                ? <button className="btn" onClick={rec.pause}><Icon name="pause" size={16} /> Pausa</button>
+                : <button className="btn" onClick={rec.resume}><Icon name="play" size={16} /> Continua</button>}
+              <button className="btn primary" onClick={() => setConfirmStop(true)}><Icon name="stop" size={16} /> Acaba</button>
             </div>
           ) : (
             <div className="box" style={{ marginTop: 14 }}>
@@ -289,7 +290,7 @@ function Summary({ rec, bike, me, setMe, onSave, onMarkShared, goToMyRoutes }: O
 
   return (
     <div>
-      <h2>Ruta acabada 🏁</h2>
+      <h2>Ruta acabada</h2>
       <div className="rec-grid" style={{ marginTop: 12 }}>
         <Stat big value={state.distanceKm.toFixed(1)} label="km" />
         <Stat big value={fmtClock(state.movingMs)} label="en moviment" />

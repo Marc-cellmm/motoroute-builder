@@ -2,11 +2,14 @@ import { useState } from 'react';
 import { bikeFromModel, CATEGORY_LABEL, searchCatalog, type BikeModel } from '../lib/bikes';
 import { effectiveConsumption, realConsumption, usableRangeKm } from '../lib/fuel';
 import { uid } from '../lib/storage';
+import Icon from './Icon';
 import type { Motorcycle } from '../lib/types';
 
 interface Props {
   bikes: Motorcycle[];
   setBikes: (b: Motorcycle[]) => void;
+  /** foto de portada del perfil: es mostra a la moto principal */
+  coverUrl?: string | null;
 }
 
 const blank = (): Motorcycle => ({
@@ -25,7 +28,8 @@ const blank = (): Motorcycle => ({
 
 const fromModel = (m: BikeModel): Motorcycle => bikeFromModel(m, uid());
 
-export default function BikeScreen({ bikes, setBikes }: Props) {
+export default function BikeScreen({ bikes, setBikes, coverUrl }: Props) {
+  const [confirmRemove, setConfirmRemove] = useState<string | null>(null);
   const [mode, setMode] = useState<'list' | 'search' | 'edit' | 'refuel'>(bikes.length ? 'list' : 'search');
   const [query, setQuery] = useState('');
   const [draft, setDraft] = useState<Motorcycle | null>(null);
@@ -50,14 +54,14 @@ export default function BikeScreen({ bikes, setBikes }: Props) {
       <div>
         <h2>Afegeix la meva moto</h2>
         <p className="hint">Cerca el model: carregarem el dipòsit i el consum perquè puguis revisar-los.</p>
-        <div className="field" style={{ marginTop: 14 }}>
+        <div className="field search-field" style={{ marginTop: 14 }}>
+          <Icon name="search" className="dim" />
           <input className="input" autoFocus placeholder="Marca o model (p. ex. Ténéré, GS, MT-07)" value={query} onChange={(e) => setQuery(e.target.value)} />
         </div>
         {results.map((m) => (
           <button
             key={m.id}
-            className="list-item"
-            style={{ width: '100%', background: 'none', border: 0, borderBottom: '1px solid var(--line)', textAlign: 'left', cursor: 'pointer' }}
+            className="pick-row"
             onClick={() => {
               setDraft(fromModel(m));
               setDraftVerified(m.verified);
@@ -68,7 +72,7 @@ export default function BikeScreen({ bikes, setBikes }: Props) {
               <b>{m.make} {m.model}</b>
               <div className="hint">{CATEGORY_LABEL[m.category]} · {m.years} · {m.tankLiters} l · {m.consumption} l/100 km</div>
             </div>
-            <span className="muted">›</span>
+            <Icon name="chevron-right" className="dim" />
           </button>
         ))}
         <div className="actions">
@@ -125,11 +129,9 @@ export default function BikeScreen({ bikes, setBikes }: Props) {
           <span>Normalment amb maletes o top case</span>
           <input type="checkbox" checked={d.carriesLuggage} onChange={(e) => set({ carriesLuggage: e.target.checked })} />
         </div>
-        <div className="box" style={{ marginTop: 14 }}>
-          <div className="kv">
-            <span>Autonomia útil (fins a la reserva)</span><b>{Number.isFinite(range) ? Math.round(range) : '—'} km</b>
-            <span>Autonomia segura (marge 15 %)</span><b>{Number.isFinite(range) ? Math.round(range * 0.85) : '—'} km</b>
-          </div>
+        <div className="spec-grid" style={{ marginTop: 14 }}>
+          <div><span>Autonomia fins a la reserva</span><b>{Number.isFinite(range) ? Math.round(range) : '—'} <small>km</small></b></div>
+          <div><span>Autonomia segura (−15 %)</span><b>{Number.isFinite(range) ? Math.round(range * 0.85) : '—'} <small>km</small></b></div>
         </div>
         <div className="actions">
           <button className="btn" onClick={() => setMode(bikes.length ? 'list' : 'search')}>Cancel·la</button>
@@ -200,39 +202,63 @@ export default function BikeScreen({ bikes, setBikes }: Props) {
 
   return (
     <div>
-      <h2>La meva moto</h2>
-      <p className="hint">El consum i el dipòsit decideixen on et recomanem repostar a cada ruta.</p>
-      <div style={{ height: 14 }} />
+      <div className="page-head">
+        <div>
+          <h2>La meva moto</h2>
+          <p className="hint">El dipòsit i el consum decideixen on et recomanem repostar a cada ruta.</p>
+        </div>
+      </div>
       {bikes.map((b) => {
         const real = realConsumption(b);
         const road = effectiveConsumption(b, 'road', 0);
         const trail = effectiveConsumption(b, 'trail', 0);
+        const safe = Math.round(usableRangeKm(b, road) * 0.85);
+        const cover = b.isDefault ? coverUrl : null;
         return (
-          <div key={b.id} className="box">
-            <div className="bike-card">
-              <span className="ico">🏍️</span>
-              <div style={{ flex: 1 }}>
+          <article key={b.id} className={`garage ${b.isDefault ? 'main' : ''}`}>
+            {cover && <div className="garage-cover" style={{ backgroundImage: `url(${cover})` }} />}
+            <header className="garage-head">
+              <span className="icon-tile"><Icon name="bike" size={22} /></span>
+              <div className="garage-title">
                 <h3>{b.name}</h3>
-                <div className="hint">{CATEGORY_LABEL[b.category] ?? b.category} · Gasolina {b.fuel === 'gasoline_98' ? '98' : '95'}{b.isDefault ? ' · Per defecte' : ''}</div>
+                <div className="hint">{CATEGORY_LABEL[b.category] ?? b.category} · Gasolina {b.fuel === 'gasoline_98' ? '98' : '95'}</div>
               </div>
+              {b.isDefault && <span className="pill">Principal</span>}
+            </header>
+            <div className="garage-range">
+              <div>
+                <span className="eyebrow">Autonomia segura</span>
+                <div className="metric">{Number.isFinite(safe) ? safe : '—'}<small>km</small></div>
+              </div>
+              <Icon name="gauge" size={34} className="dim" />
             </div>
-            <div className="kv" style={{ marginTop: 12 }}>
-              <span>Dipòsit / reserva</span><b>{b.tankLiters} l / {b.reserveLiters} l</b>
-              <span>Consum de fitxa</span><b>{b.consumptionWmtc} l/100 km</b>
-              <span>Consum real</span><b>{real ? `${real.avg.toFixed(2)} l/100 km (${real.n} ${real.n === 1 ? "mesura" : "mesures"})` : 'Encara sense dades'}</b>
-              <span>Consum efectiu carretera / trail</span><b>{road} / {trail}</b>
-              <span>Autonomia segura (carretera)</span><b>{Math.round(usableRangeKm(b, road) * 0.85)} km</b>
+            <div className="spec-grid">
+              <div><span>Dipòsit</span><b>{b.tankLiters} l</b></div>
+              <div><span>Reserva</span><b>{b.reserveLiters} l</b></div>
+              <div><span>Consum de fitxa</span><b>{b.consumptionWmtc} <small>l/100</small></b></div>
+              <div><span>Consum real</span><b>{real ? <>{real.avg.toFixed(2)} <small>l/100</small></> : <small>Sense dades</small>}</b></div>
             </div>
-            <div className="row" style={{ marginTop: 12, flexWrap: 'wrap' }}>
-              <button className="btn small primary" onClick={() => { setDraft(b); setMode('refuel'); }}>⛽ He repostat</button>
-              <button className="btn small" onClick={() => { setDraft(b); setDraftVerified(null); setMode('edit'); }}>Edita</button>
-              {!b.isDefault && <button className="btn small" onClick={() => setDefault(b.id)}>Per defecte</button>}
-              <button className="btn small ghost" onClick={() => remove(b.id)}>Elimina</button>
+            <p className="hint">Consum efectiu: {road} l/100 en carretera · {trail} l/100 en pista{real ? ` · ${real.n} ${real.n === 1 ? 'mesura' : 'mesures'}` : ''}</p>
+            <div className="garage-actions">
+              <button className="btn primary" onClick={() => { setDraft(b); setMode('refuel'); }}><Icon name="fuel" /> He repostat</button>
+              <button className="btn" onClick={() => { setDraft(b); setDraftVerified(null); setMode('edit'); }}><Icon name="edit" /> Edita</button>
             </div>
-          </div>
+            <div className="garage-more">
+              {!b.isDefault && <button className="link-btn" onClick={() => setDefault(b.id)}>Fes-la principal</button>}
+              {confirmRemove === b.id ? (
+                <span className="confirm">
+                  Segur?
+                  <button className="link-btn danger" onClick={() => { remove(b.id); setConfirmRemove(null); }}>Sí, elimina-la</button>
+                  <button className="link-btn" onClick={() => setConfirmRemove(null)}>No</button>
+                </span>
+              ) : (
+                <button className="link-btn muted-link" onClick={() => setConfirmRemove(b.id)}><Icon name="trash" size={16} /> Elimina</button>
+              )}
+            </div>
+          </article>
         );
       })}
-      <button className="btn" style={{ width: '100%' }} onClick={() => { setQuery(''); setMode('search'); }}>＋ Afegeix una moto</button>
+      <button className="btn ghost wide-btn" onClick={() => { setQuery(''); setMode('search'); }}><Icon name="plus" /> Afegeix una moto</button>
     </div>
   );
 }

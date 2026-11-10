@@ -21,6 +21,9 @@ export interface RiderProfile {
   bio: string | null;
   interests: string[];
   onboarded: boolean;
+  avatar_url: string | null;
+  /** fotos de la moto (URL públiques); la primera fa de portada del perfil */
+  bike_photos: string[];
 }
 
 export interface RiderSettings {
@@ -40,19 +43,19 @@ export interface Account {
   settings: RiderSettings | null;
 }
 
-export const INTERESTS: { id: string; label: string }[] = [
-  { id: 'passes', label: '⛰️ Ports de muntanya' },
-  { id: 'curves', label: '〰️ Corbes enllaçades' },
-  { id: 'coast', label: '🌊 Carreteres de costa' },
-  { id: 'gravel', label: '🪨 Pistes i grava' },
-  { id: 'food', label: '🍽️ Parar a dinar bé' },
-  { id: 'photo', label: '📷 Miradors i fotos' },
-  { id: 'multiday', label: '🧳 Viatges de diversos dies' },
-  { id: 'camping', label: '⛺ Acampada' },
-  { id: 'evening', label: '🌇 Sortides curtes de tarda' },
-  { id: 'group', label: '👥 Sortides en grup' },
-  { id: 'villages', label: '🏘️ Pobles amb encant' },
-  { id: 'offroad', label: '🏁 Off-road tècnic' },
+export const INTERESTS: { id: string; label: string; icon: string }[] = [
+  { id: 'passes', label: 'Ports de muntanya', icon: 'mountain' },
+  { id: 'curves', label: 'Corbes enllaçades', icon: 'curves' },
+  { id: 'coast', label: 'Carreteres de costa', icon: 'road' },
+  { id: 'gravel', label: 'Pistes i grava', icon: 'dirt' },
+  { id: 'food', label: 'Parar a dinar bé', icon: 'clock' },
+  { id: 'photo', label: 'Miradors i fotos', icon: 'camera' },
+  { id: 'multiday', label: 'Viatges de diversos dies', icon: 'calendar' },
+  { id: 'camping', label: 'Acampada', icon: 'bed' },
+  { id: 'evening', label: 'Sortides curtes de tarda', icon: 'sun' },
+  { id: 'group', label: 'Sortides en grup', icon: 'users' },
+  { id: 'villages', label: 'Pobles amb encant', icon: 'pin' },
+  { id: 'offroad', label: 'Off-road tècnic', icon: 'flag' },
 ];
 
 const CACHE = 'mrb.account';
@@ -98,8 +101,15 @@ export async function loadAccount(): Promise<Account | null> {
   const s = data.session;
   if (!s || isAnon(s)) return null;
   try {
+    const BASE = 'username,display_name,home_area,riding_style,bike_name,riding_since,bio,interests,onboarded';
+    const profileQuery = async () => {
+      const r = await sb().from('profiles').select(`${BASE},avatar_url,bike_photos`).eq('id', s.user.id).maybeSingle();
+      // servidor encara sense les columnes de fotos: carrega el perfil igualment
+      if (r.error && /avatar_url|bike_photos|column/i.test(r.error.message)) return sb().from('profiles').select(BASE).eq('id', s.user.id).maybeSingle();
+      return r;
+    };
     const [p, st] = await Promise.all([
-      sb().from('profiles').select('username,display_name,home_area,riding_style,bike_name,riding_since,bio,interests,onboarded').eq('id', s.user.id).maybeSingle(),
+      profileQuery(),
       sb().from('rider_settings').select('birth_year,experience,ride_with,pref_band,avoid_motorways,avoid_tolls,bikes').eq('user_id', s.user.id).maybeSingle(),
     ]);
     if (p.error && !/fetch|network/i.test(p.error.message)) throw nice(p.error, 'No s\'ha pogut carregar el perfil');
@@ -107,7 +117,7 @@ export async function loadAccount(): Promise<Account | null> {
     const acc: Account = {
       id: s.user.id,
       email: s.user.email ?? null,
-      profile: p.data ? { ...(p.data as RiderProfile), interests: (p.data.interests as string[] | null) ?? [] } : null,
+      profile: p.data ? { avatar_url: null, ...(p.data as Partial<RiderProfile>), interests: ((p.data as { interests?: string[] | null }).interests) ?? [], bike_photos: ((p.data as { bike_photos?: string[] | null }).bike_photos) ?? [] } as RiderProfile : null,
       settings: (st.data as RiderSettings | null) ?? null,
     };
     writeCache(acc);
@@ -209,4 +219,10 @@ export function onAuthChange(cb: (event: string) => void) {
 
 export function age(birthYear: number | null): number | null {
   return birthYear ? new Date().getFullYear() - birthYear : null;
+}
+
+/** Desa només la foto de perfil i les fotos de la moto. */
+export async function saveMedia(id: string, patch: { avatar_url?: string | null; bike_photos?: string[] }) {
+  const { error } = await sb().from('profiles').update(patch).eq('id', id);
+  if (error) throw nice(error, 'No s\'ha pogut desar la foto');
 }

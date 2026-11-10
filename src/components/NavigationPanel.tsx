@@ -3,6 +3,7 @@ import { maneuverIcon } from '../lib/navigation';
 import { fmtClock } from '../lib/recorder';
 import type { NavView } from '../lib/useNavigation';
 import type { LiveFix, RecState } from '../lib/recorder';
+import Icon from './Icon';
 
 interface Props {
   title: string;
@@ -28,7 +29,7 @@ export default function NavigationPanel({ title, view, fix, rec, elapsedMs, voic
       {view.status === 'preparing' && <div className="nav-card"><div className="nav-text">Preparant les instruccions…</div></div>}
       {view.status === 'arrived' && (
         <div className="nav-card arrived">
-          <div className="nav-icon">🏁</div>
+          <div className="nav-icon"><Icon name="arrive" size={44} /></div>
           <div className="nav-text">Has arribat al final de la ruta</div>
         </div>
       )}
@@ -41,7 +42,7 @@ export default function NavigationPanel({ title, view, fix, rec, elapsedMs, voic
             </>
           ) : view.next ? (
             <>
-              <div className="nav-icon">{maneuverIcon(view.next.maneuver.type)}</div>
+              <div className="nav-icon"><Icon name={maneuverIcon(view.next.maneuver.type)} size={52} /></div>
               <div style={{ minWidth: 0 }}>
                 <div className="nav-dist">{fmtDist(view.next.distanceKm)}</div>
                 <div className="nav-text">{view.next.maneuver.instruction}</div>
@@ -53,7 +54,7 @@ export default function NavigationPanel({ title, view, fix, rec, elapsedMs, voic
         </button>
       )}
       {view.then && view.status === 'guiding' && (
-        <div className="nav-then">Després: {maneuverIcon(view.then.type)} {view.then.instruction}</div>
+        <div className="nav-then">Després: <Icon name={maneuverIcon(view.then.type)} size={16} className="inline-ico" /> {view.then.instruction}</div>
       )}
       {view.onDetour && <div className="alert info" style={{ margin: '8px 0 0' }}>Desviament per tornar a la ruta. No tornarem als punts que ja has passat.</div>}
       {view.error && <div className="alert warn" style={{ margin: '8px 0 0' }}>{view.error}</div>}
@@ -67,8 +68,8 @@ export default function NavigationPanel({ title, view, fix, rec, elapsedMs, voic
 
       <div className="hint" style={{ margin: '8px 0' }}>{title} · la sortida es grava automàticament</div>
       <div className="actions" style={{ marginTop: 6 }}>
-        <button className="btn" onClick={() => setVoiceOn(!voiceOn)}>{voiceOn ? '🔊 Veu activada' : '🔇 Veu silenciada'}</button>
-        <button className="btn primary" onClick={onStop}>■ Acaba</button>
+        <button className="btn" onClick={() => setVoiceOn(!voiceOn)}>{voiceOn ? <><Icon name="volume" /> Veu activada</> : <><Icon name="volume-off" /> Veu silenciada</>}</button>
+        <button className="btn primary" onClick={onStop}><Icon name="stop" size={16} /> Acaba</button>
       </div>
       <div style={{ marginTop: 10 }}>{extra}</div>
     </div>

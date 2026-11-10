@@ -181,10 +181,10 @@ export function bestDepartures(samples: Sample[], data: WeatherData, durationMin
 
 export function weatherIcon(code: number): string {
   if (code < 0) return '·';
-  if (code === 0) return '☀️';
-  if (code <= 3) return '⛅';
-  if (code <= 48) return '🌫️';
-  if (code <= 67 || (code >= 80 && code <= 82)) return '🌧️';
-  if (code <= 77 || code === 85 || code === 86) return '❄️';
-  return '⛈️';
+  if (code === 0) return 'sun';
+  if (code <= 3) return 'cloud-sun';
+  if (code <= 48) return 'fog';
+  if (code <= 67 || (code >= 80 && code <= 82)) return 'rain';
+  if (code <= 77 || code === 85 || code === 86) return 'snow';
+  return 'storm';
 }

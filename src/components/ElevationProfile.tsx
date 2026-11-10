@@ -1,7 +1,6 @@
 import type { RouteResult } from '../lib/types';
 
-const LEVEL = ['#3ccf8e', '#f5c542', '#ff9a3c', '#ff4d5e'];
-const DIFF = { beginner: '#3ccf8e', intermediate: '#f5c542', expert: '#ff4d5e' };
+import { DIFF_COLORS as DIFF, LEVEL_COLORS as LEVEL, ROUTE_RED } from '../lib/theme';
 
 export default function ElevationProfile({ route }: { route: RouteResult }) {
   const W = 400;
@@ -36,7 +35,7 @@ export default function ElevationProfile({ route }: { route: RouteResult }) {
           return <rect key={i} x={x(w.km / scale)} y={top + plotH + 18} width={Math.max(0.5, x((next - w.km) / scale))} height="8" fill={LEVEL[w.level]} />;
         })}
         {(route.fuel?.stops ?? []).map((s, i) => (
-          <line key={i} x1={x(s.km / scale)} x2={x(s.km / scale)} y1={top} y2={top + plotH} stroke="#ff6b2c" strokeDasharray="3 3" vectorEffect="non-scaling-stroke" />
+          <line key={i} x1={x(s.km / scale)} x2={x(s.km / scale)} y1={top} y2={top + plotH} stroke={ROUTE_RED} strokeDasharray="3 3" vectorEffect="non-scaling-stroke" />
         ))}
       </svg>
       <div className="row muted" style={{ fontSize: 12, justifyContent: 'space-between' }}>

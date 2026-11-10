@@ -2,6 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import MapView, { DEMO } from './components/MapView';
 import Wizard, { type PickTarget } from './components/Wizard';
 import BikeScreen from './components/BikeScreen';
+import Icon, { Logo } from './components/Icon';
+import Avatar from './components/Avatar';
+import { ROUTE_RED } from './lib/theme';
 import RouteCard from './components/RouteCard';
 import RouteDetail, { Loader } from './components/RouteDetail';
 import { buildRoutes, enrichFuel, enrichWeather, makeSchedule } from './lib/pipeline';
@@ -139,9 +142,9 @@ export default function App() {
 
   const navMapRoutes = useMemo(() => {
     if (!navRoute) return [];
-    const mainRoute = { ...navRoute, id: 'nav-main', coords: nav.mainCoords ?? navRoute.coords, color: '#ff6b2c' };
+    const mainRoute = { ...navRoute, id: 'nav-main', coords: nav.mainCoords ?? navRoute.coords, color: ROUTE_RED };
     const list: RouteResult[] = [mainRoute];
-    if (nav.view.detourCoords) list.push({ ...navRoute, id: 'nav-detour', coords: nav.view.detourCoords, color: '#3fb6ff' });
+    if (nav.view.detourCoords) list.push({ ...navRoute, id: 'nav-detour', coords: nav.view.detourCoords, color: '#4da3ff' });
     return list;
   }, [navRoute, nav.mainCoords, nav.view.detourCoords]);
 
@@ -369,8 +372,13 @@ export default function App() {
     <div className="app">
       <aside className="panel">
         <div className="brand">
-          <div className="brand-mark">M</div>
-          <h1>MotoRoute Builder</h1>
+          <Logo size={34} />
+          <h1>MotoRoute<span>Builder</span></h1>
+          {account?.profile && (
+            <button className="brand-avatar" onClick={() => setTab('profile')} aria-label="El meu perfil">
+              <Avatar url={account.profile.avatar_url} name={account.profile.display_name || account.profile.username} size={34} />
+            </button>
+          )}
         </div>
         <div className="panel-body">
           {navRoute && (
@@ -495,25 +503,25 @@ export default function App() {
               onShow={(r) => setSocialRoute(r ? toRouteResult(r) : null)}
               onPlan={openShared}
               recorded={recordings}
-              onShowRecorded={(r) => setSocialRoute(r ? ({ ...r.route, id: `rec-${r.id}`, color: '#ff6b2c' } as RouteResult) : null)}
+              onShowRecorded={(r) => setSocialRoute(r ? ({ ...r.route, id: `rec-${r.id}`, color: ROUTE_RED } as RouteResult) : null)}
               onPlanRecorded={openRecorded}
               onShareRecorded={(r) => setShareTarget({ route: r.route as RouteResult, title: r.title, mode: r.mode, startName: r.startName, date: r.recordedAt.slice(0, 10), recordedId: r.id })}
               onDeleteRecorded={(id) => { setRecordings(recordings.filter((x) => x.id !== id)); setSocialRoute(null); }}
             />
           )}
 
-          {!navRoute && tab === 'bike' && <BikeScreen bikes={bikes} setBikes={setBikes} />}
+          {!navRoute && tab === 'bike' && <BikeScreen bikes={bikes} setBikes={setBikes} coverUrl={account?.profile?.bike_photos?.[0] ?? null} />}
           {!navRoute && tab === 'profile' && <ProfileScreen onProfileSaved={onProfileSaved} />}
         </div>
         <nav className="tabs" style={navRoute ? { display: 'none' } : undefined}>
-          <button className={tab === 'plan' ? 'on' : ''} onClick={() => setTab('plan')}><span className="ico">🧭</span>Planificar</button>
+          <button className={tab === 'plan' ? 'on' : ''} onClick={() => setTab('plan')}><Icon name="plan" size={22} />Planificar</button>
           <button className={`${tab === 'record' ? 'on' : ''} ${rec.state.status === 'recording' ? 'rec-live' : ''}`} onClick={() => setTab('record')}>
-            <span className="ico">{rec.state.status === 'recording' ? '🔴' : '⏺️'}</span>Grava
+            <Icon name="record" size={22} filled={rec.state.status === 'recording'} />Grava
           </button>
-          <button className={tab === 'social' ? 'on' : ''} onClick={() => setTab('social')}><span className="ico">👥</span>Social</button>
-          <button className={tab === 'routes' ? 'on' : ''} onClick={() => setTab('routes')}><span className="ico">🗂️</span>Rutes</button>
-          <button className={tab === 'bike' ? 'on' : ''} onClick={() => setTab('bike')}><span className="ico">🏍️</span>Moto</button>
-          {account && <button className={tab === 'profile' ? 'on' : ''} onClick={() => setTab('profile')}><span className="ico">👤</span>Perfil</button>}
+          <button className={tab === 'social' ? 'on' : ''} onClick={() => setTab('social')}><Icon name="social" size={22} />Social</button>
+          <button className={tab === 'routes' ? 'on' : ''} onClick={() => setTab('routes')}><Icon name="routes" size={22} />Rutes</button>
+          <button className={tab === 'bike' ? 'on' : ''} onClick={() => setTab('bike')}><Icon name="bike" size={22} />Moto</button>
+          {account && <button className={tab === 'profile' ? 'on' : ''} onClick={() => setTab('profile')}><Icon name="profile" size={22} />Perfil</button>}
         </nav>
         {shareTarget && (
           <ShareDialog

@@ -1,4 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import Icon from './Icon';
+import { LEVEL_COLORS, ROUTE_RED } from '../lib/theme';
 import { Map as MlMap, NavigationControl, Popup, setWorkerUrl, type GeoJSONSource, type LngLatBoundsLike, type MapLayerMouseEvent, type MapMouseEvent } from 'maplibre-gl';
 import { bbox } from '../lib/geo';
 
@@ -28,22 +30,33 @@ async function demoStyle() {
     version: 8 as const,
     sources: { base: { type: 'geojson' as const, data: base } },
     layers: [
-      { id: 'sea', type: 'background' as const, paint: { 'background-color': '#b9d0dc' } },
+      { id: 'sea', type: 'background' as const, paint: { 'background-color': '#0c1117' } },
       { id: 'land', type: 'fill' as const, source: 'base', filter: ['has', 'cat'] as never,
-        paint: { 'fill-color': ['case', ['==', ['get', 'cat'], 1], '#eef0e4', ['has', 'foreign'], '#e3e4dc', '#dfe3d6'] as never } },
+        paint: { 'fill-color': ['case', ['==', ['get', 'cat'], 1], '#1b1b1f', ['has', 'foreign'], '#141417', '#17171b'] as never } },
       { id: 'mun', type: 'line' as const, source: 'base', filter: ['==', ['get', 'kind'], 'mun'] as never,
-        paint: { 'line-color': '#cfd5c4', 'line-width': 0.6 } },
+        paint: { 'line-color': '#26262c', 'line-width': 0.6 } },
       { id: 'prov', type: 'line' as const, source: 'base', filter: ['==', ['get', 'kind'], 'prov'] as never,
-        paint: { 'line-color': '#9aa69a', 'line-width': 1.2, 'line-dasharray': [3, 2] } },
+        paint: { 'line-color': '#3a3a42', 'line-width': 1.2, 'line-dasharray': [3, 2] } },
       { id: 'coast', type: 'line' as const, source: 'base', filter: ['==', ['get', 'kind'], 'coast'] as never,
-        paint: { 'line-color': '#7fa3b6', 'line-width': 1.2 } },
+        paint: { 'line-color': '#2b3b4a', 'line-width': 1.2 } },
     ],
   };
 }
 import type { Accommodation, LngLat, Place, RouteResult, Stage, StationOnRoute, WeatherSample } from '../lib/types';
 
-const STYLE = 'https://tiles.openfreemap.org/styles/liberty';
-const LEVEL_COLOR = ['#3ccf8e', '#f5c542', '#ff9a3c', '#ff4d5e'];
+const STYLES = {
+  dark: 'https://tiles.openfreemap.org/styles/dark',
+  light: 'https://tiles.openfreemap.org/styles/liberty',
+} as const;
+type MapTheme = keyof typeof STYLES;
+const LEVEL_COLOR = LEVEL_COLORS;
+const readTheme = (): MapTheme => {
+  try {
+    return localStorage.getItem('mrb.mapstyle') === 'light' ? 'light' : 'dark';
+  } catch {
+    return 'dark';
+  }
+};
 
 interface Props {
   routes: RouteResult[];
@@ -78,13 +91,14 @@ export default function MapView(p: Props) {
   const ready = useRef(false);
   const latest = useRef(p);
   latest.current = p;
+  const [theme, setTheme] = useState<MapTheme>(readTheme);
 
   useEffect(() => {
     let cancelled = false;
     let m: MlMap | null = null;
     (async () => {
     await configureWorker();
-    const style = DEMO ? await demoStyle() : STYLE;
+    const style = DEMO ? await demoStyle() : STYLES[theme];
     if (cancelled) return;
     m = new MlMap({
       container: el.current!,
@@ -107,40 +121,7 @@ export default function MapView(p: Props) {
   function init(m: MlMap) {
     m.addControl(new NavigationControl({ showCompass: false }), 'top-right');
     m.on('load', () => {
-      const add = (id: string) => m.addSource(id, { type: 'geojson', data: fc([]) });
-      ['routes', 'weather', 'stations', 'stops', 'stages', 'accom', 'places', 'live', 'me'].forEach(add);
-
-      m.addLayer({ id: 'routes-casing', type: 'line', source: 'routes', layout: { 'line-cap': 'round', 'line-join': 'round' },
-        paint: { 'line-color': '#111', 'line-width': ['case', ['get', 'selected'], 9, 5], 'line-opacity': ['case', ['get', 'selected'], 0.6, 0.25] } });
-      m.addLayer({ id: 'routes-line', type: 'line', source: 'routes', layout: { 'line-cap': 'round', 'line-join': 'round', 'line-sort-key': ['case', ['get', 'selected'], 2, 1] },
-        paint: { 'line-color': ['get', 'color'], 'line-width': ['case', ['get', 'selected'], 5.5, 3], 'line-opacity': ['case', ['get', 'selected'], 1, 0.55] } });
-      m.addLayer({ id: 'stations', type: 'circle', source: 'stations',
-        paint: { 'circle-radius': 4.5, 'circle-color': '#ffffff', 'circle-stroke-color': '#333', 'circle-stroke-width': 1.5 } });
-      m.addLayer({ id: 'accom', type: 'circle', source: 'accom',
-        paint: { 'circle-radius': 6, 'circle-color': '#b46cff', 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5 } });
-      m.addLayer({ id: 'weather', type: 'circle', source: 'weather', filter: ['>=', ['get', 'level'], 1],
-        paint: { 'circle-radius': ['+', 6, ['*', 2, ['get', 'level']]], 'circle-color': ['get', 'color'], 'circle-opacity': 0.85, 'circle-stroke-color': '#111', 'circle-stroke-width': 1.5 } });
-      m.addLayer({ id: 'stops', type: 'circle', source: 'stops',
-        paint: { 'circle-radius': 10, 'circle-color': '#ff6b2c', 'circle-stroke-color': '#fff', 'circle-stroke-width': 2.5 } });
-      if (!DEMO) m.addLayer({ id: 'stops-label', type: 'symbol', source: 'stops',
-        layout: { 'text-field': '€', 'text-size': 12, 'text-font': ['Noto Sans Bold'], 'text-allow-overlap': true },
-        paint: { 'text-color': '#fff' } });
-      m.addLayer({ id: 'stages', type: 'circle', source: 'stages',
-        paint: { 'circle-radius': 11, 'circle-color': '#121417', 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
-      if (!DEMO) m.addLayer({ id: 'stages-label', type: 'symbol', source: 'stages',
-        layout: { 'text-field': ['get', 'label'], 'text-size': 12, 'text-font': ['Noto Sans Bold'], 'text-allow-overlap': true },
-        paint: { 'text-color': '#fff' } });
-      m.addLayer({ id: 'live-casing', type: 'line', source: 'live', layout: { 'line-cap': 'round', 'line-join': 'round' },
-        paint: { 'line-color': '#111', 'line-width': 8, 'line-opacity': 0.5 } });
-      m.addLayer({ id: 'live', type: 'line', source: 'live', layout: { 'line-cap': 'round', 'line-join': 'round' },
-        paint: { 'line-color': '#ff6b2c', 'line-width': 5 } });
-      m.addLayer({ id: 'me-halo', type: 'circle', source: 'me',
-        paint: { 'circle-radius': 16, 'circle-color': '#3fb6ff', 'circle-opacity': 0.25 } });
-      m.addLayer({ id: 'me', type: 'circle', source: 'me',
-        paint: { 'circle-radius': 8, 'circle-color': '#3fb6ff', 'circle-stroke-color': '#fff', 'circle-stroke-width': 3 } });
-      m.addLayer({ id: 'places', type: 'circle', source: 'places',
-        paint: { 'circle-radius': 8, 'circle-color': ['get', 'color'], 'circle-stroke-color': '#fff', 'circle-stroke-width': 3 } });
-
+      addLayers(m);
       const popup = (layer: string, html: (props: Record<string, string>) => string) => {
         m.on('click', layer, (e: MapLayerMouseEvent) => {
           const f = e.features?.[0];
@@ -156,7 +137,7 @@ export default function MapView(p: Props) {
       popup('stations', (x) => `<b>${esc(x.brand)}</b><br>${esc(x.town)}<br>${x.price} €/l · km ${x.km}`);
       popup('stops', (x) => `<b>Parada recomanada · ${esc(x.brand)}</b><br>${x.price} €/l · km ${x.km}`);
       popup('weather', (x) => `<b>km ${x.km} · ${x.eta}</b><br>${esc(x.reasons)}`);
-      popup('accom', (x) => `<b>${esc(x.name)}</b><br>${esc(x.kind)}${x.stars ? ' · ' + '★'.repeat(+x.stars) : ''}`);
+      popup('accom', (x) => `<b>${esc(x.name)}</b><br>${esc(x.kind)}${x.stars ? ' · ' + x.stars + ' estrelles' : ''}`);
       m.on('click', 'routes-line', (e: MapLayerMouseEvent) => {
         const id = e.features?.[0]?.properties?.id;
         if (id) latest.current.onSelect(id);
@@ -169,6 +150,43 @@ export default function MapView(p: Props) {
       sync();
       fit();
     });
+  }
+
+  /** Fonts i capes pròpies: es tornen a afegir cada cop que canvia l'estil del mapa. */
+  function addLayers(m: MlMap) {
+      const add = (id: string) => m.addSource(id, { type: 'geojson', data: fc([]) });
+      ['routes', 'weather', 'stations', 'stops', 'stages', 'accom', 'places', 'live', 'me'].forEach(add);
+
+      m.addLayer({ id: 'routes-casing', type: 'line', source: 'routes', layout: { 'line-cap': 'round', 'line-join': 'round' },
+        paint: { 'line-color': '#000', 'line-width': ['case', ['get', 'selected'], 10, 5], 'line-opacity': ['case', ['get', 'selected'], 0.7, 0.35] } });
+      m.addLayer({ id: 'routes-line', type: 'line', source: 'routes', layout: { 'line-cap': 'round', 'line-join': 'round', 'line-sort-key': ['case', ['get', 'selected'], 2, 1] },
+        paint: { 'line-color': ['get', 'color'], 'line-width': ['case', ['get', 'selected'], 5.5, 3], 'line-opacity': ['case', ['get', 'selected'], 1, 0.55] } });
+      m.addLayer({ id: 'stations', type: 'circle', source: 'stations',
+        paint: { 'circle-radius': 4.5, 'circle-color': '#f4f4f5', 'circle-stroke-color': '#000', 'circle-stroke-width': 1.5 } });
+      m.addLayer({ id: 'accom', type: 'circle', source: 'accom',
+        paint: { 'circle-radius': 6, 'circle-color': '#a78bfa', 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5 } });
+      m.addLayer({ id: 'weather', type: 'circle', source: 'weather', filter: ['>=', ['get', 'level'], 1],
+        paint: { 'circle-radius': ['+', 6, ['*', 2, ['get', 'level']]], 'circle-color': ['get', 'color'], 'circle-opacity': 0.85, 'circle-stroke-color': '#000', 'circle-stroke-width': 1.5 } });
+      m.addLayer({ id: 'stops', type: 'circle', source: 'stops',
+        paint: { 'circle-radius': 10, 'circle-color': ROUTE_RED, 'circle-stroke-color': '#fff', 'circle-stroke-width': 2.5 } });
+      if (!DEMO) m.addLayer({ id: 'stops-label', type: 'symbol', source: 'stops',
+        layout: { 'text-field': '€', 'text-size': 12, 'text-font': ['Noto Sans Bold'], 'text-allow-overlap': true },
+        paint: { 'text-color': '#fff' } });
+      m.addLayer({ id: 'stages', type: 'circle', source: 'stages',
+        paint: { 'circle-radius': 11, 'circle-color': '#08080a', 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
+      if (!DEMO) m.addLayer({ id: 'stages-label', type: 'symbol', source: 'stages',
+        layout: { 'text-field': ['get', 'label'], 'text-size': 12, 'text-font': ['Noto Sans Bold'], 'text-allow-overlap': true },
+        paint: { 'text-color': '#fff' } });
+      m.addLayer({ id: 'live-casing', type: 'line', source: 'live', layout: { 'line-cap': 'round', 'line-join': 'round' },
+        paint: { 'line-color': '#000', 'line-width': 9, 'line-opacity': 0.6 } });
+      m.addLayer({ id: 'live', type: 'line', source: 'live', layout: { 'line-cap': 'round', 'line-join': 'round' },
+        paint: { 'line-color': ROUTE_RED, 'line-width': 5 } });
+      m.addLayer({ id: 'me-halo', type: 'circle', source: 'me',
+        paint: { 'circle-radius': 16, 'circle-color': '#4da3ff', 'circle-opacity': 0.25 } });
+      m.addLayer({ id: 'me', type: 'circle', source: 'me',
+        paint: { 'circle-radius': 8, 'circle-color': '#4da3ff', 'circle-stroke-color': '#fff', 'circle-stroke-width': 3 } });
+      m.addLayer({ id: 'places', type: 'circle', source: 'places',
+        paint: { 'circle-radius': 8, 'circle-color': ['get', 'color'], 'circle-stroke-color': '#fff', 'circle-stroke-width': 3 } });
   }
 
   function setData(id: string, data: GeoJSON.FeatureCollection) {
@@ -195,9 +213,9 @@ export default function MapView(p: Props) {
     setData('stages', fc((q.stages ?? []).length > 1 ? q.stages!.slice(0, -1).map((s) => pt(s.end, { label: String(s.index + 1) })) : []));
     setData('accom', fc((q.accommodations ?? []).map((a) => pt(a.coord, { name: a.name, kind: a.kind, stars: a.stars ?? '' }))));
     const places: GeoJSON.Feature[] = [];
-    if (q.origin) places.push(pt(q.origin.coord, { color: '#3ccf8e' }));
-    if (q.destination) places.push(pt(q.destination.coord, { color: '#ff4d5e' }));
-    q.vias.forEach((v) => places.push(pt(v.coord, { color: '#3fb6ff' })));
+    if (q.origin) places.push(pt(q.origin.coord, { color: '#22c55e' }));
+    if (q.destination) places.push(pt(q.destination.coord, { color: ROUTE_RED }));
+    q.vias.forEach((v) => places.push(pt(v.coord, { color: '#4da3ff' })));
     setData('places', fc(places));
     const live = q.liveTrack ?? [];
     setData('live', fc(live.length > 1 ? [{ type: 'Feature', geometry: { type: 'LineString', coordinates: live }, properties: {} }] : []));
@@ -244,5 +262,29 @@ export default function MapView(p: Props) {
     if (map.current) map.current.getCanvas().style.cursor = p.onPick ? 'crosshair' : '';
   }, [p.onPick]);
 
-  return <div ref={el} className="map" />;
+  function switchTheme() {
+    const next: MapTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    try { localStorage.setItem('mrb.mapstyle', next); } catch { /* sense emmagatzematge */ }
+    const m = map.current;
+    if (!m) return;
+    ready.current = false;
+    m.setStyle(STYLES[next]);
+    m.once('style.load', () => {
+      addLayers(m);
+      ready.current = true;
+      sync();
+    });
+  }
+
+  return (
+    <>
+      <div ref={el} className="map" />
+      {!DEMO && (
+        <button className="map-style-btn" onClick={switchTheme} aria-label={theme === 'dark' ? 'Mapa clar' : 'Mapa fosc'} title={theme === 'dark' ? 'Mapa clar' : 'Mapa fosc'}>
+          <Icon name="layers" size={18} />
+        </button>
+      )}
+    </>
+  );
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { setNewPassword } from '../../lib/account';
+import { Logo } from '../Icon';
 
 export default function NewPassword({ onDone }: { onDone: () => void }) {
   const [password, setPassword] = useState('');
@@ -23,7 +24,7 @@ export default function NewPassword({ onDone }: { onDone: () => void }) {
   return (
     <div className="auth-page">
       <form className="auth-card" onSubmit={submit}>
-        <div className="auth-logo">M</div>
+        <div className="auth-logo"><Logo size={52} /></div>
         <h3 style={{ margin: '12px 0' }}>Posa una contrasenya nova</h3>
         <div className="field">
           <input className="input" type="password" autoComplete="new-password" minLength={8} value={password}

@@ -124,14 +124,20 @@ export function rejoinPoint(p: LngLat, leg: NavLeg, lastKm: number): { km: numbe
   return { km: best.km, coord: leg.coords[best.idx] };
 }
 
-/** Icona simple per tipus de maniobra de Valhalla. */
+/** Nom d'icona (components/Icon) per a cada tipus de maniobra de Valhalla. */
 export function maneuverIcon(type: number): string {
-  if ([4, 5, 6].includes(type)) return '🏁';
-  if ([9, 10, 11].includes(type)) return '↱';
-  if ([14, 15, 16].includes(type)) return '↰';
-  if ([12, 13].includes(type)) return '⤴';
-  if ([26, 27].includes(type)) return '⟳';
-  if ([18, 20, 23].includes(type)) return '↗';
-  if ([19, 21, 24].includes(type)) return '↖';
-  return '↑';
+  if ([4, 5, 6].includes(type)) return 'arrive';
+  if ([1, 2, 3].includes(type)) return 'depart';
+  if (type === 9) return 'slight-right';
+  if (type === 10) return 'turn-right';
+  if (type === 11) return 'sharp-right';
+  if (type === 16) return 'slight-left';
+  if (type === 15) return 'turn-left';
+  if (type === 14) return 'sharp-left';
+  if (type === 12 || type === 13) return 'uturn';
+  if (type === 26 || type === 27) return 'roundabout';
+  if ([18, 20, 23].includes(type)) return 'slight-right';
+  if ([19, 21, 24].includes(type)) return 'slight-left';
+  if ([25, 37, 38].includes(type)) return 'merge';
+  return 'straight';
 }

@@ -6,7 +6,7 @@ import { bestDepartures, evaluate, fetchWeather } from './weather';
 import { effectiveConsumption, loadStations, planFuelStops, stationsOnRoute } from './fuel';
 import type { Motorcycle, PlanRequest, RouteResult, Stage } from './types';
 
-const COLORS = ['#ff6b2c', '#3fb6ff', '#b46cff'];
+import { ROUTE_COLORS as COLORS } from './theme';
 const LABELS = ['Opció A', 'Opció B', 'Opció C'];
 const BREAK_FACTOR = 1.1; // parades curtes, fotos, cafè
 

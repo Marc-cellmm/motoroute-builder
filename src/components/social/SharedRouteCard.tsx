@@ -1,6 +1,8 @@
 import ElevationProfile from '../ElevationProfile';
 import { DIFF_LABEL, fmtDuration } from '../RouteCard';
 import { toRouteResult, type SharedRoute } from '../../lib/social';
+import Icon from '../Icon';
+import Avatar from '../Avatar';
 
 export interface Reactions {
   liked: boolean;
@@ -28,10 +30,10 @@ export function ReactionBar({ route, reactions, onLike, onSave }: Omit<CardProps
   return (
     <div className="reactions" onClick={(e) => e.stopPropagation()}>
       <button className={`react ${reactions.liked ? 'on like' : ''}`} onClick={onLike} aria-pressed={reactions.liked}>
-        {reactions.liked ? '❤️' : '🤍'} <span>{route.likes}</span>
+        <Icon name="heart" filled={reactions.liked} size={18} /> <span>{route.likes}</span>
       </button>
       <button className={`react ${reactions.saved ? 'on save' : ''}`} onClick={onSave} aria-pressed={reactions.saved}>
-        🔖 <span>{reactions.saved ? 'Guardada' : 'Guarda-la'}</span>
+        <Icon name="bookmark" filled={reactions.saved} size={18} /> <span>{reactions.saved ? 'Guardada' : 'Guarda-la'}</span>
       </button>
     </div>
   );
@@ -40,11 +42,17 @@ export function ReactionBar({ route, reactions, onLike, onSave }: Omit<CardProps
 export default function SharedRouteCard(p: CardProps) {
   const r = p.route;
   return (
-    <div className={`route-card ${p.selected ? 'on' : ''}`} style={{ ['--rc' as string]: '#ff6b2c' }} onClick={p.onOpen}>
+    <div className={`route-card ${p.selected ? 'on' : ''}`} style={{ ['--rc' as string]: 'var(--accent)' }} onClick={p.onOpen}>
+      <div className="author-row">
+        <Avatar url={r.author_avatar} name={r.username} size={30} />
+        <div className="author-row-text">
+          <b>@{r.username}</b>
+          <span>{ago(r.created_at)}{r.start_name ? ` · ${r.start_name.split(',')[0]}` : ''}</span>
+        </div>
+      </div>
       <header>
         <div style={{ minWidth: 0 }}>
-          <h3 style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.title}</h3>
-          <div className="hint">@{r.username} · {ago(r.created_at)}{r.start_name ? ` · ${r.start_name.split(',')[0]}` : ''}</div>
+          <h3 className="truncate">{r.title}</h3>
         </div>
         <span className={`badge ${r.difficulty}`} style={{ flex: 'none' }}>{DIFF_LABEL[r.difficulty]}</span>
       </header>
@@ -54,9 +62,9 @@ export default function SharedRouteCard(p: CardProps) {
         <div className="stat"><b>{r.elevation_gain ?? '—'} m</b><span>desnivell +</span></div>
       </div>
       <div className="badges">
-        <span className="badge">{r.mode === 'trail' ? '⛰️ Trail' : '🛣️ Carretera'}</span>
-        {Number(r.unpaved_km) > 0.5 && <span className="badge">🟫 {Math.round((r.unpaved_km / r.distance_km) * 100)} % terra</span>}
-        {r.saves > 0 && <span className="badge">🔖 {r.saves}</span>}
+        <span className="badge">{r.mode === 'trail' ? <><Icon name="mountain" size={14} />Trail</> : <><Icon name="road" size={14} />Carretera</>}</span>
+        {Number(r.unpaved_km) > 0.5 && <span className="badge"><Icon name="dirt" size={14} />{Math.round((r.unpaved_km / r.distance_km) * 100)} % terra</span>}
+        {r.saves > 0 && <span className="badge"><Icon name="bookmark" size={14} />{r.saves}</span>}
       </div>
       <ReactionBar route={r} reactions={p.reactions} onLike={p.onLike} onSave={p.onSave} />
     </div>
@@ -68,15 +76,15 @@ export function SharedRouteDetail(p: CardProps & { onBack: () => void; onPlan: (
   const rr = toRouteResult(r);
   return (
     <div>
-      <button className="btn small ghost" onClick={p.onBack}>‹ Tornar</button>
+      <button className="btn small ghost" onClick={p.onBack}><Icon name="chevron-left" size={16} /> Tornar</button>
       <div className="row" style={{ marginTop: 8, alignItems: 'flex-start' }}>
         <div style={{ minWidth: 0 }}>
           <h2>{r.title}</h2>
           <div className="hint">
-            @{r.username}{r.ridden_on ? ` · feta el ${new Date(r.ridden_on).toLocaleDateString('ca-ES', { day: 'numeric', month: 'long', year: 'numeric' })}` : ''}
+            <Avatar url={r.author_avatar} name={r.username} size={22} /> @{r.username}{r.ridden_on ? ` · feta el ${new Date(r.ridden_on).toLocaleDateString('ca-ES', { day: 'numeric', month: 'long', year: 'numeric' })}` : ''}
           </div>
           {(r.author_bike || r.author_area) && (
-            <div className="author-meta">{[r.author_bike && `🏍️ ${r.author_bike}`, r.author_area && `📍 ${r.author_area}`].filter(Boolean).join(' · ')}</div>
+            <div className="author-meta">{r.author_bike && <span><Icon name="bike" size={14} />{r.author_bike}</span>}{r.author_area && <span><Icon name="pin" size={14} />{r.author_area}</span>}</div>
           )}
         </div>
         <span className={`badge ${r.difficulty}`} style={{ flex: 'none' }}>{DIFF_LABEL[r.difficulty]}</span>
