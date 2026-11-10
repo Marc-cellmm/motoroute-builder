@@ -22,6 +22,10 @@ create policy media_insert_own on storage.objects for insert to authenticated
     and (storage.foldername(name))[1] = auth.uid()::text
     and coalesce((auth.jwt() ->> 'is_anonymous')::boolean, false) = false
   );
+-- (esborrar un fitxer també necessita poder-lo «veure»: només els de la pròpia carpeta)
+drop policy if exists media_select_own on storage.objects;
+create policy media_select_own on storage.objects for select to authenticated
+  using (bucket_id = 'media' and (storage.foldername(name))[1] = auth.uid()::text);
 drop policy if exists media_update_own on storage.objects;
 create policy media_update_own on storage.objects for update to authenticated
   using (bucket_id = 'media' and (storage.foldername(name))[1] = auth.uid()::text);
