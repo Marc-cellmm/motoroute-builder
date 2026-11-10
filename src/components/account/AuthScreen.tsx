@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { resetPassword, signIn, signUp, validEmail, type Account } from '../../lib/account';
 import Icon, { Logo } from '../Icon';
+import Legal from '../Legal';
 
 type Mode = 'signup' | 'login' | 'forgot';
 
-export default function AuthScreen({ onDone }: { onDone: (a: Account | null) => void }) {
-  const [mode, setMode] = useState<Mode>('signup');
+export default function AuthScreen({ onDone, initialMode = 'signup', onShowIntro }: { onDone: (a: Account | null) => void; initialMode?: 'signup' | 'login'; onShowIntro?: () => void }) {
+  const [mode, setMode] = useState<Mode>(initialMode);
+  const [legal, setLegal] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [show, setShow] = useState(false);
@@ -89,10 +91,20 @@ export default function AuthScreen({ onDone }: { onDone: (a: Account | null) => 
         {mode === 'login' && <button className="link-btn" onClick={() => go('forgot')}>Has oblidat la contrasenya?</button>}
         {mode === 'forgot' && <button className="link-btn" onClick={() => go('login')}>Torna a entrar</button>}
 
-        <p className="hint" style={{ marginTop: 18 }}>
-          Amb el compte tens les rutes, les motos i el perfil a tots els teus dispositius. L'edat i les preferències són privades: a la comunitat només es veu el nom de motorista, la zona, l'estil i la moto.
-        </p>
+        <div className="auth-perks">
+          <div><Icon name="routes" size={18} /><span>Rutes i motos a tots els teus dispositius</span></div>
+          <div><Icon name="lock" size={18} /><span>L'edat i les preferències són privades</span></div>
+          <div><Icon name="check" size={18} /><span>Gratis, sense anuncis ni subscripcions</span></div>
+        </div>
+        {mode === 'signup' && (
+          <p className="hint legal-line">
+            En crear el compte confirmes que tens 18 anys o més i acceptes les{' '}
+            <button type="button" className="inline-link" onClick={() => setLegal(true)}>condicions i la política de privacitat</button>.
+          </p>
+        )}
+        {onShowIntro && <button className="link-btn muted-link" style={{ width: '100%', justifyContent: 'center' }} onClick={onShowIntro}>Torna a veure què pots fer amb l'app</button>}
       </div>
+      {legal && <Legal onClose={() => setLegal(false)} />}
     </div>
   );
 }

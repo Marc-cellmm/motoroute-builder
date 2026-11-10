@@ -228,9 +228,9 @@ export default function BikeScreen({ bikes, setBikes, coverUrl }: Props) {
             <div className="garage-range">
               <div>
                 <span className="eyebrow">Autonomia segura</span>
-                <div className="metric">{Number.isFinite(safe) ? safe : '—'}<small>km</small></div>
+                <div className="metric go-text">{Number.isFinite(safe) ? safe : '—'}<small>km</small></div>
               </div>
-              <Icon name="gauge" size={34} className="dim" />
+              <Icon name="gauge" size={34} className="go-text" />
             </div>
             <div className="spec-grid">
               <div><span>Dipòsit</span><b>{b.tankLiters} l</b></div>

@@ -34,7 +34,7 @@ export default function NavigationPanel({ title, view, fix, rec, elapsedMs, voic
         </div>
       )}
       {(view.status === 'guiding' || view.status === 'rerouting' || view.status === 'no-instructions') && (
-        <button className={`nav-card ${view.offRoute || view.status === 'rerouting' ? 'warn' : ''}`} onClick={onRepeat} aria-label="Repeteix la instrucció">
+        <button className={`nav-card ${view.offRoute || view.status === 'rerouting' ? 'warn' : 'go'}`} onClick={onRepeat} aria-label="Repeteix la instrucció">
           {view.status === 'rerouting' ? (
             <>
               <div className="nav-icon">⟲</div>
@@ -66,7 +66,10 @@ export default function NavigationPanel({ title, view, fix, rec, elapsedMs, voic
         <div><b>{rec.distanceKm.toFixed(1)}</b><span>km fets · {fmtClock(elapsedMs)}</span></div>
       </div>
 
-      <div className="hint" style={{ margin: '8px 0' }}>{title} · la sortida es grava automàticament</div>
+      <div className="nav-foot">
+        <span><span className="rec-dot" /> {title} · gravant</span>
+        <span className="hint">Mira la carretera: t'avisem amb la veu</span>
+      </div>
       <div className="actions" style={{ marginTop: 6 }}>
         <button className="btn" onClick={() => setVoiceOn(!voiceOn)}>{voiceOn ? <><Icon name="volume" /> Veu activada</> : <><Icon name="volume-off" /> Veu silenciada</>}</button>
         <button className="btn primary" onClick={onStop}><Icon name="stop" size={16} /> Acaba</button>

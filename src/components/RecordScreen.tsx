@@ -109,8 +109,9 @@ export default function RecordScreen({ rec, bike, me, setMe, onSave, onMarkShare
             </div>
           )}
           {fix && (
-            <div className="alert info">
-              GPS {gpsOk ? 'a punt' : 'buscant senyal'} · precisió ±{Math.round(fix.accuracy)} m
+            <div className={`gps-pill ${gpsOk ? 'ok' : ''}`}>
+              <span className="gps-dot" />
+              GPS {gpsOk ? 'a punt' : 'buscant senyal'} <span className="dim">· ±{Math.round(fix.accuracy)} m</span>
             </div>
           )}
           {gpsError && <div className="alert warn">{gpsError}</div>}
@@ -150,7 +151,7 @@ export default function RecordScreen({ rec, bike, me, setMe, onSave, onMarkShare
           <div className="hint" style={{ margin: '8px 0' }}>
             {state.status === 'recording' && (
               <>
-                {gpsOk ? `GPS ±${Math.round(fix!.accuracy)} m` : 'Buscant senyal GPS…'}
+                <span className={gpsOk ? 'go-text' : ''}>{gpsOk ? `GPS ±${Math.round(fix!.accuracy)} m` : 'Buscant senyal GPS…'}</span>
                 {' · '}
                 {isNativeApp
                   ? 'pots apagar la pantalla'
@@ -332,7 +333,7 @@ function Summary({ rec, bike, me, setMe, onSave, onMarkShared, goToMyRoutes }: O
         </>
       ) : (
         <>
-          <div className="alert info" style={{ marginTop: 14 }}>Desada a «Les meves rutes → Gravades».</div>
+          <div className="alert ok" style={{ marginTop: 14 }}><Icon name="check" size={16} className="inline-ico" /> Desada a «Les meves rutes → Gravades».</div>
           <div className="actions">
             <button className="btn" onClick={() => downloadText(`${saved.title.replace(/[^\w-]+/g, '_')}.gpx`, saved.gpx)}>Exporta GPX</button>
             {socialEnabled && <button className="btn" onClick={() => setSharing(true)}>Comparteix</button>}

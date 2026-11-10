@@ -1,0 +1,18 @@
+{
+  "name": "MotoRoute Builder",
+  "short_name": "MotoRoute",
+  "description": "Rutes per a moto amb corbes, meteo a l'hora de pas, benzina segons la teva moto, navegació amb veu i comunitat.",
+  "lang": "ca",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#08080a",
+  "theme_color": "#08080a",
+  "categories": ["navigation", "travel", "sports"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

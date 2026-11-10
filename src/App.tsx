@@ -41,9 +41,14 @@ function defaultDeparture() {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T09:00`;
 }
 
+function greeting() {
+  const h = new Date().getHours();
+  return h < 6 ? 'Bona nit' : h < 13 ? 'Bon dia' : h < 20 ? 'Bona tarda' : 'Bona nit';
+}
+
 export default function App() {
-  const { account } = useAccount();
-  const [tab, setTabState] = useState<Tab>('plan');
+  const { account, startTab } = useAccount();
+  const [tab, setTabState] = useState<Tab>(() => (startTab as Tab | null) ?? 'plan');
   const [view, setView] = useState<View>('wizard');
   // motos: les d'aquest dispositiu; si no n'hi ha, les del compte (un mòbil nou, per exemple)
   const [bikes, setBikesState] = useState<Motorcycle[]>(() => {
@@ -403,6 +408,12 @@ export default function App() {
           )}
           {!navRoute && tab === 'plan' && view === 'wizard' && (
             <>
+              {account?.profile && (
+                <div className="greeting">
+                  <span>{greeting()}, <b>{account.profile.display_name || account.profile.username}</b></span>
+                  <span className="hint">On anem avui?</span>
+                </div>
+              )}
               <Wizard
                 req={req}
                 setReq={setReq}

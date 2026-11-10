@@ -8,6 +8,10 @@ import './styles.css';
 import App from './App';
 import LiveViewer from './components/LiveViewer';
 import AccountGate from './components/account/AccountGate';
+import { applyTextSize, listenInstall } from './lib/prefs';
+
+applyTextSize();
+listenInstall();
 
 async function start() {
   // Al build de demostració, les APIs externes se substitueixen per dades simulades.

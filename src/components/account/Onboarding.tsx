@@ -15,7 +15,7 @@ interface Props {
 }
 
 const THIS_YEAR = new Date().getFullYear();
-const MIN_AGE = 14; // edat mínima per donar el consentiment de dades a Espanya (LOPDGDD)
+const MIN_AGE = 18; // l'app és per a majors d'edat
 const BIRTH_YEARS = Array.from({ length: THIS_YEAR - MIN_AGE - 1930 + 1 }, (_, i) => THIS_YEAR - MIN_AGE - i);
 const SINCE_YEARS = Array.from({ length: THIS_YEAR - 1960 + 1 }, (_, i) => THIS_YEAR - i);
 

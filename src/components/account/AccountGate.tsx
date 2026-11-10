@@ -1,5 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
 import AuthScreen from './AuthScreen';
+import Welcome from './Welcome';
+import ReadyScreen, { type StartTab } from './ReadyScreen';
 import Onboarding from './Onboarding';
 import NewPassword from './NewPassword';
 import { loadAccount, onAuthChange, signOut, type Account } from '../../lib/account';
@@ -8,13 +10,17 @@ import { Logo } from '../Icon';
 
 interface Ctx {
   account: Account | null;
+  /** apartat on obrir l'app després de crear el perfil */
+  startTab: StartTab | null;
   setAccount: (a: Account) => void;
   logout: () => Promise<void>;
 }
-const AccountCtx = createContext<Ctx>({ account: null, setAccount: () => {}, logout: async () => {} });
+const AccountCtx = createContext<Ctx>({ account: null, startTab: null, setAccount: () => {}, logout: async () => {} });
 export const useAccount = () => useContext(AccountCtx);
 
-type Stage = 'loading' | 'auth' | 'onboarding' | 'recovery' | 'ready' | 'offline';
+type Stage = 'loading' | 'auth' | 'onboarding' | 'welcome-ready' | 'recovery' | 'ready' | 'offline';
+
+const seenWelcome = () => { try { return localStorage.getItem('mrb.welcomed') === '1'; } catch { return true; } };
 
 /**
  * Abans de res, cal un compte: correu + contrasenya i el perfil de motorista.
@@ -24,6 +30,9 @@ export default function AccountGate({ children }: { children: ReactNode }) {
   const [stage, setStage] = useState<Stage>(socialEnabled ? 'loading' : 'ready');
   const [account, setAccountState] = useState<Account | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [welcome, setWelcome] = useState(!seenWelcome());
+  const [authMode, setAuthMode] = useState<'signup' | 'login'>('signup');
+  const [startTab, setStartTab] = useState<StartTab | null>(null);
 
   const apply = useCallback((a: Account | null) => {
     setAccountState(a);
@@ -56,7 +65,7 @@ export default function AccountGate({ children }: { children: ReactNode }) {
     apply(null);
   }, [apply]);
 
-  const ctx: Ctx = { account, setAccount: apply, logout };
+  const ctx: Ctx = { account, startTab, setAccount: apply, logout };
 
   if (stage === 'loading') {
     return (
@@ -76,13 +85,23 @@ export default function AccountGate({ children }: { children: ReactNode }) {
       </div>
     );
   }
-  if (stage === 'auth') return <AuthScreen onDone={apply} />;
+  if (stage === 'auth' && welcome) {
+    return <Welcome onDone={(mode) => {
+      try { localStorage.setItem('mrb.welcomed', '1'); } catch { /* sense emmagatzematge */ }
+      setAuthMode(mode);
+      setWelcome(false);
+    }} />;
+  }
+  if (stage === 'auth') return <AuthScreen onDone={apply} initialMode={authMode} onShowIntro={() => setWelcome(true)} />;
+  if (stage === 'welcome-ready' && account) {
+    return <ReadyScreen account={account} onStart={(t) => { setStartTab(t); setStage('ready'); }} />;
+  }
   if (stage === 'recovery') return <NewPassword onDone={refresh} />;
   if (stage === 'onboarding' && account) {
     return (
       <div className="auth-page">
         <div className="auth-card wide">
-          <Onboarding account={account} onDone={apply} onLogout={logout} />
+          <Onboarding account={account} onDone={(a) => { setAccountState(a); setStage('welcome-ready'); }} onLogout={logout} />
         </div>
       </div>
     );

@@ -6,6 +6,9 @@ import Icon from '../Icon';
 import { age, deleteAccount, INTERESTS, loadAccount, resetPassword, saveMedia } from '../../lib/account';
 import { deletePhoto, MAX_BIKE_PHOTOS, uploadPhoto } from '../../lib/media';
 import { fetchMine } from '../../lib/social';
+import { loadRecordings } from '../../lib/storage';
+import { canPromptInstall, isIosBrowser, isStandalone, onInstallChange, promptInstall, setTextLarge, textLarge } from '../../lib/prefs';
+import Legal from '../Legal';
 
 const STYLE = { road: 'Carretera', trail: 'Muntanya i pistes', both: 'Carretera i muntanya' } as const;
 const STYLE_ICON = { road: 'road', trail: 'mountain', both: 'route' } as const;
@@ -23,6 +26,11 @@ export default function ProfileScreen({ onProfileSaved }: { onProfileSaved?: () 
   const [viewer, setViewer] = useState<number | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [bigText, setBigText] = useState(textLarge);
+  const [installable, setInstallable] = useState(canPromptInstall);
+  const [legal, setLegal] = useState(false);
+  const [iosHelp, setIosHelp] = useState(false);
+  useEffect(() => onInstallChange(() => setInstallable(canPromptInstall())), []);
 
   useEffect(() => {
     if (account) fetchMine(account.id).then((r) => setPublished(r.length)).catch(() => setPublished(null));
@@ -97,6 +105,15 @@ export default function ProfileScreen({ onProfileSaved }: { onProfileSaved?: () 
     await refresh();
   }
 
+  const recs = loadRecordings();
+  const totalKm = recs.reduce((a, r) => a + (r.route.distanceKm || 0), 0);
+  const movingH = recs.reduce((a, r) => a + (r.movingMin || 0), 0) / 60;
+  const topSpeed = recs.reduce((a, r) => Math.max(a, r.maxKmh || 0), 0);
+  const topAlt = recs.reduce((a, r) => Math.max(a, r.route.maxAltitude || 0), 0);
+  const monthKm = recs.filter((r) => new Date(r.recordedAt).getMonth() === new Date().getMonth() && new Date(r.recordedAt).getFullYear() === new Date().getFullYear())
+    .reduce((a, r) => a + (r.route.distanceKm || 0), 0);
+  const fmt = (n: number) => n.toLocaleString('ca-ES', { maximumFractionDigits: 0 });
+
   const yrs = age(s?.birth_year ?? null);
   const riding = p?.riding_since ? new Date().getFullYear() - p.riding_since : null;
   const name = p?.display_name || p?.username || '';
@@ -126,13 +143,37 @@ export default function ProfileScreen({ onProfileSaved }: { onProfileSaved?: () 
       {p?.bio && <p className="profile-bio">{p.bio}</p>}
 
       {err && <div className="alert err">{err}</div>}
-      {msg && <div className="alert info">{msg}</div>}
+      {msg && <div className="alert ok">{msg}</div>}
 
       <div className="stat-row">
         <div><b>{published ?? '—'}</b><span>Rutes publicades</span></div>
         <div><b>{riding ?? '—'}</b><span>{riding === 1 ? 'Any en moto' : 'Anys en moto'}</span></div>
         <div><b>{s?.bikes?.length ?? 0}</b><span>{s?.bikes?.length === 1 ? 'Moto' : 'Motos'}</span></div>
       </div>
+
+      <section className="section">
+        <div className="section-head">
+          <h3>Les teves sortides</h3>
+          <span className="hint">gravades en aquest dispositiu</span>
+        </div>
+        {recs.length ? (
+          <div className="ride-stats">
+            <div className="ride-hero">
+              <span className="eyebrow">Quilòmetres gravats</span>
+              <div className="metric go-text">{fmt(totalKm)}<small>km</small></div>
+              <span className="hint">{fmt(monthKm)} km aquest mes</span>
+            </div>
+            <div className="spec-grid">
+              <div><span>Sortides</span><b>{recs.length}</b></div>
+              <div><span>En moviment</span><b>{movingH < 10 ? movingH.toFixed(1) : fmt(movingH)} <small>h</small></b></div>
+              <div><span>Velocitat màxima</span><b>{fmt(topSpeed)} <small>km/h</small></b></div>
+              <div><span>Punt més alt</span><b>{fmt(topAlt)} <small>m</small></b></div>
+            </div>
+          </div>
+        ) : (
+          <div className="box empty-inline"><Icon name="record" size={22} className="dim" /><span>Grava la primera sortida i aquí veuràs els quilòmetres, les hores i el punt més alt.</span></div>
+        )}
+      </section>
 
       <section className="section">
         <div className="section-head">
@@ -178,6 +219,27 @@ export default function ProfileScreen({ onProfileSaved }: { onProfileSaved?: () 
       </section>
 
       <section className="section">
+        <div className="section-head"><h3>Aplicació</h3></div>
+        <div className="detail-list">
+          <label className="pref-row">
+            <Icon name="eye" /><span>Text més gran</span>
+            <input type="checkbox" className="switch" checked={bigText} onChange={(e) => { setBigText(e.target.checked); setTextLarge(e.target.checked); }} />
+          </label>
+          {!isStandalone() && (installable || isIosBrowser()) && (
+            <button className="pref-row" onClick={async () => { if (installable) await promptInstall(); else setIosHelp(!iosHelp); }}>
+              <Icon name="download" /><span>Instal·la l'app al mòbil</span><Icon name="chevron-right" className="dim" />
+            </button>
+          )}
+          <button className="pref-row" onClick={() => setLegal(true)}>
+            <Icon name="lock" /><span>Privacitat, condicions i seguretat</span><Icon name="chevron-right" className="dim" />
+          </button>
+        </div>
+        {iosHelp && (
+          <div className="alert info">A Safari, toca <b>Compartir</b> <Icon name="share" size={14} className="inline-ico" /> i després <b>Afegeix a la pantalla d'inici</b>. S'obrirà com una app, a pantalla completa.</div>
+        )}
+      </section>
+
+      <section className="section">
         <div className="section-head"><h3>Compte</h3></div>
         <div className="detail-list">
           <div><Icon name="profile" /><span>Correu</span><b className="truncate">{account.email}</b></div>
@@ -213,6 +275,7 @@ export default function ProfileScreen({ onProfileSaved }: { onProfileSaved?: () 
         )}
       </section>
 
+      {legal && <Legal onClose={() => setLegal(false)} />}
       {viewer != null && photos[viewer] && (
         <div className="lightbox" onClick={() => setViewer(null)}>
           <img src={photos[viewer]} alt="" onClick={(e) => e.stopPropagation()} />

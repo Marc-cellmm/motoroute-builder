@@ -213,7 +213,7 @@ export default function MapView(p: Props) {
     setData('stages', fc((q.stages ?? []).length > 1 ? q.stages!.slice(0, -1).map((s) => pt(s.end, { label: String(s.index + 1) })) : []));
     setData('accom', fc((q.accommodations ?? []).map((a) => pt(a.coord, { name: a.name, kind: a.kind, stars: a.stars ?? '' }))));
     const places: GeoJSON.Feature[] = [];
-    if (q.origin) places.push(pt(q.origin.coord, { color: '#22c55e' }));
+    if (q.origin) places.push(pt(q.origin.coord, { color: '#2ee88f' }));
     if (q.destination) places.push(pt(q.destination.coord, { color: ROUTE_RED }));
     q.vias.forEach((v) => places.push(pt(v.coord, { color: '#4da3ff' })));
     setData('places', fc(places));

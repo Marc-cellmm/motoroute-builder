@@ -3,7 +3,6 @@ import JoinForm from './JoinForm';
 import ShareDialog from './ShareDialog';
 import SharedRouteCard, { SharedRouteDetail } from './SharedRouteCard';
 import { useSocialList } from './useSocialList';
-import { Loader } from '../RouteDetail';
 import { deleteRoute, fetchFeed, routeFromTrack, socialEnabled, type FeedSort, type Me, type SharedRoute } from '../../lib/social';
 import { parseGpx } from '../../lib/gpxImport';
 import { reverseGeocode } from '../../lib/places';
@@ -172,7 +171,17 @@ export default function SocialScreen(p: Props) {
       {sort === 'near' && !p.near && <p className="hint">Tria un punt de sortida a Planificar per veure rutes a prop.</p>}
 
       {list.error && <div className="alert err">{list.error}</div>}
-      {loading && !list.rows.length && <Loader text="Carregant rutes de la comunitat…" />}
+      {loading && !list.rows.length && (
+        <div aria-busy="true" aria-label="Carregant rutes de la comunitat">
+          {[0, 1, 2].map((k) => (
+            <div key={k} className="route-card skeleton">
+              <div className="sk-row"><span className="sk sk-av" /><span className="sk sk-line" style={{ width: '40%' }} /></div>
+              <span className="sk sk-line" style={{ width: '70%', height: 18, marginTop: 12 }} />
+              <div className="sk-row" style={{ marginTop: 14 }}><span className="sk sk-block" /><span className="sk sk-block" /><span className="sk sk-block" /></div>
+            </div>
+          ))}
+        </div>
+      )}
       {!loading && !list.rows.length && !list.error && (
         <div className="empty"><Icon name="bike" size={40} />Encara no hi ha rutes aquí. Sigues el primer a compartir-ne una!</div>
       )}
