@@ -241,3 +241,42 @@ describe('on rodo avui', () => {
     expect(w.from.getHours()).toBe(9);
   });
 });
+
+import { curveTightness, styleMatch } from './scoring';
+
+describe('gustos del motorista', () => {
+  const pts = (turns: number[]) => turns.map((turnDeg, i) => ({ km: i * 0.1, turnDeg, radius: 100 }));
+  it('distingeix corbes obertes de ratoneres', () => {
+    expect(curveTightness(pts([10, 12, 15, 2, 20]))).toBe(0);
+    expect(curveTightness(pts([70, 90, 65, 3]))).toBe(100);
+    expect(curveTightness(pts([10, 30, 70, 1]))).toBe(50);
+    expect(curveTightness(pts([1, 2]))).toBe(0);
+  });
+  it('ordena per afinitat', () => {
+    const open = { curvatureScore: 60, curveTightness: 15, difficultyScore: 20, elevationGain: 400, distanceKm: 100 };
+    const tight = { curvatureScore: 60, curveTightness: 75, difficultyScore: 70, elevationGain: 2600, distanceKm: 100 };
+    expect(styleMatch(open, { curves: 'open', climb: 'any', mood: 'any' })).toBeGreaterThan(styleMatch(tight, { curves: 'open', climb: 'any', mood: 'any' }));
+    expect(styleMatch(tight, { curves: 'tight', climb: 'passes', mood: 'keen' })).toBeGreaterThan(styleMatch(open, { curves: 'tight', climb: 'passes', mood: 'keen' }));
+    expect(styleMatch(open, { curves: 'any', climb: 'flat', mood: 'calm' })).toBeGreaterThan(styleMatch(tight, { curves: 'any', climb: 'flat', mood: 'calm' }));
+    expect(styleMatch(open)).toBe(60);
+  });
+});
+
+import { rampColor, renderWx, type WxGrid } from './weatherMap';
+
+describe('meteo al mapa', () => {
+  it('escala de colors: sense pluja és transparent i interpola', () => {
+    expect(rampColor('precip', 0)[3]).toBe(0);
+    expect(rampColor('precip', 50)[3]).toBe(0.8);
+    expect(rampColor('cloud', 40)[3]).toBeCloseTo(0.265, 2);
+  });
+  it('interpola la graella', () => {
+    const grid: WxGrid = { west: 0, east: 1, south: 0, north: 1, cols: 2, rows: 2, lons: [0, 1], lats: [1, 0], hours: [0],
+      values: { precip: [[0, 0, 0, 0]], cloud: [[0, 100, 0, 100]], wind: [[0, 0, 0, 0]], windDir: [[0, 0, 0, 0]], humidity: [[0, 0, 0, 0]], temp: [[0, 0, 0, 0]] } };
+    const px = renderWx(grid, 'cloud', 0, 3, 2);
+    expect(px[3]).toBe(0); // oest: cel serè
+    expect(px[11]).toBe(Math.round(0.78 * 255)); // est: tapat
+    expect(px[7]).toBeGreaterThan(px[3]);
+    expect(px[7]).toBeLessThan(px[11]);
+  });
+});

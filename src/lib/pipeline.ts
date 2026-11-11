@@ -1,14 +1,14 @@
 import { cumulativeKm, pointAtKm } from './geo';
 import { elevationProfile } from './elevation';
 import { planRoutes } from './routing';
-import { elevationStats, scoreRoute } from './scoring';
+import { elevationStats, scoreRoute, styleMatch } from './scoring';
 import { bestDepartures, evaluate, fetchWeather } from './weather';
 import { effectiveConsumption, loadStations, planFuelStops, stationsOnRoute } from './fuel';
 import type { Motorcycle, PlanRequest, RouteResult, Stage } from './types';
 
 import { ROUTE_COLORS as COLORS } from './theme';
 import { t } from '../i18n';
-const LABELS = [t("Opció A"), t("Opció B"), t("Opció C")];
+const LABELS = [t("Opció A"), t("Opció B"), t("Opció C"), t("Opció D"), t("Opció E"), t("Opció F")];
 const BREAK_FACTOR = 1.1; // parades curtes, fotos, cafè
 
 export async function buildRoutes(req: PlanRequest, progress: (msg: string) => void) {
@@ -26,8 +26,8 @@ export async function buildRoutes(req: PlanRequest, progress: (msg: string) => v
     const scoring = scoreRoute(req.mode, r.coords, prof.km, prof.elev, r.unpavedRanges);
     out.push({
       id: `${Date.now()}-${i}`,
-      label: LABELS[i],
-      color: COLORS[i],
+      label: '',
+      color: '',
       coords: r.coords,
       elevations: prof.elev,
       profileKm: prof.km,
@@ -41,7 +41,13 @@ export async function buildRoutes(req: PlanRequest, progress: (msg: string) => v
       ...scoring,
     });
   }
-  return { routes: out, note };
+  // treu les gairebé idèntiques i ordena per afinitat amb els gustos del motorista
+  const unique = out.filter((r, i) => !out.slice(0, i).some((o) =>
+    Math.abs(o.distanceKm - r.distanceKm) < 1.5 && Math.abs(o.elevationGain - r.elevationGain) < 40 && o.curvatureScore === r.curvatureScore));
+  for (const r of unique) r.match = styleMatch(r, req.style);
+  unique.sort((a, b) => b.match! - a.match!);
+  unique.forEach((r, i) => { r.label = LABELS[i] ?? `${i + 1}`; r.color = COLORS[i % COLORS.length]; });
+  return { routes: unique.slice(0, 6), note };
 }
 
 /** Divideix en etapes de `kmPerDay` i retorna una funció d'hora estimada de pas. */

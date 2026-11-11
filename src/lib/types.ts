@@ -50,6 +50,14 @@ export interface PlanRequest {
   kmPerDay: number;
   /** rumb preferit (graus) per a les rutes circulars: «On rodo avui?» */
   heading?: number;
+  /** gustos del motorista: ordenen les alternatives per afinitat */
+  style?: RideStyle;
+}
+
+export interface RideStyle {
+  curves: 'open' | 'any' | 'tight'; // corbes obertes i ràpides o tancades i ratoneres
+  climb: 'flat' | 'any' | 'passes'; // terreny pla o ports de muntanya
+  mood: 'calm' | 'any' | 'keen'; // com et sents avui
 }
 
 export interface Segment {
@@ -149,6 +157,10 @@ export interface RouteResult {
   elevationGain: number;
   maxAltitude: number;
   curvatureScore: number; // 0-100
+  /** 0 = corbes obertes i ràpides, 100 = tancades i ratoneres */
+  curveTightness?: number;
+  /** afinitat (0-100) amb els gustos del motorista */
+  match?: number;
   difficulty: Difficulty;
   difficultyScore: number;
   segments: Segment[];

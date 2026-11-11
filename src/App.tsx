@@ -375,6 +375,39 @@ export default function App() {
   const isSaved = !!selected && saved.some((s) => s.route.coords.length === selected.coords.length && s.route.distanceKm === selected.distanceKm);
   const showExtras = tab === 'plan' && view !== 'wizard' && selected;
 
+  // Rutes de més d'un dia: busca on dormir al final de cada etapa i ho pinta al mapa.
+  const overnight = selected?.stages && selected.stages.length > 1 ? selected.stages.length - 1 : 0;
+  const planning = tab === 'plan' && view !== 'wizard';
+  useEffect(() => {
+    setAccom({});
+    setAccomOnMap([]);
+    if (DEMO || !planning || !overnight || !selected?.stages) return;
+    let cancelled = false;
+    const ends = selected.stages.slice(0, Math.min(overnight, 6));
+    (async () => {
+      for (const st of ends) {
+        if (cancelled) return;
+        setAccom((a) => ({ ...a, [st.index]: 'loading' }));
+        try {
+          const list = await searchAccommodation(st.end, 10);
+          if (cancelled) return;
+          setAccom((a) => ({ ...a, [st.index]: list }));
+        } catch (e) {
+          if (cancelled) return;
+          setAccom((a) => ({ ...a, [st.index]: (e as Error).message }));
+        }
+        await new Promise((r) => setTimeout(r, 900));
+      }
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedId, overnight, planning]);
+  const mapAccom = useMemo(() => {
+    const all = Object.values(accom).flatMap((v) => (Array.isArray(v) ? v.slice(0, 15) : []));
+    const seen = new Set(all.map((a) => a.id));
+    return [...all, ...accomOnMap.filter((a) => !seen.has(a.id))];
+  }, [accom, accomOnMap]);
+
   return (
     <div className="app">
       <aside className="panel">
@@ -561,10 +594,10 @@ export default function App() {
           destination={req.circular ? null : req.destination}
           vias={req.circular ? [] : req.vias}
           weather={showExtras && view === 'detail' ? selected!.weather : undefined}
-          stations={showExtras && view === 'detail' ? selected!.fuel?.stations : undefined}
+          stations={showExtras ? selected!.fuel?.stations : undefined}
           stops={showExtras ? selected!.fuel?.stops : undefined}
           stages={showExtras ? selected!.stages : undefined}
-          accommodations={showExtras && view === 'detail' ? accomOnMap : undefined}
+          accommodations={showExtras ? mapAccom : undefined}
           onPick={picking ? onPick : null}
           liveTrack={tab === 'record' || navRoute ? liveTrack : undefined}
           position={tab === 'record' || navRoute ? rec.fix?.coord ?? null : null}

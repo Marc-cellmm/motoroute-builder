@@ -745,6 +745,31 @@
   "f": "LocationInput.tsx"
  },
  {
+  "k": "ux92kx",
+  "s": "Pluja",
+  "f": "MapView.tsx"
+ },
+ {
+  "k": "1ktou73",
+  "s": "Núvols",
+  "f": "MapView.tsx"
+ },
+ {
+  "k": "xda5j2",
+  "s": "Vent",
+  "f": "MapView.tsx"
+ },
+ {
+  "k": "1prte81",
+  "s": "Humitat",
+  "f": "MapView.tsx"
+ },
+ {
+  "k": "1tfp66h",
+  "s": "Temperatura",
+  "f": "MapView.tsx"
+ },
+ {
   "k": "1nsivqq",
   "s": "<b>Parada recomanada · {0}</b><br>{1} €/l · km {2}",
   "f": "MapView.tsx"
@@ -757,6 +782,41 @@
  {
   "k": "1yimggt",
   "s": "Mapa fosc",
+  "f": "MapView.tsx"
+ },
+ {
+  "k": "1s75yue",
+  "s": "Relleu",
+  "f": "MapView.tsx"
+ },
+ {
+  "k": "101kyv3",
+  "s": "Meteo al mapa",
+  "f": "MapView.tsx"
+ },
+ {
+  "k": "vrw0mc",
+  "s": "No s'ha pogut obtenir la previsió meteorològica",
+  "f": "MapView.tsx"
+ },
+ {
+  "k": "i10sf5",
+  "s": "Pausa",
+  "f": "MapView.tsx"
+ },
+ {
+  "k": "iubv5y",
+  "s": "Reprodueix",
+  "f": "MapView.tsx"
+ },
+ {
+  "k": "etwhms",
+  "s": "Hora de la previsió",
+  "f": "MapView.tsx"
+ },
+ {
+  "k": "1aowjng",
+  "s": "Carregant…",
   "f": "MapView.tsx"
  },
  {
@@ -1040,11 +1100,6 @@
   "f": "RecordScreen.tsx"
  },
  {
-  "k": "i10sf5",
-  "s": "Pausa",
-  "f": "RecordScreen.tsx"
- },
- {
   "k": "zqp01v",
   "s": "Vols acabar la gravació?",
   "f": "RecordScreen.tsx"
@@ -1220,11 +1275,6 @@
   "f": "RideToday.tsx"
  },
  {
-  "k": "vrw0mc",
-  "s": "No s'ha pogut obtenir la previsió meteorològica",
-  "f": "RideToday.tsx"
- },
- {
   "k": "13qye2c",
   "s": "On rodo avui?",
   "f": "RideToday.tsx"
@@ -1290,6 +1340,11 @@
   "f": "RouteCard.tsx"
  },
  {
+  "k": "iv1n15",
+  "s": "{0} % per a tu",
+  "f": "RouteCard.tsx"
+ },
+ {
   "k": "1rt2lug",
   "s": "índex de corbes",
   "f": "RouteCard.tsx"
@@ -1297,6 +1352,21 @@
  {
   "k": "1o8l19i",
   "s": "desnivell +",
+  "f": "RouteCard.tsx"
+ },
+ {
+  "k": "x6p35",
+  "s": "Corbes obertes",
+  "f": "RouteCard.tsx"
+ },
+ {
+  "k": "gt10b6",
+  "s": "Corbes ratoneres",
+  "f": "RouteCard.tsx"
+ },
+ {
+  "k": "14x40is",
+  "s": "Corbes variades",
   "f": "RouteCard.tsx"
  },
  {
@@ -1600,6 +1670,66 @@
   "f": "Wizard.tsx"
  },
  {
+  "k": "hc4gy6",
+  "s": "Quines corbes t'agraden?",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "e3dha9",
+  "s": "Obertes i ràpides",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "uagwjh",
+  "s": "De tot",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "1wd0rb2",
+  "s": "Tancades i ratoneres",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "8u8663",
+  "s": "I el terreny?",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "1j128w8",
+  "s": "Més aviat pla",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "b1dypf",
+  "s": "Tant me fa",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "gdrftf",
+  "s": "Ports de muntanya",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "dqtzf2",
+  "s": "Com et sents avui?",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "mtfb7j",
+  "s": "Tranquil",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "onobjm",
+  "s": "Normal",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "6hamv5",
+  "s": "Amb ganes",
+  "f": "Wizard.tsx"
+ },
+ {
   "k": "vxmotq",
   "s": "Carreteres amples, corbes obertes i pendents suaus.",
   "f": "Wizard.tsx"
@@ -1735,6 +1865,11 @@
   "f": "Wizard.tsx"
  },
  {
+  "k": "1fdxb0k",
+  "s": "Et proposem fins a sis rutes, ordenades de la que més s'assembla al que busques a la que menys.",
+  "f": "Wizard.tsx"
+ },
+ {
   "k": "10f4ugu",
   "s": "Evitar autopistes i autovies",
   "f": "Wizard.tsx"
@@ -1793,11 +1928,6 @@
   "k": "15id93v",
   "s": "Calcula les rutes",
   "f": "Wizard.tsx"
- },
- {
-  "k": "gdrftf",
-  "s": "Ports de muntanya",
-  "f": "account.ts"
  },
  {
   "k": "xnneon",
@@ -2140,6 +2270,21 @@
   "f": "pipeline.ts"
  },
  {
+  "k": "qxhcd7",
+  "s": "Opció D",
+  "f": "pipeline.ts"
+ },
+ {
+  "k": "qnhqo8",
+  "s": "Opció E",
+  "f": "pipeline.ts"
+ },
+ {
+  "k": "rhgjr5",
+  "s": "Opció F",
+  "f": "pipeline.ts"
+ },
+ {
   "k": "1n2z34a",
   "s": "Calculant rutes amb el perfil de moto…",
   "f": "pipeline.ts"
@@ -2378,11 +2523,6 @@
   "k": "pz4uck",
   "s": "sense alertes · {0}",
   "f": "weather.ts"
- },
- {
-  "k": "1aowjng",
-  "s": "Carregant…",
-  "f": "AccountGate.tsx"
  },
  {
   "k": "jv1v5v",

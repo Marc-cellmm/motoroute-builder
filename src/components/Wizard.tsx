@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 import LocationInput from './LocationInput';
 import { DEMO } from './MapView';
-import type { Difficulty, DistanceBand, Motorcycle, Place, PlanRequest } from '../lib/types';
+import type { Difficulty, DistanceBand, Motorcycle, Place, PlanRequest, RideStyle } from '../lib/types';
+import { DEFAULT_STYLE } from '../lib/scoring';
 import Icon from './Icon';
 import { t } from '../i18n';
 
@@ -26,6 +27,12 @@ const BANDS: { id: DistanceBand; label: string; sub: string }[] = [
   { id: '100_200', label: t("100–200 km"), sub: t("Mig dia") },
   { id: '200_400', label: t("200–400 km"), sub: t("Jornada completa") },
   { id: '400_plus', label: t("400+ km"), sub: t("Gran travessa") },
+];
+
+const STYLE_Q: { key: keyof RideStyle; label: string; options: [string, string][] }[] = [
+  { key: 'curves', label: t("Quines corbes t'agraden?"), options: [['open', t("Obertes i ràpides")], ['any', t("De tot")], ['tight', t("Tancades i ratoneres")]] },
+  { key: 'climb', label: t("I el terreny?"), options: [['flat', t("Més aviat pla")], ['any', t("Tant me fa")], ['passes', t("Ports de muntanya")]] },
+  { key: 'mood', label: t("Com et sents avui?"), options: [['calm', t("Tranquil")], ['any', t("Normal")], ['keen', t("Amb ganes")]] },
 ];
 
 const DIFF_HELP: Record<string, Record<Difficulty, string>> = {
@@ -195,6 +202,20 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
             </div>
             <p className="hint">{DIFF_HELP[req.mode][req.difficulty]}</p>
           </div>
+          {STYLE_Q.map((q) => {
+            const style = req.style ?? DEFAULT_STYLE;
+            return (
+              <div className="field" key={q.key}>
+                <label>{q.label}</label>
+                <div className="chips">
+                  {q.options.map(([v, label]) => (
+                    <button key={v} className={`chip ${style[q.key] === v ? 'on' : ''}`} onClick={() => set({ style: { ...style, [q.key]: v } as RideStyle })}>{label}</button>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+          <p className="hint">{t("Et proposem fins a sis rutes, ordenades de la que més s'assembla al que busques a la que menys.")}</p>
           {req.mode === 'road' && (
             <div className="toggle">
               <span>{t("Evitar autopistes i autovies")}</span>

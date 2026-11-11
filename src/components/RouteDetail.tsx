@@ -181,7 +181,7 @@ export default function RouteDetail(p: Props) {
             </select>
             <select className="input" value={minStars} onChange={(e) => setMinStars(+e.target.value)}>
               <option value={0}>{t("Qualsevol categoria")}</option>
-              {[1, 2, 3, 4, 5].map((s) => <option key={s} value={s}>{s} {s === 1 ? 'estrella' : 'estrelles'} {t("o més")}</option>)}
+              {[1, 2, 3, 4, 5].map((s) => <option key={s} value={s}>{s}★ {t("o més")}</option>)}
             </select>
           </div>
           <p className="hint">{t("Allotjaments d'OpenStreetMap a 10 km del final de cada etapa. Els preus i la disponibilitat requereixen un acord amb Booking o Expedia (fase 2), i el criteri biker-friendly, confirmacions d'usuaris.")}</p>
@@ -209,7 +209,7 @@ export default function RouteDetail(p: Props) {
                         <span className="km">{a.distanceKm} {t("km")}</span>
                         <div className="main">
                           <b>{a.name}</b>
-                          <div className="muted">{a.kind}{a.stars ? ` · ${a.stars} ${a.stars === 1 ? 'estrella' : 'estrelles'}` : ''}</div>
+                          <div className="muted">{a.kind}{a.stars ? ` · ${a.stars}★` : ''}</div>
                           {a.website && <a href={a.website} target="_blank" rel="noreferrer" style={{ color: 'var(--accent)' }}>{t("Web")}</a>}
                           {a.phone && <span className="muted"> · {a.phone}</span>}
                         </div>

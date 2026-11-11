@@ -166,15 +166,16 @@ function loopPoints(origin: LngLat, bearingDeg: number, sideKm: number): LngLat[
   return [destination(origin, bearingDeg - 30, sideKm), destination(origin, bearingDeg + 30, sideKm)];
 }
 
-/** Genera fins a 3 rutes circulars dins el rang de km. */
+/** Genera fins a 6 rutes circulars dins el rang de km, obertes en rumbs diferents. */
 async function circularRoutes(req: PlanRequest): Promise<RawRoute[]> {
   const [min, max] = BAND_RANGE[req.band];
   const target = (min + max) / 2;
   const seed = Math.floor(Math.random() * 360);
   const out: RawRoute[] = [];
-  for (let i = 0; i < 3; i++) {
-    // amb rumb preferit, les tres voltes s'obren cap a aquella banda
-    const θ = req.heading != null ? (req.heading + [0, -40, 40][i] + 360) % 360 : (seed + i * 120) % 360;
+  const count = req.heading != null ? 4 : 6;
+  for (let i = 0; i < count; i++) {
+    // amb rumb preferit, les voltes s'obren cap a aquella banda
+    const θ = req.heading != null ? (req.heading + [0, -35, 35, 70][i] + 360) % 360 : (seed + i * 60) % 360;
     let side = target / (3 * 1.3); // la carretera fa ~30 % més que la línia recta
     for (let attempt = 0; attempt < 2; attempt++) {
       const [p1, p2] = loopPoints(req.origin!.coord, θ, side);
@@ -201,7 +202,7 @@ async function circularRoutes(req: PlanRequest): Promise<RawRoute[]> {
         break;
       }
     }
-    await sleep(400);
+    await sleep(300);
   }
   if (!out.length) throw new Error(t("No s'ha pogut generar cap ruta circular des d'aquest origen."));
   return out;
@@ -217,19 +218,21 @@ async function pointToPointRoutes(req: PlanRequest): Promise<{ routes: RawRoute[
   ];
   const direct = await callValhalla(stops, req, req.vias.length ? 0 : 2);
   const [min] = BAND_RANGE[req.band];
-  if (direct[0].distanceKm >= min || req.vias.length) return { routes: direct.slice(0, 3) };
+  if (req.vias.length) return { routes: direct.slice(0, 3) };
+  const longEnough = direct[0].distanceKm >= min;
 
   // La ruta directa és més curta que el rang: busca desviaments a banda i banda.
   const a = req.origin!.coord;
   const b = dest.coord;
   const straight = haversine(a, b);
-  const targetStraight = (min * 1.15) / 1.3; // longitud recta desitjada
+  // si la directa ja entra al rang, els desviaments són variants una mica més llargues
+  const targetStraight = longEnough ? straight * 1.25 : (min * 1.15) / 1.3; // longitud recta desitjada
   const offset = Math.sqrt(Math.max(0, (targetStraight / 2) ** 2 - (straight / 2) ** 2));
   const mid: LngLat = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
   const brg = bearing(a, b);
   const detours: RawRoute[] = [];
   for (const side of [-90, 90]) {
-    const via = destination(mid, brg + side, Math.max(offset, 10));
+    const via = destination(mid, brg + side, Math.max(offset, Math.min(25, straight * 0.3), 8));
     try {
       await sleep(400);
       const [r] = await callValhalla(
@@ -241,8 +244,9 @@ async function pointToPointRoutes(req: PlanRequest): Promise<{ routes: RawRoute[
       /* ignora el costat que no té carreteres */
     }
   }
+  if (longEnough) return { routes: [...direct.slice(0, 3), ...detours] };
   return {
-    routes: [...detours, direct[0]].slice(0, 3),
+    routes: [...detours, ...direct].slice(0, 5),
     note: t("La ruta directa fa {0} km; s'hi han afegit desviaments per acostar-la al rang triat.", [Math.round(direct[0].distanceKm)]),
   };
 }

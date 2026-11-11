@@ -1,5 +1,5 @@
 import { bearing, cumulativeKm, resample } from './geo';
-import type { Difficulty, LngLat, RideMode, Segment } from './types';
+import type { Difficulty, LngLat, RideMode, RideStyle, Segment } from './types';
 
 const LEVELS: Difficulty[] = ['beginner', 'intermediate', 'expert'];
 
@@ -74,9 +74,44 @@ export function segmentDifficulty(mode: RideMode, s: Omit<Segment, 'difficulty'>
   return pts >= 4 ? 'expert' : pts >= 2 ? 'intermediate' : 'beginner';
 }
 
+/**
+ * Com de tancades són les corbes (0-100). Amb mostres cada 100 m: un gir de 8-25° és una corba
+ * oberta i ràpida (radi > 230 m), de 25-60° mitjana, i més de 60° una corba ratonera o forquilla.
+ */
+export function curveTightness(points: CurvePoint[]): number {
+  let curves = 0;
+  let weight = 0;
+  for (const p of points) {
+    if (p.turnDeg < 8) continue;
+    curves++;
+    weight += p.turnDeg >= 60 ? 1 : p.turnDeg >= 25 ? 0.5 : 0;
+  }
+  return curves ? Math.round((weight / curves) * 100) : 0;
+}
+
+export const DEFAULT_STYLE: RideStyle = { curves: 'any', climb: 'any', mood: 'any' };
+
+/** Afinitat (0-100) d'una ruta amb els gustos del motorista. */
+export function styleMatch(
+  r: { curvatureScore: number; curveTightness?: number; difficultyScore: number; elevationGain: number; distanceKm: number },
+  style: RideStyle = DEFAULT_STYLE,
+): number {
+  const tight = r.curveTightness ?? 40;
+  const climb = Math.min(100, (r.elevationGain / Math.max(1, r.distanceKm)) * 4); // 25 m/km = port de muntanya
+  const parts: number[] = [r.curvatureScore]; // a tothom li agraden les corbes
+  if (style.curves === 'open') parts.push(100 - tight, 100 - tight);
+  if (style.curves === 'tight') parts.push(tight, tight);
+  if (style.climb === 'flat') parts.push(100 - climb);
+  if (style.climb === 'passes') parts.push(climb);
+  if (style.mood === 'calm') parts.push(100 - Math.min(100, r.difficultyScore));
+  if (style.mood === 'keen') parts.push(Math.min(100, r.difficultyScore));
+  return Math.round(parts.reduce((a, b) => a + b, 0) / parts.length);
+}
+
 export interface Scoring {
   segments: Segment[];
   curvatureScore: number;
+  curveTightness: number;
   difficulty: Difficulty;
   difficultyScore: number;
 }
@@ -137,7 +172,7 @@ export function scoreRoute(
   const difficultyScore = Math.round(
     (segments.reduce((s, x) => s + LEVELS.indexOf(x.difficulty) * (x.kmEnd - x.kmStart), 0) / Math.max(total, 1)) * 50,
   );
-  return { segments, curvatureScore, difficulty: LEVELS[p90], difficultyScore };
+  return { segments, curvatureScore, curveTightness: curveTightness(curvePts), difficulty: LEVELS[p90], difficultyScore };
 }
 
 export function elevationStats(elev: number[]): { gain: number; max: number } {

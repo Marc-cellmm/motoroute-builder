@@ -24,7 +24,10 @@ export default function RouteCard({ route, selected, onClick, userLevel }: {
     <div className={`route-card ${selected ? 'on' : ''}`} style={{ ['--rc' as string]: route.color }} onClick={onClick}>
       <header>
         <h3><span className="dot" />{route.label}</h3>
-        <span className={`badge ${route.difficulty}`}>{DIFF_LABEL[route.difficulty]}</span>
+        <span className="row" style={{ gap: 6, flex: 'none' }}>
+          {route.match != null && <span className="badge match">{t("{0} % per a tu", [route.match])}</span>}
+          <span className={`badge ${route.difficulty}`}>{DIFF_LABEL[route.difficulty]}</span>
+        </span>
       </header>
       <div className="stats">
         <div className="stat"><b>{Math.round(route.distanceKm)} {t("km")}</b><span>{fmtDuration(route.durationMin)}</span></div>
@@ -32,6 +35,9 @@ export default function RouteCard({ route, selected, onClick, userLevel }: {
         <div className="stat"><b>{route.elevationGain} m</b><span>{t("desnivell +")}</span></div>
       </div>
       <div className="badges">
+        {route.curveTightness != null && route.curvatureScore >= 15 && (
+          <span className="badge"><Icon name="curves" size={14} />{route.curveTightness < 30 ? t("Corbes obertes") : route.curveTightness > 55 ? t("Corbes ratoneres") : t("Corbes variades")}</span>
+        )}
         {route.unpavedKm > 0.5 && <span className="badge"><Icon name="dirt" size={14} />{Math.round((route.unpavedKm / route.distanceKm) * 100)} {t("% terra")}</span>}
         {route.motorwayKm > 0.5 && <span className="badge"><Icon name="motorway" size={14} />{Math.round(route.motorwayKm)} {t("km autopista")}</span>}
         <span className="badge"><Icon name="mountain" size={14} />{t("màx.")}{' '}{route.maxAltitude} m</span>
