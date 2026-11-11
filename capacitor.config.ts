@@ -8,6 +8,7 @@ const config: CapacitorConfig = {
   backgroundColor: '#08080a',
   ios: {
     contentInset: 'never',
+    zoomEnabled: false,
     backgroundColor: '#08080a',
   },
 };

@@ -31,8 +31,15 @@
 
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; margin: 0; }
+/* La pantalla mai es pot ampliar ni desplaçar de costat: a l'iPhone, un zoom en escriure deixava les pestanyes fora. */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; touch-action: manipulation; }
+html, body { width: 100%; max-width: 100%; overflow: hidden; overscroll-behavior: none; }
+body { position: fixed; inset: 0; }
+#root { width: 100%; overflow-x: hidden; overflow-y: auto; }
 body { background: var(--bg); color: var(--text); font: calc(15px * var(--fs))/1.5 var(--font); -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; font-feature-settings: 'cv11', 'ss01'; }
 button, input, select, textarea { font: inherit; color: inherit; }
+/* Menys de 16 px fa que l'iPhone ampliï la pàgina en tocar un camp. */
+input, select, textarea { font-size: max(16px, 1em); }
 button { -webkit-tap-highlight-color: transparent; }
 h1, h2, h3 { font-family: var(--display); font-weight: 700; margin: 0; letter-spacing: 0.01em; }
 h2 { font-size: calc(28px * var(--fs)); line-height: 1.05; text-transform: uppercase; letter-spacing: 0.02em; }
@@ -102,7 +109,7 @@ a { color: var(--accent-text); }
 .input::placeholder { color: var(--dim); }
 .input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23a3a3ad' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 38px; }
-textarea.input { resize: vertical; min-height: 80px; font: inherit; }
+textarea.input { resize: vertical; min-height: 80px; }
 .search-field { position: relative; }
 .search-field .icon { position: absolute; left: 13px; top: 14px; pointer-events: none; }
 .search-field .input { padding-left: 42px; }
