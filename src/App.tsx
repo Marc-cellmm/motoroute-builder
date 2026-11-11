@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import MapView, { DEMO } from './components/MapView';
 import Wizard, { type PickTarget } from './components/Wizard';
+import RideToday from './components/RideToday';
 import BikeScreen from './components/BikeScreen';
 import Icon, { Logo } from './components/Icon';
 import Avatar from './components/Avatar';
@@ -414,6 +415,7 @@ export default function App() {
                   <span className="hint">{t("On anem avui?")}</span>
                 </div>
               )}
+              {!DEMO && <RideToday req={req} setReq={setReq} onGo={submit} busy={!!progress} canLocate />}
               <Wizard
                 req={req}
                 setReq={setReq}

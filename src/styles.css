@@ -523,3 +523,21 @@ textarea.input { resize: vertical; min-height: 80px; font: inherit; }
 :lang(zh) h1, :lang(zh) h2, :lang(zh) h3, :lang(ru) h1, :lang(ru) h2, :lang(ru) h3, [lang='ar-MA'] h1, [lang='ar-MA'] h2, [lang='ar-MA'] h3 { font-family: var(--font); letter-spacing: 0; }
 .tab-label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 400px) { .tabs button { font-size: calc(10.5px * var(--fs)); letter-spacing: 0; } }
+
+/* ---------- On rodo avui? ---------- */
+.ride-today { border: 1px solid rgba(46, 232, 143, 0.28); background: linear-gradient(160deg, var(--go-soft), transparent 60%), var(--panel-2); border-radius: 16px; padding: 14px; margin: 0 0 18px; }
+.ride-today-head { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.ride-today-head > div { flex: 1; min-width: 0; }
+.ride-today-head b { font-size: calc(16px * var(--fs)); }
+.ride-today-head .hint { margin: 2px 0 0; }
+.icon-tile.go { background: var(--go-soft); color: var(--go); }
+.ride-best { margin: 12px 0 0; font-weight: 600; }
+.ride-spots { list-style: none; margin: 8px 0 0; padding: 0; }
+.ride-spots li { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); min-width: 0; }
+.ride-arrow { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--panel-3); color: var(--go); flex: none; }
+.ride-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.ride-info b { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.ride-info b svg { flex: none; color: var(--muted); }
+.ride-info b span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ride-info small { color: var(--muted); font-size: calc(12.5px * var(--fs)); }
+.ride-info small.lvl0 { color: var(--good); } .ride-info small.lvl1 { color: var(--warn); } .ride-info small.lvl2 { color: var(--orange); } .ride-info small.lvl3 { color: var(--bad); }

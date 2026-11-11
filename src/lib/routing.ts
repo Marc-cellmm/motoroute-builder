@@ -173,7 +173,8 @@ async function circularRoutes(req: PlanRequest): Promise<RawRoute[]> {
   const seed = Math.floor(Math.random() * 360);
   const out: RawRoute[] = [];
   for (let i = 0; i < 3; i++) {
-    const θ = (seed + i * 120) % 360;
+    // amb rumb preferit, les tres voltes s'obren cap a aquella banda
+    const θ = req.heading != null ? (req.heading + [0, -40, 40][i] + 360) % 360 : (seed + i * 120) % 360;
     let side = target / (3 * 1.3); // la carretera fa ~30 % més que la línia recta
     for (let attempt = 0; attempt < 2; attempt++) {
       const [p1, p2] = loopPoints(req.origin!.coord, θ, side);

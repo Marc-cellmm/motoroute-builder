@@ -216,3 +216,28 @@ describe('perfil de motorista', () => {
     expect(d).toEqual({ mode: 'trail', difficulty: 'beginner', band: '50_100', avoidMotorways: true, avoidTolls: false });
   });
 });
+
+import { rideWindow, scoreWindow } from './rideToday';
+
+describe('on rodo avui', () => {
+  const h = (temp: number, rainProb: number, precip: number, gust: number, code: number) => ({ temp, rainProb, precip, gust, code });
+  it('un dia assolellat i suau és bo; pluja i tempesta, no', () => {
+    const good = scoreWindow([h(18, 5, 0, 15, 0), h(22, 5, 0, 20, 1), h(21, 10, 0, 18, 1)]);
+    expect(good.level).toBe(0);
+    expect(good.tMin).toBe(18);
+    expect(good.tMax).toBe(22);
+    const wet = scoreWindow([h(14, 80, 2, 30, 63), h(13, 90, 3, 35, 63)]);
+    expect(wet.level).toBeGreaterThanOrEqual(2);
+    expect(scoreWindow([h(20, 60, 1, 50, 95)]).score).toBeLessThan(wet.score + 30);
+    expect(scoreWindow([h(1, 0, 0, 10, 0)]).level).toBeGreaterThanOrEqual(1);
+    expect(scoreWindow([]).level).toBe(3);
+  });
+  it('a partir de les 17 h mira demà', () => {
+    expect(rideWindow(new Date(2026, 10, 11, 10, 30)).tomorrow).toBe(false);
+    expect(rideWindow(new Date(2026, 10, 11, 10, 30)).from.getHours()).toBe(10);
+    const w = rideWindow(new Date(2026, 10, 11, 18, 0));
+    expect(w.tomorrow).toBe(true);
+    expect(w.from.getDate()).toBe(12);
+    expect(w.from.getHours()).toBe(9);
+  });
+});

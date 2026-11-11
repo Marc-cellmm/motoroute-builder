@@ -48,6 +48,8 @@ export interface PlanRequest {
   departure: string; // ISO local datetime
   days: number;
   kmPerDay: number;
+  /** rumb preferit (graus) per a les rutes circulars: «On rodo avui?» */
+  heading?: number;
 }
 
 export interface Segment {

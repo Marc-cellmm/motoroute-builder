@@ -1195,6 +1195,86 @@
   "f": "RecordScreen.tsx"
  },
  {
+  "k": "fvx4g7",
+  "s": "Sense alertes",
+  "f": "RideToday.tsx"
+ },
+ {
+  "k": "6c1lam",
+  "s": "Precaució",
+  "f": "RideToday.tsx"
+ },
+ {
+  "k": "apk7l4",
+  "s": "Alerta",
+  "f": "RideToday.tsx"
+ },
+ {
+  "k": "zu8bjr",
+  "s": "Perill",
+  "f": "RideToday.tsx"
+ },
+ {
+  "k": "hxo3hw",
+  "s": "Tria el punt de sortida.",
+  "f": "RideToday.tsx"
+ },
+ {
+  "k": "vrw0mc",
+  "s": "No s'ha pogut obtenir la previsió meteorològica",
+  "f": "RideToday.tsx"
+ },
+ {
+  "k": "13qye2c",
+  "s": "On rodo avui?",
+  "f": "RideToday.tsx"
+ },
+ {
+  "k": "x5rhq4",
+  "s": "Mirem el temps al teu voltant i et diem cap on fa millor dia per sortir.",
+  "f": "RideToday.tsx"
+ },
+ {
+  "k": "18mudrb",
+  "s": "Demà",
+  "f": "RideToday.tsx"
+ },
+ {
+  "k": "oofs7s",
+  "s": "Avui",
+  "f": "RideToday.tsx"
+ },
+ {
+  "k": "1uwvr18",
+  "s": "Mira-ho",
+  "f": "RideToday.tsx"
+ },
+ {
+  "k": "gz6q0v",
+  "s": "Fa mal temps a tot arreu. Potser millor un altre dia.",
+  "f": "RideToday.tsx"
+ },
+ {
+  "k": "19p0sp",
+  "s": "El millor temps és cap a {0}.",
+  "f": "RideToday.tsx"
+ },
+ {
+  "k": "rniyai",
+  "s": "a {0} km",
+  "f": "RideToday.tsx"
+ },
+ {
+  "k": "hi8j58",
+  "s": "{0}–{1} °C · pluja {2} % · ratxes {3} km/h",
+  "f": "RideToday.tsx"
+ },
+ {
+  "k": "oi7o65",
+  "s": "Ruta cap aquí",
+  "f": "RideToday.tsx"
+ },
+ {
   "k": "1wawir4",
   "s": "Principiant",
   "f": "RouteCard.tsx"
@@ -1263,26 +1343,6 @@
   "k": "1bh7e5e",
   "s": "km de nivell Avançat.",
   "f": "RouteCard.tsx"
- },
- {
-  "k": "fvx4g7",
-  "s": "Sense alertes",
-  "f": "RouteDetail.tsx"
- },
- {
-  "k": "6c1lam",
-  "s": "Precaució",
-  "f": "RouteDetail.tsx"
- },
- {
-  "k": "apk7l4",
-  "s": "Alerta",
-  "f": "RouteDetail.tsx"
- },
- {
-  "k": "zu8bjr",
-  "s": "Perill",
-  "f": "RouteDetail.tsx"
  },
  {
   "k": "109p0r",
@@ -1702,6 +1762,11 @@
  {
   "k": "1vl5gy6",
   "s": "1 dia",
+  "f": "Wizard.tsx"
+ },
+ {
+  "k": "1r6vtju",
+  "s": "{n} dies",
   "f": "Wizard.tsx"
  },
  {
@@ -2232,11 +2297,6 @@
  {
   "k": "f0z3c3",
   "s": "El servei de meteo està saturat; torna-ho a provar d'aquí a un minut.",
-  "f": "weather.ts"
- },
- {
-  "k": "vrw0mc",
-  "s": "No s'ha pogut obtenir la previsió meteorològica",
   "f": "weather.ts"
  },
  {

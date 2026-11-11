@@ -229,7 +229,7 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
             <div className="field">
               <label>{t("Dies")}</label>
               <select className="input" value={req.days} onChange={(e) => set({ days: +e.target.value })}>
-                {[1, 2, 3, 4, 5, 6, 7].map((d) => <option key={d} value={d}>{d === 1 ? t("1 dia") : `${d} dies`}</option>)}
+                {[1, 2, 3, 4, 5, 6, 7].map((d) => <option key={d} value={d}>{d === 1 ? t("1 dia") : t("{n} dies", { n: d })}</option>)}
               </select>
             </div>
             {req.days > 1 && (
