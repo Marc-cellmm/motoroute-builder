@@ -435,6 +435,56 @@
   "f": "FirstRun.tsx"
  },
  {
+  "k": "1tfp66h",
+  "s": "Temperatura",
+  "f": "HourlyForecast.tsx"
+ },
+ {
+  "k": "ux92kx",
+  "s": "Pluja",
+  "f": "HourlyForecast.tsx"
+ },
+ {
+  "k": "1ktou73",
+  "s": "Núvols",
+  "f": "HourlyForecast.tsx"
+ },
+ {
+  "k": "xda5j2",
+  "s": "Vent",
+  "f": "HourlyForecast.tsx"
+ },
+ {
+  "k": "1prte81",
+  "s": "Humitat",
+  "f": "HourlyForecast.tsx"
+ },
+ {
+  "k": "1lwzva",
+  "s": "Previsió per hores",
+  "f": "HourlyForecast.tsx"
+ },
+ {
+  "k": "vtpclg",
+  "s": "Centre del mapa",
+  "f": "HourlyForecast.tsx"
+ },
+ {
+  "k": "11qtt28",
+  "s": "Tanca",
+  "f": "HourlyForecast.tsx"
+ },
+ {
+  "k": "vrw0mc",
+  "s": "No s'ha pogut obtenir la previsió meteorològica",
+  "f": "HourlyForecast.tsx"
+ },
+ {
+  "k": "1840wip",
+  "s": "Ara",
+  "f": "HourlyForecast.tsx"
+ },
+ {
   "k": "mufpne",
   "s": "Condicions i privacitat",
   "f": "Legal.tsx"
@@ -442,11 +492,6 @@
  {
   "k": "1jzr6vd",
   "s": "Les teves dades",
-  "f": "Legal.tsx"
- },
- {
-  "k": "11qtt28",
-  "s": "Tanca",
   "f": "Legal.tsx"
  },
  {
@@ -745,31 +790,6 @@
   "f": "LocationInput.tsx"
  },
  {
-  "k": "ux92kx",
-  "s": "Pluja",
-  "f": "MapView.tsx"
- },
- {
-  "k": "1ktou73",
-  "s": "Núvols",
-  "f": "MapView.tsx"
- },
- {
-  "k": "xda5j2",
-  "s": "Vent",
-  "f": "MapView.tsx"
- },
- {
-  "k": "1prte81",
-  "s": "Humitat",
-  "f": "MapView.tsx"
- },
- {
-  "k": "1tfp66h",
-  "s": "Temperatura",
-  "f": "MapView.tsx"
- },
- {
   "k": "1nsivqq",
   "s": "<b>Parada recomanada · {0}</b><br>{1} €/l · km {2}",
   "f": "MapView.tsx"
@@ -792,11 +812,6 @@
  {
   "k": "101kyv3",
   "s": "Meteo al mapa",
-  "f": "MapView.tsx"
- },
- {
-  "k": "vrw0mc",
-  "s": "No s'ha pogut obtenir la previsió meteorològica",
   "f": "MapView.tsx"
  },
  {

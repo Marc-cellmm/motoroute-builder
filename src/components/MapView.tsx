@@ -3,6 +3,7 @@ import Icon from './Icon';
 import { LEVEL_COLORS, ROUTE_RED } from '../lib/theme';
 import { Map as MlMap, NavigationControl, Popup, setWorkerUrl, type GeoJSONSource, type LngLatBoundsLike, type MapLayerMouseEvent, type MapMouseEvent } from 'maplibre-gl';
 import { bbox } from '../lib/geo';
+import HourlyForecast from './HourlyForecast';
 import { fetchWxGrid, renderWx, WX_RAMP, WX_UNIT, type WxGrid, type WxVar } from '../lib/weatherMap';
 
 export const DEMO = import.meta.env.VITE_DEMO === '1';
@@ -161,6 +162,7 @@ export default function MapView(p: Props) {
   const [wxBusy, setWxBusy] = useState(false);
   const [wxError, setWxError] = useState(false);
   const [wxPlay, setWxPlay] = useState(false);
+  const [hourlyAt, setHourlyAt] = useState<LngLat | null>(null);
   const [styleRev, setStyleRev] = useState(0);
   latestTheme.current = theme;
 
@@ -551,8 +553,12 @@ export default function MapView(p: Props) {
             </>
           )}
           {wxBusy && !wxGrid && <div className="wx-msg">{t("Carregant…")}</div>}
+          <button className="wx-hourly" onClick={() => { const c = map.current?.getCenter(); if (c) { setWxPlay(false); setHourlyAt([c.lng, c.lat]); } }}>
+            <Icon name="clock" size={15} /> {t("Previsió per hores")} <Icon name="chevron-right" size={15} className="flip" />
+          </button>
         </div>
       )}
+      {hourlyAt && <HourlyForecast coord={hourlyAt} initial={wxVar ?? undefined} onClose={() => setHourlyAt(null)} />}
     </>
   );
 }
