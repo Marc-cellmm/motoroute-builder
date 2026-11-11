@@ -32,6 +32,28 @@ MotoRoute per a iPhone
 Amb un Apple ID gratuït l'app caduca cada 7 dies: torna a prémer ▶ amb l'iPhone connectat.
 TXT
 
+cat > "$STAGE/LEEME.txt" <<'TXT'
+MotoRoute para iPhone
+=====================
+
+1. Abre ios/App/App.xcodeproj con Xcode (doble clic).
+   La primera vez Xcode descarga unos paquetes (Capacitor): espera a que termine.
+2. Xcode → Settings → Accounts → + → añade tu Apple ID.
+3. A la izquierda haz clic en "App" → pestaña "Signing & Capabilities" → Team: elige tu nombre (Personal Team).
+   Si dice que el Bundle Identifier no está disponible, cámbialo (p. ej. com.tunombre.motoroute).
+4. Conecta el iPhone con el cable.
+   En el iPhone: Ajustes → Privacidad y seguridad → Modo de desarrollador → actívalo.
+5. Arriba en Xcode elige tu iPhone y pulsa ▶ (Run).
+6. La primera vez, en el iPhone: Ajustes → General → VPN y gestión de dispositivos →
+   tu Apple ID → Confiar.
+
+Con un Apple ID gratuito la app caduca cada 7 días: vuelve a pulsar ▶ con el iPhone conectado.
+
+Tu cuenta: al abrir la app entras con tu correo y contraseña. El perfil, las motos, las fotos
+y las rutas publicadas se guardan en la nube (Supabase), así que son los mismos en la web y en
+cualquier iPhone donde entres con esa cuenta.
+TXT
+
 rm -f "$OUT"
 (cd "$(dirname "$STAGE")" && zip -qry "$OUT" MotoRoute-iPhone)
 echo "Creat $OUT"
