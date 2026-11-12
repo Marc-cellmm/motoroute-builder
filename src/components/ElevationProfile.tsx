@@ -39,10 +39,15 @@ export default function ElevationProfile({ route }: { route: RouteResult }) {
           <line key={i} x1={x(s.km / scale)} x2={x(s.km / scale)} y1={top} y2={top + plotH} stroke={ROUTE_RED} strokeDasharray="3 3" vectorEffect="non-scaling-stroke" />
         ))}
       </svg>
-      <div className="row muted" style={{ fontSize: 12, justifyContent: 'space-between' }}>
+      <div className="profile-legend">
         <span>{Math.round(minE)}–{Math.round(maxE)} m</span>
-        <span>{t("Franges: dificultat · meteo")}{route.fuel?.stops.length ? t(" · línies: benzina") : ''}</span>
+        <span className="sp" />
         <span>{Math.round(route.distanceKm)} {t("km")}</span>
+      </div>
+      <div className="profile-legend">
+        <span><i style={{ background: `linear-gradient(90deg, ${DIFF.beginner}, ${DIFF.intermediate}, ${DIFF.expert})` }} />{t("Dificultat")}</span>
+        {weather.length > 0 && <span><i style={{ background: `linear-gradient(90deg, ${LEVEL.join(", ")})` }} />{t("Meteo")}</span>}
+        {route.fuel?.stops.length ? <span><i className="fuel" />{t("Benzina")}</span> : null}
       </div>
     </div>
   );

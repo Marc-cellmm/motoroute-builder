@@ -408,8 +408,13 @@ export default function App() {
     return [...all, ...accomOnMap.filter((a) => !seen.has(a.id))];
   }, [accom, accomOnMap]);
 
+  // Al mòbil, el mapa s'encongeix quan no hi ha res a ensenyar i deixa més lloc al panell.
+  const mapHasContent = !!navRoute || tab === 'plan'
+    || (tab === 'record' && rec.state.status !== 'idle')
+    || ((tab === 'social' || tab === 'routes') && !!socialRoute);
+
   return (
-    <div className="app">
+    <div className={`app ${mapHasContent ? '' : 'map-min'}`}>
       <aside className="panel">
         <div className="brand">
           <Logo size={34} />
@@ -436,9 +441,10 @@ export default function App() {
             />
           )}
           {!navRoute && DEMO && (
-            <div className="alert info" style={{ marginTop: 0 }}>
-              <b>{t("Mode demostració.")}</b> {t("Rutes, meteo, benzineres i allotjaments són simulats (els pobles de Catalunya són reals). La versió completa amb dades reals es publica a Vercel.")}
-            </div>
+            <details className="alert info demo-note">
+              <summary><b>{t("Mode demostració.")}</b></summary>
+              {t("Rutes, meteo, benzineres i allotjaments són simulats (els pobles de Catalunya són reals). La versió completa amb dades reals es publica a Vercel.")}
+            </details>
           )}
           {!navRoute && tab === 'plan' && view === 'wizard' && (
             <>

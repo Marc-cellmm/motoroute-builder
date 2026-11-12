@@ -65,7 +65,8 @@ export default function Wizard({ req, setReq, bikes, onSubmit, picking, setPicki
 
   return (
     <div>
-      <div className="stepper">{[0, 1, 2, 3].map((i) => <span key={i} className={i <= step ? 'on' : ''} />)}</div>
+      <div className="stepper" aria-hidden="true">{[0, 1, 2, 3].map((i) => <span key={i} className={i <= step ? 'on' : ''} />)}</div>
+      <div className="eyebrow step-label">{t("Pas {0} de {1}", [step + 1, 4])}</div>
 
       {step === 0 && (
         <>
