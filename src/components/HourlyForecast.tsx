@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Icon from './Icon';
 import { WX_UNIT, type WxVar } from '../lib/weatherMap';
 import type { LngLat } from '../lib/types';
+import { cached, fetchRetry } from '../lib/net';
+import { reverseGeocode } from '../lib/places';
 import { t, locale } from '../i18n';
 
 interface Hour {
@@ -40,32 +42,33 @@ export function skyIcon(code: number, day: boolean): string {
 const COL = 54; // amplada de cada hora
 const CHART_H = 96;
 
-async function load(coord: LngLat): Promise<{ hours: Hour[]; place: string | null }> {
-  const [res, place] = await Promise.all([
-    fetch(
+const forecastCache = cached<Hour[]>(15 * 60_000, 20);
+
+/** Previsió per hores d'un punt (memòria cau de 15 min per zona de ~5 km). */
+function loadHours(coord: LngLat): Promise<Hour[]> {
+  const key = `${coord[0].toFixed(2)},${coord[1].toFixed(2)}`;
+  return forecastCache(key, async () => {
+    const res = await fetchRetry(
       `https://api.open-meteo.com/v1/forecast?latitude=${coord[1].toFixed(4)}&longitude=${coord[0].toFixed(4)}` +
       '&hourly=temperature_2m,precipitation_probability,precipitation,cloud_cover,wind_speed_10m,wind_gusts_10m,wind_direction_10m,relative_humidity_2m,weather_code,is_day' +
       '&timeformat=unixtime&timezone=GMT&forecast_days=3&wind_speed_unit=kmh',
-    ),
-    fetch(`https://photon.komoot.io/reverse?lon=${coord[0]}&lat=${coord[1]}&radius=15`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((j) => { const p = j?.features?.[0]?.properties; return (p?.city || p?.name || p?.county || null) as string | null; })
-      .catch(() => null),
-  ]);
-  if (!res.ok) throw new Error('weather');
-  const h = (await res.json()).hourly as Record<string, number[]>;
-  const now = Date.now() / 1000;
-  let start = h.time.findIndex((ts) => ts + 3600 > now);
-  if (start < 0) start = 0;
-  const hours: Hour[] = [];
-  for (let i = start; i < Math.min(h.time.length, start + 48); i++) {
-    hours.push({
-      ts: h.time[i], temp: h.temperature_2m[i], rainProb: h.precipitation_probability?.[i] ?? 0, precip: h.precipitation[i] ?? 0,
-      cloud: h.cloud_cover[i] ?? 0, wind: h.wind_speed_10m[i] ?? 0, gust: h.wind_gusts_10m?.[i] ?? 0, dir: h.wind_direction_10m[i] ?? 0,
-      humidity: h.relative_humidity_2m[i] ?? 0, code: h.weather_code[i] ?? 0, day: (h.is_day?.[i] ?? 1) === 1,
-    });
-  }
-  return { hours, place };
+      { timeoutMs: 12000, retries: 3 },
+    );
+    if (!res.ok) throw new Error('weather');
+    const h = (await res.json()).hourly as Record<string, number[]>;
+    const now = Date.now() / 1000;
+    let start = h.time.findIndex((ts) => ts + 3600 > now);
+    if (start < 0) start = 0;
+    const hours: Hour[] = [];
+    for (let i = start; i < Math.min(h.time.length, start + 48); i++) {
+      hours.push({
+        ts: h.time[i], temp: h.temperature_2m[i], rainProb: h.precipitation_probability?.[i] ?? 0, precip: h.precipitation[i] ?? 0,
+        cloud: h.cloud_cover[i] ?? 0, wind: h.wind_speed_10m[i] ?? 0, gust: h.wind_gusts_10m?.[i] ?? 0, dir: h.wind_direction_10m[i] ?? 0,
+        humidity: h.relative_humidity_2m[i] ?? 0, code: h.weather_code[i] ?? 0, day: (h.is_day?.[i] ?? 1) === 1,
+      });
+    }
+    return hours;
+  });
 }
 
 const valueOf = (h: Hour, v: WxVar) => (v === 'temp' ? h.temp : v === 'precip' ? h.precip : v === 'cloud' ? h.cloud : v === 'wind' ? h.wind : h.humidity);
@@ -79,11 +82,15 @@ export default function HourlyForecast({ coord, initial, onClose }: { coord: Lng
   const [v, setV] = useState<WxVar>(initial ?? 'temp');
   const scroller = useRef<HTMLDivElement>(null);
 
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     let alive = true;
-    load(coord).then((r) => { if (alive) { setHours(r.hours); setPlace(r.place); } }).catch(() => alive && setError(true));
+    setError(false);
+    // La previsió es mostra tan bon punt arriba; el nom del lloc va a part i no la fa esperar.
+    loadHours(coord).then((h) => { if (alive) setHours(h); }).catch(() => { if (alive) setError(true); });
+    reverseGeocode(coord, '').then((n) => { if (alive && n) setPlace(n.split(',')[0]); });
     return () => { alive = false; };
-  }, [coord]);
+  }, [coord, attempt]);
 
   const meta = VARS.find((x) => x.id === v)!;
   const chart = useMemo(() => {
@@ -113,7 +120,12 @@ export default function HourlyForecast({ coord, initial, onClose }: { coord: Lng
           </div>
           <button className="icon-btn" onClick={onClose} aria-label={t("Tanca")}><Icon name="x" /></button>
         </div>
-        {error && <div className="alert err">{t("No s'ha pogut obtenir la previsió meteorològica")}</div>}
+        {error && !hours && (
+          <div className="alert err">
+            {t("No s'ha pogut obtenir la previsió meteorològica")}
+            <div style={{ marginTop: 8 }}><button className="btn small" onClick={() => setAttempt((n) => n + 1)}>{t("Torna-ho a provar")}</button></div>
+          </div>
+        )}
         {!hours && !error && <div className="skeleton" style={{ height: 260 }} aria-busy="true" />}
         {hours && now && chart && (
           <>

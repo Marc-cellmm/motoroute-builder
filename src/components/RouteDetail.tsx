@@ -197,7 +197,11 @@ export default function RouteDetail(p: Props) {
                     <h3>{multiDay ? t("Etapa {0}", [s.index + 1]) : t("Final de ruta")} · {day(s.date)}</h3>
                     <div className="hint">{t("km")}{' '}{Math.round(s.kmStart)}–{Math.round(s.kmEnd)} ({Math.round(s.kmEnd - s.kmStart)} {t("km)")}</div>
                   </div>
-                  {!acc && <button className="btn small" style={{ flex: 'none' }} onClick={() => p.onLoadAccommodation(s.index)}>{t("Cerca on dormir")}</button>}
+                  {(!acc || (typeof acc === 'string' && acc !== 'loading')) && (
+                    <button className="btn small" style={{ flex: 'none' }} onClick={() => p.onLoadAccommodation(s.index)}>
+                      {acc ? t("Torna-ho a provar") : t("Cerca on dormir")}
+                    </button>
+                  )}
                 </div>
                 {acc === 'loading' && <Loader text={t("Cercant allotjaments…")} />}
                 {typeof acc === 'string' && acc !== 'loading' && <div className="alert err">{acc}</div>}

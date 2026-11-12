@@ -81,6 +81,8 @@ export default function App() {
   }));
   const [routes, setRoutes] = useState<RouteResult[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selectedRef = useRef<string | null>(null);
+  selectedRef.current = selectedId;
   const [progress, setProgress] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
@@ -272,13 +274,16 @@ export default function App() {
 
   async function loadAccommodation(stage: number) {
     const st = selected?.stages?.find((s) => s.index === stage);
-    if (!st) return;
+    if (!st || accom[stage] === 'loading') return; // un segon clic no torna a demanar-ho
+    const routeId = selectedId;
     setAccom((a) => ({ ...a, [stage]: 'loading' }));
     try {
       const list = await searchAccommodation(st.end, 10);
+      if (selectedRef.current !== routeId) return; // l'usuari ja mira una altra ruta
       setAccom((a) => ({ ...a, [stage]: list }));
       setAccomOnMap(list);
     } catch (e) {
+      if (selectedRef.current !== routeId) return;
       setAccom((a) => ({ ...a, [stage]: (e as Error).message }));
     }
   }
@@ -384,21 +389,13 @@ export default function App() {
     if (DEMO || !planning || !overnight || !selected?.stages) return;
     let cancelled = false;
     const ends = selected.stages.slice(0, Math.min(overnight, 6));
-    (async () => {
-      for (const st of ends) {
-        if (cancelled) return;
-        setAccom((a) => ({ ...a, [st.index]: 'loading' }));
-        try {
-          const list = await searchAccommodation(st.end, 10);
-          if (cancelled) return;
-          setAccom((a) => ({ ...a, [st.index]: list }));
-        } catch (e) {
-          if (cancelled) return;
-          setAccom((a) => ({ ...a, [st.index]: (e as Error).message }));
-        }
-        await new Promise((r) => setTimeout(r, 900));
-      }
-    })();
+    // Les peticions van en cua dins searchAccommodation: cada etapa apareix quan arriba.
+    setAccom(Object.fromEntries(ends.map((st) => [st.index, 'loading' as const])));
+    for (const st of ends) {
+      searchAccommodation(st.end, 10)
+        .then((list) => { if (!cancelled) setAccom((a) => ({ ...a, [st.index]: list })); })
+        .catch((e) => { if (!cancelled) setAccom((a) => ({ ...a, [st.index]: (e as Error).message })); });
+    }
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId, overnight, planning]);

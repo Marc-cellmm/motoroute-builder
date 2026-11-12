@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import Icon from './Icon';
 import { BAND_RANGE } from '../lib/routing';
-import { reverseGeocode } from '../lib/places';
+import { rememberPosition, reverseGeocode } from '../lib/places';
+import { currentPosition } from '../lib/location';
 import { rideToday, type RideSpot, type RideToday as Result } from '../lib/rideToday';
 import { weatherIcon } from '../lib/weather';
 import type { Place, PlanRequest } from '../lib/types';
@@ -21,18 +22,14 @@ const wxIcon = (code: number) => {
   return n === 'cloud-sun' ? 'cloud' : n === '·' ? 'cloud' : n;
 };
 
-function locate(): Promise<Place | null> {
-  return new Promise((resolve) => {
-    if (!navigator.geolocation) return resolve(null);
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const coord: [number, number] = [pos.coords.longitude, pos.coords.latitude];
-        resolve({ name: await reverseGeocode(coord), coord });
-      },
-      () => resolve(null),
-      { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 },
-    );
-  });
+async function locate(): Promise<Place | null> {
+  try {
+    const coord = await currentPosition();
+    rememberPosition(coord);
+    return { name: await reverseGeocode(coord), coord };
+  } catch {
+    return null;
+  }
 }
 
 /** «On rodo avui?»: cap on fa millor dia per sortir, amb una ruta circular cap allà. */

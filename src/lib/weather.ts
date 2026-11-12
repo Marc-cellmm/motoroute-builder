@@ -1,5 +1,6 @@
 import type { LngLat, WeatherSample } from './types';
 import { t as tr } from '../i18n';
+import { fetchRetry } from './net';
 
 interface Sample {
   km: number;
@@ -28,16 +29,6 @@ const VARS =
   'temperature_2m,apparent_temperature,precipitation_probability,precipitation,wind_gusts_10m,weather_code,freezing_level_height';
 
 /** Una sola crida multipunt a Open-Meteo amb tota la previsió horària. */
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-/** fetch amb reintents si Open-Meteo respon 429 (massa peticions). */
-async function fetchRetry(url: string): Promise<Response> {
-  for (let attempt = 0; ; attempt++) {
-    const res = await fetch(url);
-    if (res.status !== 429 || attempt >= 3) return res;
-    await sleep(4000 * (attempt + 1));
-  }
-}
 
 export async function fetchWeather(samples: Sample[], departure: Date, lastDay: Date = departure): Promise<WeatherData> {
   const lat = samples.map((s) => s.coord[1].toFixed(4)).join(',');
@@ -48,7 +39,7 @@ export async function fetchWeather(samples: Sample[], departure: Date, lastDay: 
   const url =
     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&elevation=${elev}` +
     `&hourly=${VARS}&daily=sunset&timeformat=unixtime&timezone=GMT&forecast_days=${days}&wind_speed_unit=kmh`;
-  const res = await fetchRetry(url);
+  const res = await fetchRetry(url, { timeoutMs: 20000, retries: 3 });
   if (res.status === 429) throw new Error(tr("El servei de meteo està saturat; torna-ho a provar d'aquí a un minut."));
   if (!res.ok) throw new Error(tr("No s'ha pogut obtenir la previsió meteorològica"));
   const json = await res.json();

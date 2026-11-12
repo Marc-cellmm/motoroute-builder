@@ -1,3 +1,4 @@
+import { fetchRetry } from './net';
 /**
  * Meteo sobre el mapa: una graella de previsió d'Open-Meteo per a la zona visible,
  * interpolada en una imatge de colors. Sense claus ni tessel·les de tercers.
@@ -42,7 +43,11 @@ export function rampColor(v: WxVar, x: number): [number, number, number, number]
 const mercY = (lat: number) => Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360));
 const invMercY = (y: number) => (Math.atan(Math.exp(y)) * 360) / Math.PI - 90;
 
-export async function fetchWxGrid(west: number, south: number, east: number, north: number, cols = 9, rows = 7): Promise<WxGrid> {
+/**
+ * Graella de previsió per a una zona. Open-Meteo compta cada punt com una petició, així que la
+ * graella és petita (7×6) i es cancel·la si el mapa es mou abans que arribi.
+ */
+export async function fetchWxGrid(west: number, south: number, east: number, north: number, cols = 7, rows = 6, signal?: AbortSignal): Promise<WxGrid> {
   south = Math.max(-80, south);
   north = Math.min(80, north);
   const lons = Array.from({ length: cols }, (_, c) => west + ((east - west) * c) / (cols - 1));
@@ -52,10 +57,11 @@ export async function fetchWxGrid(west: number, south: number, east: number, nor
   const la: string[] = [];
   const lo: string[] = [];
   for (const lat of lats) for (const lon of lons) { la.push(lat.toFixed(3)); lo.push((((lon + 540) % 360) - 180).toFixed(3)); }
-  const res = await fetch(
+  const res = await fetchRetry(
     `https://api.open-meteo.com/v1/forecast?latitude=${la.join(',')}&longitude=${lo.join(',')}` +
     '&hourly=precipitation,cloud_cover,wind_speed_10m,wind_direction_10m,relative_humidity_2m,temperature_2m' +
     '&timeformat=unixtime&timezone=GMT&forecast_days=3&wind_speed_unit=kmh',
+    { timeoutMs: 15000, retries: 2, signal },
   );
   if (!res.ok) throw new Error('weather');
   const json = await res.json();

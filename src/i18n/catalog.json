@@ -385,13 +385,18 @@
   "f": "ElevationProfile.tsx"
  },
  {
-  "k": "iyiphp",
-  "s": "Franges: dificultat · meteo",
+  "k": "jyqkjm",
+  "s": "Dificultat",
   "f": "ElevationProfile.tsx"
  },
  {
-  "k": "1j2nuw5",
-  "s": " · línies: benzina",
+  "k": "12xzrxt",
+  "s": "Meteo",
+  "f": "ElevationProfile.tsx"
+ },
+ {
+  "k": "1q80a7e",
+  "s": "Benzina",
   "f": "ElevationProfile.tsx"
  },
  {
@@ -477,6 +482,11 @@
  {
   "k": "vrw0mc",
   "s": "No s'ha pogut obtenir la previsió meteorològica",
+  "f": "HourlyForecast.tsx"
+ },
+ {
+  "k": "xq5j2k",
+  "s": "Torna-ho a provar",
   "f": "HourlyForecast.tsx"
  },
  {
@@ -765,18 +775,43 @@
   "f": "LiveViewer.tsx"
  },
  {
+  "k": "1g04n0o",
+  "s": "La meva ubicació",
+  "f": "LocationInput.tsx"
+ },
+ {
+  "k": "6zmlnm",
+  "s": "Permís de localització denegat.",
+  "f": "LocationInput.tsx"
+ },
+ {
+  "k": "18je0qy",
+  "s": "No s'ha pogut obtenir la teva ubicació. Prova-ho a l'aire lliure o escriu el poble.",
+  "f": "LocationInput.tsx"
+ },
+ {
   "k": "1mh3h3f",
   "s": "Cerca un poble, ciutat o lloc",
   "f": "LocationInput.tsx"
  },
  {
-  "k": "1wrxy08",
-  "s": "Localitzant…",
+  "k": "1aowjng",
+  "s": "Carregant…",
   "f": "LocationInput.tsx"
  },
  {
-  "k": "1g04n0o",
-  "s": "La meva ubicació",
+  "k": "12utsb4",
+  "s": "No s'ha trobat cap lloc amb aquest nom. Revisa'n l'ortografia o tria'l al mapa.",
+  "f": "LocationInput.tsx"
+ },
+ {
+  "k": "2ufurk",
+  "s": "No hi ha connexió. Comprova la cobertura i torna-ho a provar.",
+  "f": "LocationInput.tsx"
+ },
+ {
+  "k": "1wrxy08",
+  "s": "Localitzant…",
   "f": "LocationInput.tsx"
  },
  {
@@ -827,11 +862,6 @@
  {
   "k": "etwhms",
   "s": "Hora de la previsió",
-  "f": "MapView.tsx"
- },
- {
-  "k": "1aowjng",
-  "s": "Carregant…",
   "f": "MapView.tsx"
  },
  {
@@ -942,11 +972,6 @@
  {
   "k": "girync",
   "s": "Aquest navegador no té GPS disponible.",
-  "f": "RecordScreen.tsx"
- },
- {
-  "k": "6zmlnm",
-  "s": "Permís de localització denegat.",
   "f": "RecordScreen.tsx"
  },
  {
@@ -1435,16 +1460,6 @@
   "f": "RouteDetail.tsx"
  },
  {
-  "k": "12xzrxt",
-  "s": "Meteo",
-  "f": "RouteDetail.tsx"
- },
- {
-  "k": "1q80a7e",
-  "s": "Benzina",
-  "f": "RouteDetail.tsx"
- },
- {
   "k": "f028nz",
   "s": "Etapes i allotjament",
   "f": "RouteDetail.tsx"
@@ -1775,6 +1790,11 @@
   "f": "Wizard.tsx"
  },
  {
+  "k": "qxmq97",
+  "s": "Pas {0} de {1}",
+  "f": "Wizard.tsx"
+ },
+ {
   "k": "ywxclm",
   "s": "Modalitat i moto",
   "f": "Wizard.tsx"
@@ -2037,11 +2057,6 @@
  {
   "k": "e5ztqf",
   "s": "Ara mateix no es poden crear comptes nous.",
-  "f": "account.ts"
- },
- {
-  "k": "2ufurk",
-  "s": "No hi ha connexió. Comprova la cobertura i torna-ho a provar.",
   "f": "account.ts"
  },
  {
@@ -2545,11 +2560,6 @@
   "f": "AccountGate.tsx"
  },
  {
-  "k": "xq5j2k",
-  "s": "Torna-ho a provar",
-  "f": "AccountGate.tsx"
- },
- {
   "k": "11z030v",
   "s": "T'hem enviat un correu a {0}. Obre l'enllaç per confirmar el compte i després entra aquí.",
   "f": "AuthScreen.tsx"
@@ -2697,11 +2707,6 @@
  {
   "k": "191vmv5",
   "s": "Edita el perfil",
-  "f": "Onboarding.tsx"
- },
- {
-  "k": "qxmq97",
-  "s": "Pas {0} de {1}",
   "f": "Onboarding.tsx"
  },
  {
@@ -3637,11 +3642,6 @@
  {
   "k": "kq0nc6",
   "s": "Modalitat",
-  "f": "ShareDialog.tsx"
- },
- {
-  "k": "jyqkjm",
-  "s": "Dificultat",
   "f": "ShareDialog.tsx"
  },
  {

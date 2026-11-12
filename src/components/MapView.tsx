@@ -4,6 +4,7 @@ import { LEVEL_COLORS, ROUTE_RED } from '../lib/theme';
 import { Map as MlMap, NavigationControl, Popup, setWorkerUrl, type GeoJSONSource, type LngLatBoundsLike, type MapLayerMouseEvent, type MapMouseEvent } from 'maplibre-gl';
 import { bbox } from '../lib/geo';
 import HourlyForecast from './HourlyForecast';
+import { isAbort } from '../lib/net';
 import { fetchWxGrid, renderWx, WX_RAMP, WX_UNIT, type WxGrid, type WxVar } from '../lib/weatherMap';
 
 export const DEMO = import.meta.env.VITE_DEMO === '1';
@@ -401,23 +402,29 @@ export default function MapView(p: Props) {
   const wxGridRef = useRef<WxGrid | null>(null);
   wxGridRef.current = wxGrid;
 
+  const wxCtrl = useRef<AbortController | null>(null);
   async function loadWx() {
     const m = map.current;
     if (!m) return;
+    // Només compta l'última petició: la que hi hagi en curs es cancel·la.
+    wxCtrl.current?.abort();
+    const ctrl = new AbortController();
+    wxCtrl.current = ctrl;
     const b = m.getBounds();
-    const padX = (b.getEast() - b.getWest()) * 0.2;
-    const padY = (b.getNorth() - b.getSouth()) * 0.2;
+    const padX = (b.getEast() - b.getWest()) * 0.25;
+    const padY = (b.getNorth() - b.getSouth()) * 0.25;
     setWxBusy(true);
     setWxError(false);
     try {
-      const grid = await fetchWxGrid(b.getWest() - padX, b.getSouth() - padY, b.getEast() + padX, b.getNorth() + padY);
-      if (wxWanted.current) { setWxGrid(grid); setWxHour((h) => Math.min(h, grid.hours.length - 1)); }
-    } catch {
-      setWxError(true);
+      const grid = await fetchWxGrid(b.getWest() - padX, b.getSouth() - padY, b.getEast() + padX, b.getNorth() + padY, 7, 6, ctrl.signal);
+      if (wxWanted.current && wxCtrl.current === ctrl) { setWxGrid(grid); setWxHour((h) => Math.min(h, grid.hours.length - 1)); }
+    } catch (e) {
+      if (!isAbort(e) && wxCtrl.current === ctrl) setWxError(true);
     } finally {
-      setWxBusy(false);
+      if (wxCtrl.current === ctrl) setWxBusy(false);
     }
   }
+  useEffect(() => () => wxCtrl.current?.abort(), []);
 
   /** La graella encara cobreix el que es veu (i no s'ha fet massa zoom)? */
   function wxCovers() {
@@ -498,7 +505,7 @@ export default function MapView(p: Props) {
   }, [wxPlay, wxGrid]);
 
   function toggleWx() {
-    if (wxVar) { setWxVar(null); setWxPlay(false); }
+    if (wxVar) { setWxVar(null); setWxPlay(false); wxCtrl.current?.abort(); setWxBusy(false); }
     else setWxVar('precip');
   }
   // amb la meteo oberta, el mapa guanya alçada al mòbil
@@ -536,7 +543,12 @@ export default function MapView(p: Props) {
               </button>
             ))}
           </div>
-          {wxError && <div className="wx-msg">{t("No s'ha pogut obtenir la previsió meteorològica")}</div>}
+          {wxError && (
+            <div className="wx-msg">
+              {t("No s'ha pogut obtenir la previsió meteorològica")}{' '}
+              <button className="inline-link" onClick={() => void loadWx()}>{t("Torna-ho a provar")}</button>
+            </div>
+          )}
           {wxGrid && wxTime && (
             <>
               <div className="wx-time">
@@ -552,7 +564,7 @@ export default function MapView(p: Props) {
               </div>
             </>
           )}
-          {wxBusy && !wxGrid && <div className="wx-msg">{t("Carregant…")}</div>}
+          {wxBusy && <div className="wx-msg"><span className="spin" style={{ width: 12, height: 12, verticalAlign: -2, marginInlineEnd: 6 }} />{t("Carregant…")}</div>}
           <button className="wx-hourly" onClick={() => { const c = map.current?.getCenter(); if (c) { setWxPlay(false); setHourlyAt([c.lng, c.lat]); } }}>
             <Icon name="clock" size={15} /> {t("Previsió per hores")} <Icon name="chevron-right" size={15} className="flip" />
           </button>

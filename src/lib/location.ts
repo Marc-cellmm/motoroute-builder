@@ -77,3 +77,42 @@ export async function watchLocation(
 export function openAppSettings() {
   if (isNativeApp) void BackgroundGeolocation.openSettings();
 }
+
+/**
+ * La posició actual, una sola vegada i ràpid: primer accepta una posició recent (fins a 5 min)
+ * o aproximada, i només si no n'hi ha espera el GPS precís. Mai espera més de ~20 s.
+ * A l'app nativa fa servir el GPS del sistema (un sol permís, sense el diàleg del navegador).
+ */
+export function currentPosition(): Promise<[number, number]> {
+  if (isNativeApp) {
+    return new Promise((resolve, reject) => {
+      let id: string | null = null;
+      let done = false;
+      const finish = (fn: () => void) => {
+        if (done) return;
+        done = true;
+        clearTimeout(timer);
+        if (id) void BackgroundGeolocation.removeWatcher({ id });
+        fn();
+      };
+      const timer = setTimeout(() => finish(() => reject('timeout' as LocationError)), 20000);
+      BackgroundGeolocation.addWatcher({ requestPermissions: true, stale: true, distanceFilter: 0 }, (loc, err) => {
+        if (err) finish(() => reject((err.code === 'NOT_AUTHORIZED' ? 'denied' : 'unavailable') as LocationError));
+        else if (loc) finish(() => resolve([loc.longitude, loc.latitude]));
+      }).then((w) => { id = w; if (done) void BackgroundGeolocation.removeWatcher({ id: w }); })
+        .catch(() => finish(() => reject('unavailable' as LocationError)));
+    });
+  }
+  const once = (opts: PositionOptions) =>
+    new Promise<[number, number]>((resolve, reject) => {
+      if (!navigator.geolocation) return reject('unavailable' as LocationError);
+      navigator.geolocation.getCurrentPosition(
+        (p) => resolve([p.coords.longitude, p.coords.latitude]),
+        (e) => reject((e.code === e.PERMISSION_DENIED ? 'denied' : e.code === e.TIMEOUT ? 'timeout' : 'unavailable') as LocationError),
+        opts,
+      );
+    });
+  return once({ enableHighAccuracy: false, maximumAge: 300000, timeout: 7000 }).catch((e) =>
+    e === 'denied' ? Promise.reject(e) : once({ enableHighAccuracy: true, maximumAge: 0, timeout: 13000 }),
+  );
+}

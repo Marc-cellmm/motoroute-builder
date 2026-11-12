@@ -617,3 +617,13 @@ textarea.input { resize: vertical; min-height: 80px; }
 .profile-legend i.fuel { height: 0; border-top: 2px dashed var(--accent-hi); border-radius: 0; }
 .demo-note { display: flex; gap: 10px; align-items: flex-start; font-size: calc(13px * var(--fs)); padding: 10px 12px; margin: 0 0 14px; }
 .demo-note b { color: var(--text); }
+
+/* ---------- Cerca de llocs ---------- */
+.ac-list button { display: flex; align-items: center; gap: 10px; }
+.ac-list button .icon { color: var(--dim); }
+.ac-list button.on { background: var(--panel-3); }
+.ac-list button span { min-width: 0; overflow-wrap: anywhere; }
+.ac-msg { padding: 13px 14px; color: var(--muted); font-size: calc(14px * var(--fs)); line-height: 1.4; }
+.ac-spin { position: absolute; right: 14px; top: 17px; }
+[dir='rtl'] .ac-spin { right: auto; left: 14px; }
+.search-field .input { padding-right: 42px; }

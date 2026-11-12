@@ -1,5 +1,7 @@
 import type { LngLat } from './types';
 import { destination } from './geo';
+import { fetchRetry } from './net';
+import { reverseGeocode } from './places';
 
 /**
  * «On rodo avui?»: mira la previsió en vuit direccions al voltant del punt de sortida
@@ -95,14 +97,8 @@ function windowHours(h: OmHourly, from: Date, to: Date): HourWx[] {
 }
 
 async function placeName(coord: LngLat): Promise<string | null> {
-  try {
-    const res = await fetch(`https://photon.komoot.io/reverse?lon=${coord[0]}&lat=${coord[1]}&radius=15`);
-    if (!res.ok) return null;
-    const p = (await res.json()).features?.[0]?.properties;
-    return p?.city || p?.name || p?.county || null;
-  } catch {
-    return null;
-  }
+  const name = await reverseGeocode(coord, '');
+  return name ? name.split(',')[0] : null;
 }
 
 export async function rideToday(origin: LngLat, radiusKm: number, now = new Date()): Promise<RideToday> {
@@ -113,7 +109,7 @@ export async function rideToday(origin: LngLat, radiusKm: number, now = new Date
     `&longitude=${points.map((p) => p[0].toFixed(3)).join(',')}` +
     '&hourly=temperature_2m,precipitation_probability,precipitation,wind_gusts_10m,weather_code' +
     '&timeformat=unixtime&timezone=GMT&forecast_days=3&wind_speed_unit=kmh';
-  const res = await fetch(url);
+  const res = await fetchRetry(url, { timeoutMs: 15000, retries: 2 });
   if (!res.ok) throw new Error('weather');
   const json = await res.json();
   const list: { hourly: OmHourly }[] = Array.isArray(json) ? json : [json];
